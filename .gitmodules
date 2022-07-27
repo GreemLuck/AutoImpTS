@@ -1,0 +1,3 @@
+[submodule "trmf"]
+    path = Algorithms/exp-trmf-nips16
+    url = https://github.com/rofuyu/exp-trmf-nips16
