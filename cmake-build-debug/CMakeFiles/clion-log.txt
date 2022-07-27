@@ -1,0 +1,4 @@
+C:\WINDOWS\system32\wsl.exe --distribution Ubuntu --exec /bin/bash -c "export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/dev/reduced-bench && /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G 'CodeBlocks - Unix Makefiles' -S /mnt/c/dev/reduced-bench -B /mnt/c/dev/reduced-bench"
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/dev/reduced-bench

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="reduced_bench"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/mnt/c/dev/reduced-bench"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/mnt/c/dev/reduced-bench"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/mnt/c/dev/reduced-bench"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reduced_bench">
+				<Option output="/mnt/c/dev/reduced-bench/reduced_bench" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/c/dev/reduced-bench"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/python3.8"/>
+					<Add directory="/mnt/c/dev/reduced-bench/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 reduced_bench"/>
+					<CompileFile command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reduced_bench/fast">
+				<Option output="/mnt/c/dev/reduced-bench/reduced_bench" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/c/dev/reduced-bench"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/python3.8"/>
+					<Add directory="/mnt/c/dev/reduced-bench/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 reduced_bench/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/mnt/c/dev/reduced-bench/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/Auxiliary.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/Auxiliary.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/CentroidDecomposition.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/CentroidDecomposition.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/MissingBlock.hpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/RSVD.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algebra/RSVD.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/CDMissingValueRecovery.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/CDMissingValueRecovery.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/DynaMMo.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/DynaMMo.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/GROUSE.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/GROUSE.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/IterativeSVD.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/IterativeSVD.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/NMFMissingValueRecovery.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/NMFMissingValueRecovery.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/ROSL.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/ROSL.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/SPIRIT.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/SPIRIT.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/ST_MVL.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/ST_MVL.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/SVT.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/SVT.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/SoftImpute.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/SoftImpute.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/TKCM.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/TKCM.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/MathIO/MatrixReadWrite.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/MathIO/MatrixReadWrite.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Performance/Benchmark.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Performance/Benchmark.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Stats/Correlation.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Stats/Correlation.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Testing.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Testing.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/include/sqlite3.c">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/include/sqlite3.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/main.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/parser.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/parser.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
