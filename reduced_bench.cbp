@@ -159,6 +159,12 @@
 		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/TKCM.h">
 			<Option target="reduced_bench"/>
 		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/AutoParam/SuccessiveHalving.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/AutoParam/SuccessiveHalving.h">
+			<Option target="reduced_bench"/>
+		</Unit>
 		<Unit filename="/mnt/c/dev/reduced-bench/MathIO/MatrixReadWrite.cpp">
 			<Option target="reduced_bench"/>
 		</Unit>

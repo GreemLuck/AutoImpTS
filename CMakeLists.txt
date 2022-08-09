@@ -36,7 +36,7 @@ add_executable(
         Algebra/MissingBlock.hpp
         Stats/Correlation.cpp Stats/Correlation.h
         Algebra/RSVD.cpp Algebra/RSVD.h
-)
+        AutoParam/SuccessiveHalving.cpp AutoParam/SuccessiveHalving.h)
 target_include_directories(reduced_bench PUBLIC ${ARMADILLO_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS} include)
 target_link_libraries(reduced_bench ${ARMADILLO_LIBRARIES} ${PYTHON_LIBRARIES} -lmlpack -ldl)
 

@@ -35,6 +35,8 @@ Python.h
 -
 filesystem
 -
+algorithm
+-
 Performance/Benchmark.h
 /mnt/c/dev/reduced-bench/Performance/Benchmark.h
 parser.h

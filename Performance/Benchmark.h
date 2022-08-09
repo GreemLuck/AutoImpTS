@@ -19,7 +19,7 @@ Recovery(arma::mat &mat, uint64_t truncation,
          const std::string &algorithm, const std::string &xtra);
 
 int64_t Recovery(arma::mat &mat, const std::string &algorithm,
-                 std::vector<double> &params);
+                 std::map<std::string, double> &params);
 
 void Start_Benchmark(settings &set);
 double getRMSE_Vec(arma::vec &ref, arma::vec &forecast, int64_t blockSize);

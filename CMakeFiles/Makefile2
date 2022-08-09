@@ -74,12 +74,12 @@ clean: CMakeFiles/reduced_bench.dir/clean
 CMakeFiles/reduced_bench.dir/all:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/depend
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/dev/reduced-bench/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 "Built target reduced_bench"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/dev/reduced-bench/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 "Built target reduced_bench"
 .PHONY : CMakeFiles/reduced_bench.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/reduced_bench.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles 22
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles 23
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/reduced_bench.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles 0
 .PHONY : CMakeFiles/reduced_bench.dir/rule

@@ -2,6 +2,9 @@
 // Created by Zakhar on 16/03/2017.
 //
 
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 #include <chrono>
 #include <iostream>
 #include <tuple>
@@ -60,27 +63,39 @@ void set_params(std::vector<double> &params, std::vector<double> &default_params
 }
 
 // CDREC
-int64_t Recovery_CD(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_CD(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Parameters order: maxiter, eps, truncation
-    std::vector<double> default_params = {100, 1E-6, 3};
+    double truncation, threshold, maxIter;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
+
+    if(params.find("Threshold") != params.end())
+        threshold = params["Threshold"];
+    else
+        threshold = 1e-6;
+
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 100;
 
     // Local
     int64_t result;
-    CDMissingValueRecovery rmv(mat, params[0], params[1]);
+    CDMissingValueRecovery rmv(mat, maxIter, threshold);
     std::chrono::steady_clock::time_point begin;
     std::chrono::steady_clock::time_point end;
     
     // Recovery
-    rmv.setReduction(params[2]);
+    rmv.setReduction(truncation);
     rmv.disableCaching = false;
     rmv.useNormalization = false;
     
     begin = std::chrono::steady_clock::now();
     rmv.autoDetectMissingBlocks();
-    rmv.performRecovery(params[2] == mat.n_cols);
+    rmv.performRecovery(truncation == mat.n_cols);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -90,16 +105,23 @@ int64_t Recovery_CD(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_TKCM(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_TKCM(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Parameters order: k, d
-    std::vector<double> default_params = {1, 1};
+    double truncation, d;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 1;
+
+    if(params.find("D") != params.end())
+        d = params["D"];
+    else
+        d = 1;
 
     // Local
     int64_t result;
-    Algorithms::TKCM tkcm(mat, params[0], params[1]);
+    Algorithms::TKCM tkcm(mat, truncation, d);
     std::chrono::steady_clock::time_point begin;
     std::chrono::steady_clock::time_point end;
 
@@ -116,19 +138,31 @@ int64_t Recovery_TKCM(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_ST_MVL(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Parameters order: alpha, beta, w
-    std::vector<double> default_params = {2.0, 0.85, 7};
+    double alpha, beta, winSize;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Alpha") != params.end())
+        alpha = params["Alpha"];
+    else
+        alpha = 2.0;
+
+    if(params.find("Beta") != params.end())
+        beta = params["Beta"];
+    else
+        beta = 0.85;
+
+    if(params.find("Win_Size") != params.end())
+        winSize = params["Win_Size"];
+    else
+        winSize = 7;
 
     // Local
     int64_t result;
     // TODO: implement correctly latlong argument by adding it before calling benchmark
     const std::string latlong = "latlong_placeholder.txt";
 
-    ST_MVL stmvl(mat, latlong, params[0], params[1], params[2]);
+    ST_MVL stmvl(mat, latlong, alpha, beta, winSize);
 
     std::chrono::steady_clock::time_point begin;
     std::chrono::steady_clock::time_point end;
@@ -147,12 +181,24 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::vector<double> &params)
 }
 
 
-int64_t Recovery_SPIRIT(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_SPIRIT(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Parameters order: k0, w, lambda
-    std::vector<double> default_params = {3, 6, 1};
+    double truncation, winSize, lambda;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
+
+    if(params.find("Win_Size") != params.end())
+        winSize = params["Win_Size"];
+    else
+        winSize = 6;
+
+    if(params.find("Lambda") != params.end())
+        lambda = params["Lambda"];
+    else
+        lambda = 1;
 
     // Local
     int64_t result;
@@ -162,7 +208,7 @@ int64_t Recovery_SPIRIT(arma::mat &mat, std::vector<double> &params)
     
     // Recovery
     begin = std::chrono::steady_clock::now();
-    SPIRIT::doSpirit(mat, params[0], params[1], params[2]);
+    SPIRIT::doSpirit(mat, truncation, winSize, lambda);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -172,12 +218,14 @@ int64_t Recovery_SPIRIT(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_GROUSE(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_GROUSE(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Params order: maxrank
-    std::vector<double> default_params = {3};
+    double truncation;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
 
     // Local
     int64_t result;
@@ -190,7 +238,7 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::vector<double> &params)
     mat = mat.t();
 
     begin = std::chrono::steady_clock::now();
-    GROUSE::doGROUSE(mat, params[0]);
+    GROUSE::doGROUSE(mat, truncation);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -202,12 +250,24 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_NNMF(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_NNMF(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Params order: maxiter, truncation, tolerance
-    std::vector<double> default_params = {100, 3, 1E-6};
+    double truncation, threshold, maxIter;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
+
+    if(params.find("Threshold") != params.end())
+        threshold = params["Threshold"];
+    else
+        threshold = 1e-6;
+
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 100;
 
     // Local
     int64_t result;
@@ -217,7 +277,7 @@ int64_t Recovery_NNMF(arma::mat &mat, std::vector<double> &params)
     
     // Recovery
     begin = std::chrono::steady_clock::now();
-    NMFMissingValueRecovery::doNMFRecovery(mat, params[1], params[2], params[0]);
+    NMFMissingValueRecovery::doNMFRecovery(mat, truncation, threshold, maxIter);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -227,12 +287,19 @@ int64_t Recovery_NNMF(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_DynaMMo(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_DynaMMo(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Params order: maxiter, truncation
-    std::vector<double> default_params = {100, 3};
+    double truncation, maxIter;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
+
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 100;
 
     // Local
     int64_t result;
@@ -244,7 +311,7 @@ int64_t Recovery_DynaMMo(arma::mat &mat, std::vector<double> &params)
     mat = mat.t();
     
     begin = std::chrono::steady_clock::now();
-    DynaMMo::doDynaMMo(mat, params[1], params[0], true);
+    DynaMMo::doDynaMMo(mat, truncation, maxIter, true);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -256,12 +323,24 @@ int64_t Recovery_DynaMMo(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_SVT(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_SVT(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Params order: maxiter, tauscale, tolerance
-    std::vector<double> default_params = {100, 0.2, 1E-4};
+    double maxIter, threshold, tauscale;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 100;
+
+    if(params.find("Threshold") != params.end())
+        threshold = params["Threshold"];
+    else
+        threshold = 1e-4;
+
+    if(params.find("Tauscale") != params.end())
+        tauscale = params["Tauscale"];
+    else
+        tauscale = 0.2;
 
     // Local
     int64_t result;
@@ -273,7 +352,7 @@ int64_t Recovery_SVT(arma::mat &mat, std::vector<double> &params)
 
     // Recovery
     begin = std::chrono::steady_clock::now();
-    SVT::doSVT(mat, params[1], params[2], params[0]);
+    SVT::doSVT(mat, tauscale, threshold, maxIter);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -283,13 +362,24 @@ int64_t Recovery_SVT(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_ROSL(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_ROSL(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Params order: rankE, tolerance, maxiter
-    std::vector<double> default_params = {3, 1E-6, 500};
+    double truncation, threshold, maxIter;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
 
+    if(params.find("Threshold") != params.end())
+        threshold = params["Threshold"];
+    else
+        threshold = 1e-7;
+
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 500;
     // Local
     int64_t result;
 
@@ -298,7 +388,7 @@ int64_t Recovery_ROSL(arma::mat &mat, std::vector<double> &params)
     
     // Recovery
     begin = std::chrono::steady_clock::now();
-    ROSL::ROSL_Recovery(mat, params[0], params[1], params[2]);
+    ROSL::ROSL_Recovery(mat, truncation,threshold,maxIter);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -308,13 +398,24 @@ int64_t Recovery_ROSL(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_IterativeSVD(arma::mat &mat, std::vector<double> &params)
+int64_t Recovery_IterativeSVD(arma::mat &mat, std::map<std::string, double> &params)
 {
-    // Params order: maxiter, tolerance, truncation
-    std::vector<double> default_params = {100, 1E-5, 3};
+    double truncation, threshold, maxIter;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
 
+    if(params.find("Threshold") != params.end())
+        threshold = params["Threshold"];
+    else
+        threshold = 1e-6;
+
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 100;
     // Local
     int64_t result;
 
@@ -323,7 +424,7 @@ int64_t Recovery_IterativeSVD(arma::mat &mat, std::vector<double> &params)
     
     // Recovery
     begin = std::chrono::steady_clock::now();
-    IterativeSVD::recoveryIterativeSVD(mat, params[2], params[1], params[0]);
+    IterativeSVD::recoveryIterativeSVD(mat, truncation, threshold, maxIter);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -333,12 +434,24 @@ int64_t Recovery_IterativeSVD(arma::mat &mat, std::vector<double> &params)
     return result;
 }
 
-int64_t Recovery_SoftImpute(arma::mat &mat, std::vector<double>  &params)
+int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &params)
 {
-    //Params order: maxiter, truncation, tolerance
-    std::vector<double> default_params = {100, 3, 1E-5};
+    double truncation, threshold, maxIter;
 
-    set_params(params, default_params, default_params.size());
+    if(params.find("Truncation") != params.end())
+        truncation = params["Truncation"];
+    else
+        truncation = 3;
+
+    if(params.find("Threshold") != params.end())
+        threshold = params["Threshold"];
+    else
+        threshold = 1e-6;
+
+    if(params.find("Max_Iter") != params.end())
+        maxIter = params["Max_Iter"];
+    else
+        maxIter = 100;
 
     // Local
     int64_t result;
@@ -348,7 +461,7 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::vector<double>  &params)
     
     // Recovery
     begin = std::chrono::steady_clock::now();
-    SoftImpute::doSoftImpute(mat, params[1], params[2], params[0]);
+    SoftImpute::doSoftImpute(mat, truncation, threshold, maxIter);
     end = std::chrono::steady_clock::now();
     
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -358,7 +471,54 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::vector<double>  &params)
     return result;
 }
 
-int64_t Recovery(arma::mat &mat, const std::string &algorithm, std::vector<double> &params){
+void Recovery_TRMF(std::string &pathData, settings &set){
+    // Local
+    std::chrono::steady_clock::time_point begin;
+    std::chrono::steady_clock::time_point end;
+
+    // Testing Python interpreter
+    Py_Initialize();
+
+    // Add trmf module to path
+    PyObject *sys = PyImport_ImportModule("sys");
+    PyObject *pathModule = PyObject_GetAttrString(sys, "path");
+    PyList_Append(pathModule, PyUnicode_FromString("Algorithms/"));
+    PyObject * Module = PyImport_ImportModule("trmfpy");
+
+    // Prepare args
+    PyObject * Arg1 = PyUnicode_FromString(pathData.c_str());
+    PyObject * Arg2 = PyLong_FromLong(set.tick);
+    PyObject * Args = PyTuple_Pack(2, Arg1, Arg2);
+
+    if(!PyTuple_Check(Args))
+        std::cerr << "Error with python arguments" << std::endl;
+
+    // Get and run main function
+    PyObject * Dict = PyModule_GetDict(Module);
+    PyObject * Func = PyDict_GetItemString(Dict, "main");
+
+    begin = std::chrono::steady_clock::now();
+    PyObject * Result = PyObject_CallObject(Func, Args);
+    end = std::chrono::steady_clock::now();
+
+    if(PyNumber_Check(Result))
+        set.rmse = PyFloat_AsDouble(Result);
+    else
+        PyErr_Print();
+
+    Py_DECREF(Module);
+    Py_DECREF(Dict);
+    Py_DECREF(Func);
+    Py_DECREF(Args);
+
+    Py_Finalize();
+
+    set.runtime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+    std::cout << "Time(TRMF) : " << set.runtime << std::endl;
+}
+
+
+int64_t Recovery(arma::mat &mat, const std::string &algorithm, std::map<std::string, double> &params){
     if (algorithm == "cd")
     {
         return Recovery_CD(mat, params);
@@ -428,6 +588,11 @@ void Start_Benchmark(settings &set){
     std::string dataFdName = DName2Folder(set.dataset);
     std::string fileName = set.dataset + "_normal.txt";
     std::string filePath = currentPath + "/" + dataFolder + dataFdName + "/" + fileName;
+
+    if(set.algorithm == "trmf"){
+        Recovery_TRMF(filePath, set);
+        return;
+    }
 
     // Creating the dataset matrix
     file.open(filePath);

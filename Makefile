@@ -501,6 +501,33 @@ Algorithms/TKCM.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.s
 .PHONY : Algorithms/TKCM.cpp.s
 
+AutoParam/SuccessiveHalving.o: AutoParam/SuccessiveHalving.cpp.o
+
+.PHONY : AutoParam/SuccessiveHalving.o
+
+# target to build an object file
+AutoParam/SuccessiveHalving.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o
+.PHONY : AutoParam/SuccessiveHalving.cpp.o
+
+AutoParam/SuccessiveHalving.i: AutoParam/SuccessiveHalving.cpp.i
+
+.PHONY : AutoParam/SuccessiveHalving.i
+
+# target to preprocess a source file
+AutoParam/SuccessiveHalving.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.i
+.PHONY : AutoParam/SuccessiveHalving.cpp.i
+
+AutoParam/SuccessiveHalving.s: AutoParam/SuccessiveHalving.cpp.s
+
+.PHONY : AutoParam/SuccessiveHalving.s
+
+# target to generate assembly for a file
+AutoParam/SuccessiveHalving.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.s
+.PHONY : AutoParam/SuccessiveHalving.cpp.s
+
 MathIO/MatrixReadWrite.o: MathIO/MatrixReadWrite.cpp.o
 
 .PHONY : MathIO/MatrixReadWrite.o
@@ -741,6 +768,9 @@ help:
 	@echo "... Algorithms/TKCM.o"
 	@echo "... Algorithms/TKCM.i"
 	@echo "... Algorithms/TKCM.s"
+	@echo "... AutoParam/SuccessiveHalving.o"
+	@echo "... AutoParam/SuccessiveHalving.i"
+	@echo "... AutoParam/SuccessiveHalving.s"
 	@echo "... MathIO/MatrixReadWrite.o"
 	@echo "... MathIO/MatrixReadWrite.i"
 	@echo "... MathIO/MatrixReadWrite.s"

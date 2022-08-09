@@ -1,23 +1,17 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <filesystem>
+#include <algorithm>
 
 #include "Performance/Benchmark.h"
+#include "AutoParam/SuccessiveHalving.h"
 #include "parser.h"
 #include "sqlite3.h"
 
 #include <iostream>
 
-void trmf_test();
 void sql_insert(settings&);
-
-std::string dataname2folder(std::string dataset){
-    if(dataset == "airq")
-        return "air_quality";
-    if(dataset == "drift10")
-        return "drift";
-    return dataset;
-}
+void SuccessiveHalving();
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
     int i;
@@ -33,67 +27,87 @@ using namespace arma;
 using namespace Algorithms;
 
 int main(int argc, char **argv) {
-    settings set {"airq", "cd", {}, 100, 0, 0};
+    settings set;
     parse(argc, argv, set);
 
-    //trmf_test();
-    //sql_test();
+    if(set.autoH)
+        SuccessiveHalving(set);
+    else
+        Performance::Start_Benchmark(set);
 
-    Performance::Start_Benchmark(set);
-
+    map<string, double>::iterator it = set.params.begin();
     cout.precision(15);
     cout.flush();
     cout << "Dataset : " << set.dataset << endl <<
-            "Algorithm : " << set.algorithm << endl <<
-            "Parameters : ";
-    for(const auto& value: set.params)
-        cout << value << ", ";
-    cout << endl << "Ticks : " << set.tick << endl <<
-            "Runtime : " << set.runtime << endl <<
-            "RMSE : " << set.rmse << endl;
+         "Algorithm : " << set.algorithm << endl;
+    while(it != set.params.end()){
+        cout << it->first << " : " << it->second << endl;
+    }
+    cout << "Ticks : " << set.tick << endl <<
+         "Runtime : " << set.runtime << endl <<
+         "RMSE : " << set.rmse << endl;
 
     sql_insert(set);
 
     return 0;
 }
 
-void trmf_test(){
-    // Testing Python interpreter
-    Py_Initialize();
-
-    std::string currentPath = std::filesystem::current_path();
-
-    string trmf_module_path = currentPath + "/Algorithm/";
-    char char_path[trmf_module_path.length() +1];
-    // TODO: add path to python interpreter and invoke the function in trmfpy.py
-    const wchar_t module_path[] = L"Algorithm/";
-    const char module_name[] = "trmfpy";
-
-    PyObject *sys = PyImport_ImportModule("sys");
-    PyObject *path = PyObject_GetAttrString(sys, "path");
-    PyList_Append(path, PyUnicode_FromString("Algorithms/"));
-    PyObject * Module = PyImport_ImportModule(module_name);
-    PyObject * Dict = PyModule_GetDict(Module);
-    PyObject * Func = PyDict_GetItemString(Dict, "main");
-
-    if(PyCallable_Check(Func)) {
-        PyObject_CallObject(Func, NULL);
-        PyErr_Print();
+string GetTableName(string &algorithm){
+    if(algorithm == "cd"){
+        return "CDREC";
+    } else if(algorithm == "tkcm"){
+        return "TKCM";
+    } else if(algorithm == "st-mvl") {
+        algorithm = "ST_MVL";
+    } else if(algorithm == "spirit"){
+        algorithm = "Spirit";
+    } else if(algorithm == "grouse"){
+        return "Grouse";
+    } else if(algorithm == "nnmf"){
+        return "NNMF";
+    } else if(algorithm == "dynnamo"){
+        return "Dynnamo";
+    } else if(algorithm == "svt"){
+        return "SVT";
+    } else if(algorithm == "rosl"){
+        return "ROSL";
+    } if(algorithm == "itersvd") {
+        return "IterSVD";
+    } else if(algorithm == "softimpute"){
+        return "SoftImpute";
     }
-    else
-        PyErr_Print();
+}
 
-    Py_DECREF(Module);
-    Py_DECREF(Dict);
-    Py_DECREF(Func);
-
-    Py_Finalize();
+string vec2str(std::vector<double> vec){
+    ostringstream oss;
+    if(!vec.empty()){
+        // Convert all element and add ","
+        std::copy(vec.begin(), vec.end(), std::ostream_iterator<double>(oss, ","));
+    }
+    return oss.str();
 }
 
 void sql_insert(settings &set){
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
+    string paramsValues, paramsNames, genericHeader, resultHeader, table;
+
+    // Format Parameters keys and values
+    map<string, double>::iterator it = set.params.begin();
+    ostringstream streamKeys;
+    ostringstream streamValues;
+    while(it != set.params.end()){
+        streamKeys << it->first << ",";
+        streamValues << it->second << ",";
+    }
+    paramsNames = streamKeys.str();
+    paramsValues = streamValues.str();
+    genericHeader = "Dataset,Ticks,";
+    resultHeader = "Runtime,Rmse";
+
+    // Get the table name
+    table = GetTableName(set.algorithm);
 
     // Open database
     rc = sqlite3_open("Results", &db);
@@ -106,9 +120,10 @@ void sql_insert(settings &set){
     }
 
     std::ostringstream stringStream;
-    stringStream << "INSERT INTO CDREC(Dataset,Ticks,Tolerance,Truncation,Max_iter,Runtime,Rmse) " <<
-                    "VALUES('" << set.dataset << "'," << set.tick << "," << set.params[1] << "," <<
-                    set.params[2] << "," << set.params[0] << "," << set.runtime << "," << set.rmse << ");";
+    stringStream.precision(15);
+    stringStream << "INSERT INTO " << table << "(" << genericHeader << paramsNames << resultHeader << ") " <<
+                    "VALUES('" << set.dataset << "'," << set.tick << "," << paramsValues << set.runtime <<
+                    "," << set.rmse << ");";
     const string& tmp = stringStream.str();
     const char *sql = tmp.c_str();
 

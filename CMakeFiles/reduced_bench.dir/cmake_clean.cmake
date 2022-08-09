@@ -13,6 +13,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/reduced_bench.dir/Algorithms/SVT.cpp.o"
   "CMakeFiles/reduced_bench.dir/Algorithms/SoftImpute.cpp.o"
   "CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.o"
+  "CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o"
   "CMakeFiles/reduced_bench.dir/MathIO/MatrixReadWrite.cpp.o"
   "CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o"
   "CMakeFiles/reduced_bench.dir/Stats/Correlation.cpp.o"
