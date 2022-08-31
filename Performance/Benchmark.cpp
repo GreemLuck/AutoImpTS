@@ -67,20 +67,17 @@ int64_t Recovery_CD(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, threshold, maxIter;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
-    else
-        truncation = 3;
+    if(params.find(Parameters::CD::TRUNCATION) == params.end())
+        params[Parameters::CD::TRUNCATION] = 3;
+    truncation = params[Parameters::CD::TRUNCATION];
 
-    if(params.find("Threshold") != params.end())
-        threshold = params["Threshold"];
-    else
-        threshold = 1e-6;
+    if(params.find(Parameters::CD::TOLERANCE) == params.end())
+        params[Parameters::CD::TOLERANCE] = 1e-6;
+    threshold = params[Parameters::CD::TOLERANCE];
 
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
-    else
-        maxIter = 100;
+    if(params.find(Parameters::CD::MAX_ITER) == params.end())
+        params[Parameters::CD::MAX_ITER] = 100;
+    maxIter = params[Parameters::CD::MAX_ITER];
 
     // Local
     int64_t result;
@@ -109,13 +106,13 @@ int64_t Recovery_TKCM(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, d;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
+    if(params.find(Parameters::TKCM::TRUNCATION) != params.end())
+        truncation = params[Parameters::TKCM::TRUNCATION];
     else
         truncation = 1;
 
-    if(params.find("D") != params.end())
-        d = params["D"];
+    if(params.find(Parameters::TKCM::D) != params.end())
+        d = params[Parameters::TKCM::D];
     else
         d = 1;
 
@@ -142,18 +139,18 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
 {
     double alpha, beta, winSize;
 
-    if(params.find("Alpha") != params.end())
-        alpha = params["Alpha"];
+    if(params.find(Parameters::ST_MVL::ALPHA) != params.end())
+        alpha = params[Parameters::ST_MVL::ALPHA];
     else
         alpha = 2.0;
 
-    if(params.find("Beta") != params.end())
-        beta = params["Beta"];
+    if(params.find(Parameters::ST_MVL::GAMMA) != params.end())
+        beta = params[Parameters::ST_MVL::GAMMA];
     else
         beta = 0.85;
 
-    if(params.find("Win_Size") != params.end())
-        winSize = params["Win_Size"];
+    if(params.find(Parameters::ST_MVL::WIN_SIZE) != params.end())
+        winSize = params[Parameters::ST_MVL::WIN_SIZE];
     else
         winSize = 7;
 
@@ -185,18 +182,18 @@ int64_t Recovery_SPIRIT(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, winSize, lambda;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
+    if(params.find(Parameters::SPIRIT::TRUNCATION) != params.end())
+        truncation = params[Parameters::SPIRIT::TRUNCATION];
     else
         truncation = 3;
 
-    if(params.find("Win_Size") != params.end())
-        winSize = params["Win_Size"];
+    if(params.find(Parameters::SPIRIT::WIN_SIZE) != params.end())
+        winSize = params[Parameters::SPIRIT::WIN_SIZE];
     else
         winSize = 6;
 
-    if(params.find("Lambda") != params.end())
-        lambda = params["Lambda"];
+    if(params.find(Parameters::SPIRIT::LAMBDA) != params.end())
+        lambda = params[Parameters::SPIRIT::LAMBDA];
     else
         lambda = 1;
 
@@ -222,8 +219,8 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
+    if(params.find(Parameters::GROUSE::TRUNCATION) != params.end())
+        truncation = params[Parameters::GROUSE::TRUNCATION];
     else
         truncation = 3;
 
@@ -250,54 +247,54 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::map<std::string, double> &params)
     return result;
 }
 
-int64_t Recovery_NNMF(arma::mat &mat, std::map<std::string, double> &params)
-{
-    double truncation, threshold, maxIter;
+    int64_t Recovery_NNMF(arma::mat &mat, std::map<std::string, double> &params)
+    {
+        double truncation, threshold, maxIter;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
-    else
-        truncation = 3;
+        if(params.find(Parameters::NNMF::TRUNCATION) != params.end())
+            truncation = params[Parameters::NNMF::TRUNCATION];
+        else
+            truncation = 3;
 
-    if(params.find("Threshold") != params.end())
-        threshold = params["Threshold"];
-    else
-        threshold = 1e-6;
+        if(params.find(Parameters::NNMF::TOLERANCE) != params.end())
+            threshold = params[Parameters::NNMF::TOLERANCE];
+        else
+            threshold = 1e-6;
 
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
-    else
-        maxIter = 100;
+        if(params.find(Parameters::NNMF::MAX_ITER) != params.end())
+            maxIter = params[Parameters::NNMF::MAX_ITER];
+        else
+            maxIter = 100;
 
-    // Local
-    int64_t result;
-    
-    std::chrono::steady_clock::time_point begin;
-    std::chrono::steady_clock::time_point end;
-    
-    // Recovery
-    begin = std::chrono::steady_clock::now();
-    NMFMissingValueRecovery::doNMFRecovery(mat, truncation, threshold, maxIter);
-    end = std::chrono::steady_clock::now();
-    
-    result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-    std::cout << "Time (TeNMF): " << result << std::endl;
-    
-    verifyRecovery(mat);
-    return result;
-}
+        // Local
+        int64_t result;
+
+        std::chrono::steady_clock::time_point begin;
+        std::chrono::steady_clock::time_point end;
+
+        // Recovery
+        begin = std::chrono::steady_clock::now();
+        NMFMissingValueRecovery::doNMFRecovery(mat, truncation, threshold, maxIter);
+        end = std::chrono::steady_clock::now();
+
+        result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+        std::cout << "Time (TeNMF): " << result << std::endl;
+
+        verifyRecovery(mat);
+        return result;
+    }
 
 int64_t Recovery_DynaMMo(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, maxIter;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
+    if(params.find(Parameters::DYNAMMO::TRUNCATION) != params.end())
+        truncation = params[Parameters::DYNAMMO::TRUNCATION];
     else
         truncation = 3;
 
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
+    if(params.find(Parameters::DYNAMMO::MAX_ITER) != params.end())
+        maxIter = params[Parameters::DYNAMMO::MAX_ITER];
     else
         maxIter = 100;
 
@@ -305,20 +302,20 @@ int64_t Recovery_DynaMMo(arma::mat &mat, std::map<std::string, double> &params)
     int64_t result;
     std::chrono::steady_clock::time_point begin;
     std::chrono::steady_clock::time_point end;
-    
+
+
     // Recovery
-    
     mat = mat.t();
-    
+
     begin = std::chrono::steady_clock::now();
     DynaMMo::doDynaMMo(mat, truncation, maxIter, true);
     end = std::chrono::steady_clock::now();
-    
+
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
     std::cout << "Time (DynaMMo): " << result << std::endl;
-    
+
     mat = mat.t();
-    
+
     verifyRecovery(mat);
     return result;
 }
@@ -327,20 +324,27 @@ int64_t Recovery_SVT(arma::mat &mat, std::map<std::string, double> &params)
 {
     double maxIter, threshold, tauscale;
 
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
-    else
+    if(params.find(Parameters::SVT::MAX_ITER) != params.end())
+        maxIter = params[Parameters::SVT::MAX_ITER];
+    else{
         maxIter = 100;
+        params[Parameters::SVT::MAX_ITER] = maxIter;
+    }
 
-    if(params.find("Threshold") != params.end())
-        threshold = params["Threshold"];
-    else
+
+    if(params.find(Parameters::SVT::TOLERANCE) != params.end())
+        threshold = params[Parameters::SVT::TOLERANCE];
+    else {
         threshold = 1e-4;
+        params[Parameters::SVT::TOLERANCE] = threshold;
+    }
 
-    if(params.find("Tauscale") != params.end())
-        tauscale = params["Tauscale"];
-    else
+    if(params.find(Parameters::SVT::TAUSCALE) != params.end())
+        tauscale = params[Parameters::SVT::TAUSCALE];
+    else {
         tauscale = 0.2;
+        params[Parameters::SVT::TAUSCALE] = tauscale;
+    }
 
     // Local
     int64_t result;
@@ -366,20 +370,21 @@ int64_t Recovery_ROSL(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, threshold, maxIter;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
+    if(params.find(Parameters::ROSL::TRUNCATION) != params.end())
+        truncation = params[Parameters::ROSL::TRUNCATION];
     else
         truncation = 3;
 
-    if(params.find("Threshold") != params.end())
-        threshold = params["Threshold"];
+    if(params.find(Parameters::ROSL::TOLERANCE) != params.end())
+        threshold = params[Parameters::ROSL::TOLERANCE];
     else
         threshold = 1e-7;
 
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
+    if(params.find(Parameters::ROSL::MAX_ITER) != params.end())
+        maxIter = params[Parameters::ROSL::MAX_ITER];
     else
         maxIter = 500;
+
     // Local
     int64_t result;
 
@@ -402,18 +407,18 @@ int64_t Recovery_IterativeSVD(arma::mat &mat, std::map<std::string, double> &par
 {
     double truncation, threshold, maxIter;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
+    if(params.find(Parameters::SVD::TRUNCATION) != params.end())
+        truncation = params[Parameters::SVD::TRUNCATION];
     else
         truncation = 3;
 
-    if(params.find("Threshold") != params.end())
-        threshold = params["Threshold"];
+    if(params.find(Parameters::SVD::TOLERANCE) != params.end())
+        threshold = params[Parameters::SVD::TOLERANCE];
     else
         threshold = 1e-6;
 
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
+    if(params.find(Parameters::SVD::MAX_ITER) != params.end())
+        maxIter = params[Parameters::SVD::MAX_ITER];
     else
         maxIter = 100;
     // Local
@@ -438,20 +443,12 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &para
 {
     double truncation, threshold, maxIter;
 
-    if(params.find("Truncation") != params.end())
-        truncation = params["Truncation"];
-    else
-        truncation = 3;
-
-    if(params.find("Threshold") != params.end())
-        threshold = params["Threshold"];
-    else
-        threshold = 1e-6;
-
-    if(params.find("Max_Iter") != params.end())
-        maxIter = params["Max_Iter"];
-    else
-        maxIter = 100;
+    maxIter = params.find(Parameters::SOFTIMPUTE::MAX_ITER) != params.end() ?
+            params[Parameters::SOFTIMPUTE::MAX_ITER] : 100;
+    truncation = params.find(Parameters::SOFTIMPUTE::TRUNCATION) != params.end() ?
+              params[Parameters::SOFTIMPUTE::TRUNCATION] : 3;
+    threshold = params.find(Parameters::SOFTIMPUTE::TOLERANCE) != params.end() ?
+                 params[Parameters::SOFTIMPUTE::TOLERANCE] : 1e-6;
 
     // Local
     int64_t result;
@@ -468,27 +465,61 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &para
     std::cout << "Time (SoftImpute): " << result << std::endl;
     
     verifyRecovery(mat);
+
+    params[Parameters::SOFTIMPUTE::MAX_ITER] = maxIter;
+    params[Parameters::SOFTIMPUTE::TRUNCATION] = truncation;
+    params[Parameters::SOFTIMPUTE::TOLERANCE] = threshold;
+
     return result;
 }
 
-void Recovery_TRMF(std::string &pathData, settings &set){
+void Recovery_TRMF(std::string &dataset, settings &set){
+    double max_iter, tolerance, lambdaI, lambdaAR, lambdaLag;
+
+    max_iter = set.params.find(Parameters::TRMF::MAX_ITER) != set.params.end()
+            ? set.params[Parameters::TRMF::MAX_ITER] : 40;
+    tolerance = set.params.find(Parameters::TRMF::TOLERANCE) != set.params.end()
+            ? set.params[Parameters::TRMF::TOLERANCE] : 0.5;
+    lambdaI = set.params.find(Parameters::TRMF::LAMBDA_I) != set.params.end()
+            ? set.params[Parameters::TRMF::LAMBDA_I] : 0.7;
+    lambdaAR = set.params.find(Parameters::TRMF::LAMBDA_AR) != set.params.end()
+            ? set.params[Parameters::TRMF::LAMBDA_AR] : 125;
+    lambdaLag = set.params.find(Parameters::TRMF::LAMBDA_LAG) != set.params.end()
+            ? set.params[Parameters::TRMF::LAMBDA_LAG] : 4;
+
     // Local
     std::chrono::steady_clock::time_point begin;
     std::chrono::steady_clock::time_point end;
 
-    // Testing Python interpreter
+    // Python interpreter
     Py_Initialize();
 
-    // Add trmf module to path
+    // Add trmfpy module to path
     PyObject *sys = PyImport_ImportModule("sys");
     PyObject *pathModule = PyObject_GetAttrString(sys, "path");
-    PyList_Append(pathModule, PyUnicode_FromString("Algorithms/"));
-    PyObject * Module = PyImport_ImportModule("trmfpy");
+    PyList_Append(pathModule, PyUnicode_FromString("./Algorithms"));
+
+    PyObject* ModuleString = PyUnicode_FromString((char*) "trmfpy");
+    if (!ModuleString) {
+        PyErr_Print();
+        printf("Error formating python script\n");
+    }
+
+    PyObject* Module = PyImport_Import(ModuleString);
+    if (!Module) {
+        PyErr_Print();
+        printf("Error importing python script\n");
+    }
 
     // Prepare args
-    PyObject * Arg1 = PyUnicode_FromString(pathData.c_str());
-    PyObject * Arg2 = PyLong_FromLong(set.tick);
-    PyObject * Args = PyTuple_Pack(2, Arg1, Arg2);
+    PyObject * Dataset = PyUnicode_FromString(dataset.c_str());
+    PyObject * Ticks = PyLong_FromLong(set.tick);
+    PyObject * Max_Iter = PyLong_FromLong(max_iter);
+    PyObject * Tolerance = PyFloat_FromDouble(tolerance);
+    PyObject * LambdaI = PyFloat_FromDouble(lambdaI);
+    PyObject * LambdaAR = PyFloat_FromDouble(lambdaAR);
+    PyObject * LambdaLag = PyFloat_FromDouble(lambdaLag);
+    PyObject * Args = PyTuple_Pack(7, Dataset, Ticks, Max_Iter, Tolerance, LambdaI, LambdaAR, LambdaLag);
 
     if(!PyTuple_Check(Args))
         std::cerr << "Error with python arguments" << std::endl;
@@ -499,6 +530,10 @@ void Recovery_TRMF(std::string &pathData, settings &set){
 
     begin = std::chrono::steady_clock::now();
     PyObject * Result = PyObject_CallObject(Func, Args);
+    if(!Result){
+        PyErr_Print();
+        std::cerr << "Error during TRMF runtime" << std::endl;
+    }
     end = std::chrono::steady_clock::now();
 
     if(PyNumber_Check(Result))
@@ -515,6 +550,12 @@ void Recovery_TRMF(std::string &pathData, settings &set){
 
     set.runtime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
     std::cout << "Time(TRMF) : " << set.runtime << std::endl;
+
+    set.params[Parameters::TRMF::MAX_ITER] = max_iter;
+    set.params[Parameters::TRMF::TOLERANCE] = tolerance;
+    set.params[Parameters::TRMF::LAMBDA_I] = lambdaI;
+    set.params[Parameters::TRMF::LAMBDA_AR] = lambdaAR;
+    set.params[Parameters::TRMF::LAMBDA_LAG] = lambdaLag;
 }
 
 
@@ -590,7 +631,7 @@ void Start_Benchmark(settings &set){
     std::string filePath = currentPath + "/" + dataFolder + dataFdName + "/" + fileName;
 
     if(set.algorithm == "trmf"){
-        Recovery_TRMF(filePath, set);
+        Recovery_TRMF(set.dataset, set);
         return;
     }
 

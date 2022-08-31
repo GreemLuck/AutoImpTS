@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/dev/reduced-bench
+CMAKE_SOURCE_DIR = /mnt/f/dev/reduced-bench
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/dev/reduced-bench
+CMAKE_BINARY_DIR = /mnt/f/dev/reduced-bench
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles /mnt/c/dev/reduced-bench/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/f/dev/reduced-bench/CMakeFiles /mnt/f/dev/reduced-bench/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/f/dev/reduced-bench/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -501,6 +501,33 @@ Algorithms/TKCM.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.s
 .PHONY : Algorithms/TKCM.cpp.s
 
+AutoParam/BayesOpt.o: AutoParam/BayesOpt.cpp.o
+
+.PHONY : AutoParam/BayesOpt.o
+
+# target to build an object file
+AutoParam/BayesOpt.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.o
+.PHONY : AutoParam/BayesOpt.cpp.o
+
+AutoParam/BayesOpt.i: AutoParam/BayesOpt.cpp.i
+
+.PHONY : AutoParam/BayesOpt.i
+
+# target to preprocess a source file
+AutoParam/BayesOpt.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.i
+.PHONY : AutoParam/BayesOpt.cpp.i
+
+AutoParam/BayesOpt.s: AutoParam/BayesOpt.cpp.s
+
+.PHONY : AutoParam/BayesOpt.s
+
+# target to generate assembly for a file
+AutoParam/BayesOpt.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.s
+.PHONY : AutoParam/BayesOpt.cpp.s
+
 AutoParam/SuccessiveHalving.o: AutoParam/SuccessiveHalving.cpp.o
 
 .PHONY : AutoParam/SuccessiveHalving.o
@@ -527,6 +554,33 @@ AutoParam/SuccessiveHalving.s: AutoParam/SuccessiveHalving.cpp.s
 AutoParam/SuccessiveHalving.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.s
 .PHONY : AutoParam/SuccessiveHalving.cpp.s
+
+Database/SQL.o: Database/SQL.cpp.o
+
+.PHONY : Database/SQL.o
+
+# target to build an object file
+Database/SQL.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o
+.PHONY : Database/SQL.cpp.o
+
+Database/SQL.i: Database/SQL.cpp.i
+
+.PHONY : Database/SQL.i
+
+# target to preprocess a source file
+Database/SQL.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Database/SQL.cpp.i
+.PHONY : Database/SQL.cpp.i
+
+Database/SQL.s: Database/SQL.cpp.s
+
+.PHONY : Database/SQL.s
+
+# target to generate assembly for a file
+Database/SQL.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Database/SQL.cpp.s
+.PHONY : Database/SQL.cpp.s
 
 MathIO/MatrixReadWrite.o: MathIO/MatrixReadWrite.cpp.o
 
@@ -608,33 +662,6 @@ Stats/Correlation.s: Stats/Correlation.cpp.s
 Stats/Correlation.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Stats/Correlation.cpp.s
 .PHONY : Stats/Correlation.cpp.s
-
-Testing.o: Testing.cpp.o
-
-.PHONY : Testing.o
-
-# target to build an object file
-Testing.cpp.o:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Testing.cpp.o
-.PHONY : Testing.cpp.o
-
-Testing.i: Testing.cpp.i
-
-.PHONY : Testing.i
-
-# target to preprocess a source file
-Testing.cpp.i:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Testing.cpp.i
-.PHONY : Testing.cpp.i
-
-Testing.s: Testing.cpp.s
-
-.PHONY : Testing.s
-
-# target to generate assembly for a file
-Testing.cpp.s:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Testing.cpp.s
-.PHONY : Testing.cpp.s
 
 include/sqlite3.o: include/sqlite3.c.o
 
@@ -768,9 +795,15 @@ help:
 	@echo "... Algorithms/TKCM.o"
 	@echo "... Algorithms/TKCM.i"
 	@echo "... Algorithms/TKCM.s"
+	@echo "... AutoParam/BayesOpt.o"
+	@echo "... AutoParam/BayesOpt.i"
+	@echo "... AutoParam/BayesOpt.s"
 	@echo "... AutoParam/SuccessiveHalving.o"
 	@echo "... AutoParam/SuccessiveHalving.i"
 	@echo "... AutoParam/SuccessiveHalving.s"
+	@echo "... Database/SQL.o"
+	@echo "... Database/SQL.i"
+	@echo "... Database/SQL.s"
 	@echo "... MathIO/MatrixReadWrite.o"
 	@echo "... MathIO/MatrixReadWrite.i"
 	@echo "... MathIO/MatrixReadWrite.s"
@@ -780,9 +813,6 @@ help:
 	@echo "... Stats/Correlation.o"
 	@echo "... Stats/Correlation.i"
 	@echo "... Stats/Correlation.s"
-	@echo "... Testing.o"
-	@echo "... Testing.i"
-	@echo "... Testing.s"
 	@echo "... include/sqlite3.o"
 	@echo "... include/sqlite3.i"
 	@echo "... include/sqlite3.s"

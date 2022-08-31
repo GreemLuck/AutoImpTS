@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Algorithms/exp-trmf-nips16" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/AutoParam/limbo" vcs="Git" />
   </component>
 </project>
