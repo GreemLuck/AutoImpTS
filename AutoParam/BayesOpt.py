@@ -95,30 +95,36 @@ def softimp(truncation, tolerance, max_iter):
     return -rmse
 
 
-def cdrec(truncation, tolerance, max_iter):
+def cdrec(truncation, tolerance=1e-5, max_iter=100):
     rmse, runtime = ts_algorithms.cdrec(truncation, tolerance, max_iter,
                                         tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
-def trmf(tolerance, max_iter, lambdaI, lambdaAR, lambdaLag):
-    rmse, runtime = ts_algorithms.trmf(tolerance, max_iter, lambdaI, lambdaAR, lambdaLag,
-                                       tick=TICKS, verbose=VERBOSE,
+def trmf(lambdaI, lambdaAR, lambdaLag):
+    rmse, runtime = ts_algorithms.trmf(lambdaI=lambdaI,lambdaAR=lambdaAR, lambdaLag=lambdaLag, verbose=VERBOSE,
                                        dataset=DATASET, label=LABEL)
     return -rmse
 
 
-def plot_grouse(bo):
-    x = np.linspace(1, 10, 10000)
+def plot_grouse(bo, alg, dataset):
+    param_name = bo.space.keys[0]
+    bmin, bmax = bo.space.bounds[0]
+
+    x = np.linspace(bmin, bmax, 10000)
 
     mean, sigma = bo._gp.predict(x.reshape(-1, 1), return_std=True)
 
     plt.figure(figsize=(16, 9))
     plt.plot(x, mean)
     plt.fill_between(x, mean + sigma, mean - sigma, alpha=0.1)
-
     plt.scatter(bo.space.params, bo.space.target, c="red", s=50, zorder=10)
-    plt.savefig(os.path.join(ROOT_FOLDER, "Graphs", "grouse_bayesOpt"))
+
+    plt.title(f"Bayesian Optimization of {alg}'s {param_name} on {dataset}")
+    plt.xlabel(f"{param_name}")
+    plt.ylabel(f"rmse (reversed)")
+
+    plt.savefig(os.path.join(ROOT_FOLDER, "Graphs", f"bayesOpt_{alg}_{param_name}"))
 
 
 algorithms = {
@@ -143,7 +149,7 @@ algorithms = {
 }
 
 
-def main(alg, dataset="airq", tick=100, exploration=2, exploitation=5, verbose=False):
+def main(alg_name, dataset="airq", tick=100, exploration=2, exploitation=5, verbose=False):
     global TICKS
     global DATASET
     global VERBOSE
@@ -151,9 +157,11 @@ def main(alg, dataset="airq", tick=100, exploration=2, exploitation=5, verbose=F
     DATASET = dataset
     VERBOSE = verbose
 
+    alg, bounds = algorithms[alg_name]
+
     optimizer = BayesianOptimization(
-        f=algorithms[alg][0],
-        pbounds=algorithms[alg][1],
+        f=alg,
+        pbounds=bounds,
         random_state=2,
     )
 
@@ -165,8 +173,8 @@ def main(alg, dataset="airq", tick=100, exploration=2, exploitation=5, verbose=F
         n_iter=int(exploitation)
     )
 
-    if alg == "grouse":
-        plot_grouse(optimizer)
+    if optimizer.space.dim == 1:
+        plot_grouse(optimizer, alg_name, dataset)
     return optimizer.max
 
 

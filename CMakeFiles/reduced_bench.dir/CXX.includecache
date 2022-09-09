@@ -6,45 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/mnt/f/dev/reduced-bench/Algebra/MissingBlock.hpp
-mlpack/core.hpp
--
-
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.cpp
+/mnt/f/dev/reduced-bench/Database/SQL.cpp
 iostream
 -
-vector
+sstream
 -
-SuccessiveHalving.h
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.h
-../Database/SQL.h
+SQL.h
 /mnt/f/dev/reduced-bench/Database/SQL.h
-
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.h
-../Performance/Benchmark.h
-/mnt/f/dev/reduced-bench/Performance/Benchmark.h
+sqlite3.h
+/mnt/f/dev/reduced-bench/Database/sqlite3.h
 
 /mnt/f/dev/reduced-bench/Database/SQL.h
-../parser.h
-/mnt/f/dev/reduced-bench/parser.h
-
-/mnt/f/dev/reduced-bench/MathIO/MatrixReadWrite.h
-string
--
-fstream
--
-vector
--
-armadillo
--
-
-/mnt/f/dev/reduced-bench/Performance/Benchmark.h
-mlpack/core.hpp
--
-../MathIO/MatrixReadWrite.h
-/mnt/f/dev/reduced-bench/MathIO/MatrixReadWrite.h
-../Algebra/MissingBlock.hpp
-/mnt/f/dev/reduced-bench/Algebra/MissingBlock.hpp
 ../parser.h
 /mnt/f/dev/reduced-bench/parser.h
 
@@ -52,5 +24,9 @@ mlpack/core.hpp
 iostream
 -
 map
+-
+
+include/sqlite3.h
+stdarg.h
 -
 

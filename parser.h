@@ -13,7 +13,6 @@ struct settings {
     std::string dataset;
     std::string algorithm;
     std::map<std::string, double> params;
-    u_int64_t tick;
     u_int64_t runtime;
     double rmse;
     std::string label;
@@ -89,7 +88,7 @@ namespace Parameters{
     }
 
     namespace TRMF {
-        const std::string TOLERANCE = "Tolerance";
+        const std::string K = "K";
         const std::string MAX_ITER = "Max_Iter";
         const std::string LAMBDA_I = "LambdaI";
         const std::string LAMBDA_AR = "LambdaAR";
@@ -100,7 +99,7 @@ namespace Parameters{
 
 enum optionIndex { UNKNOWN, HELP, AUTO, ALG, PARAMS, TRUNCATION, MAX_ITER, TOLERANCE,
         D, ALPHA, GAMMA, WIN_SIZE, LAMBDA, TAUSCALE, LAMBDA_I, LAMBDA_AR, LAMBDA_LAG,
-        LABEL, DATASET, TICK };
+        LABEL, DATASET };
 
 int parse(int argc, char **argv, settings &set);
 

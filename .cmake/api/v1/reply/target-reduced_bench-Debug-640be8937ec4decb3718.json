@@ -82,8 +82,7 @@
 				36,
 				38,
 				40,
-				42,
-				44
+				42
 			]
 		},
 		{
@@ -177,8 +176,7 @@
 				36,
 				38,
 				40,
-				42,
-				44
+				42
 			]
 		},
 		{
@@ -206,8 +204,7 @@
 				37,
 				39,
 				41,
-				43,
-				45
+				43
 			]
 		}
 	],
@@ -453,17 +450,6 @@
 		{
 			"backtrace" : 1,
 			"path" : "Database/SQL.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "AutoParam/BayesOpt.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "AutoParam/BayesOpt.h",
 			"sourceGroupIndex" : 1
 		}
 	],

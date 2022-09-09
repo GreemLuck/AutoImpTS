@@ -27,8 +27,8 @@ bool compareByRmse(const settings &a, const settings &b){
 }
 
 void TruncationBased_SH(settings &set){
-    double budgetIter = 100;
-    double budgetThreshold = 1e-5;
+    double budgetIter = 5;
+    double budgetThreshold = 1e-3;
     std::vector<int> parameters(10);
     range(parameters.begin(), parameters.end(), 1, 1);
 
@@ -63,8 +63,8 @@ void TruncationBased_SH(settings &set){
 }
 
 void SVT_SH(settings &set){
-    double budgetIter = 100;
-    double budgetThreshold = 1e-5;
+    double budgetIter = 5;
+    double budgetThreshold = 1e-3;
     double size = 50;
     std::vector<double> parameters(size);
     range(parameters.begin(), parameters.end(), 0.02, 0.02);
@@ -98,8 +98,7 @@ void SVT_SH(settings &set){
 }
 
 void TRMF_SH(settings &set){
-    double budgetIter = 100;
-    double budgetThreshold = 1e-5;
+    double budgetIter = 5;
     std::vector<double> parameters(10);
     range(parameters.begin(), parameters.end(), 0.1, 0.1);
 
@@ -107,7 +106,6 @@ void TRMF_SH(settings &set){
     std::vector<settings> round(10, set);
     for(int i = 0; i<round.size(); i++){
         round[i].params[Parameters::TRMF::MAX_ITER] = budgetIter;
-        round[i].params[Parameters::TRMF::TOLERANCE] = budgetThreshold;
         round[i].params[Parameters::CD::TRUNCATION] = parameters[i];
     }
 

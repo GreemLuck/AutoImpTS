@@ -21,7 +21,7 @@ namespace Algorithms
 class ST_MVL
 {
   private:
-    const std::string techFolder = "_technical/ST-MVL/";
+    const std::string techFolder = "_data/_technical/ST-MVL/";
     const std::string equationFile = techFolder + "stmvl_equation.txt";
     const std::string trainingFolder = techFolder + "TrainingFolder/";
   

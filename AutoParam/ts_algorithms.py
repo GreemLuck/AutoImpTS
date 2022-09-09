@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 import sqlite3
 import time
+from numpy import mean
 
 ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
 EXE = "reduced_bench"
@@ -10,7 +11,8 @@ EXE = "reduced_bench"
 sys.path.append(os.path.join(ROOT_FOLDER, "Algorithms"))
 import trmfpy
 
-CDREC_BOUNDS = {"truncation": (1, 10), "tolerance": (0, 1), "max_iter": (10, 1000)}
+# CDREC_BOUNDS = {"truncation": (1, 10), "tolerance": (0, 1), "max_iter": (10, 1000)}
+CDREC_BOUNDS = {"truncation": (1, 10)}
 DYNAMMO_BOUNDS = {"truncation": (1, 10), "max_iter": (10, 200)}
 TKCM_BOUNDS = {"truncation": (1, 10), "d": (0, 10)}
 ST_MVL_BOUNDS = {"aplha": (0, 1), "gamma": (0, 1), "win_size": (0, 100)}
@@ -21,10 +23,34 @@ SVT_BOUNDS = {"tolerance": (0, 1), "tauscale": (0, 1), "max_iter": (10, 1000)}
 ROSL_BOUDNS = {"tolerance": (0, 1), "truncation": (0, 1), "max_iter": (10, 1000)}
 ITERSVD_BOUNDS = {"tolerance": (0, 1), "truncation": (0, 1), "max_iter": (10, 1000)}
 SOFTIMP_BOUNDS = {"tolerance": (0, 1), "truncation": (0, 1), "max_iter": (10, 1000)}
-TRMF_BOUNDS = {"tolerance": (0, 1), "lambdaI": (0, 1), "lambdaLag": (0, 1), "lambdaAR": (0, 1), "max_iter": (10, 100)}
+TRMF_BOUNDS = {"lambdaI": (0, 1), "lambdaLag": (0, 1), "lambdaAR": (0, 1)}
 
 
-def dynammo(truncation, max_iter, tick=100, dataset='airq', verbose=False, label = "dynammo-bayes"):
+def get_algorithm(alg):
+    algorithms = {
+        "cdrec": (cdrec, CDREC_BOUNDS),
+        "cd": (cdrec, CDREC_BOUNDS),
+        "dynammo": (dynammo, DYNAMMO_BOUNDS),
+        "dynnamo": (dynammo, DYNAMMO_BOUNDS),
+        "tkcm": (tkcm, TKCM_BOUNDS),
+        "stmvl": (stmvl, ST_MVL_BOUNDS),
+        "st-mvl": (stmvl, ST_MVL_BOUNDS),
+        "spirit": (spirit, SPIRIT_BOUNDS),
+        "grouse": (grouse, GROUSE_BOUNDS),
+        "nnmf": (nnmf, NNMF_BOUNDS),
+        "svt": (svt, SVT_BOUNDS),
+        "rosl": (rosl, ROSL_BOUDNS),
+        "itersvd": (itersvd, ITERSVD_BOUNDS),
+        "iter-svd": (itersvd, ITERSVD_BOUNDS),
+        "svd": (itersvd, ITERSVD_BOUNDS),
+        "softimpute": (softimp, SOFTIMP_BOUNDS),
+        "softimp": (softimp, SOFTIMP_BOUNDS),
+        "trmf": (trmf, TRMF_BOUNDS)
+    }
+    return algorithms[alg]
+
+
+def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False, label = "dynammo-bayes"):
     alg = "dynammo"
 
     truncation = int(truncation)
@@ -46,12 +72,13 @@ def dynammo(truncation, max_iter, tick=100, dataset='airq', verbose=False, label
                           "WHERE Truncation=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (truncation, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def tkcm(truncation, d, tick=100, dataset='airq', verbose=False, label = "tkcm-bayes"):
+def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label = "tkcm-bayes"):
     alg = "tkcm"
 
     truncation = int(truncation)
@@ -76,12 +103,13 @@ def tkcm(truncation, d, tick=100, dataset='airq', verbose=False, label = "tkcm-b
                           "WHERE Truncation=? "
                           "AND d=? "
                           "AND Label=?"
-                          , (truncation, d, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, d, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def stmvl(alpha, gamma, win_size, tick=100, dataset='airq', verbose=False, label = "stmvl-bayes"):
+def stmvl(alpha=0.2, gamma=0.4, win_size=10, dataset='airq', verbose=False, label = "stmvl-bayes"):
     alg = "st-mvl"
 
     alpha = f"{alpha:.15f}"
@@ -90,7 +118,6 @@ def stmvl(alpha, gamma, win_size, tick=100, dataset='airq', verbose=False, label
 
     cmd = f"{ROOT_FOLDER}/{EXE} " \
           f"--alg={alg} " \
-          f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--set-alpha={alpha} " \
           f"--set-gamma={gamma} " \
@@ -109,12 +136,13 @@ def stmvl(alpha, gamma, win_size, tick=100, dataset='airq', verbose=False, label
                           "AND Gamma=? "
                           "AND Win_Size=? "
                           "AND Label=?"
-                          , (alpha, gamma, win_size, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (alpha, gamma, win_size, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def spirit(truncation, win_size, lbda, tick=100, dataset='airq', verbose=False, label = "spirit-bayes"):
+def spirit(truncation=3, win_size=10, lbda=0.3, tick=100, dataset='airq', verbose=False, label = "spirit-bayes"):
     alg = "spirit"
 
     truncation = int(truncation)
@@ -142,12 +170,13 @@ def spirit(truncation, win_size, lbda, tick=100, dataset='airq', verbose=False, 
                           "AND Win_Size=? "
                           "AND Lambda=? "
                           "AND Label=?"
-                          , (truncation, win_size, lbda, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, win_size, lbda, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def grouse(truncation, tick=100, dataset='airq', verbose=False, label = "grouse-bayes"):
+def grouse(truncation=3, tick=100, dataset='airq', verbose=False, label = "grouse-bayes"):
     alg = "grouse"
 
     truncation = int(truncation)
@@ -170,12 +199,13 @@ def grouse(truncation, tick=100, dataset='airq', verbose=False, label = "grouse-
     rmse = cursor.execute("SELECT Rmse, Runtime FROM Grouse "
                           "WHERE Truncation=? "
                           "AND Label=?"
-                          , (truncation, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def nnmf(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=False, label = "nnmf-bayes"):
+def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "nnmf-bayes"):
     alg = "nnmf"
 
     truncation = int(truncation)
@@ -203,12 +233,13 @@ def nnmf(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=Fals
                           "AND Tolerance=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (truncation, tolerance, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def svt(tolerance, tauscale, max_iter, tick=100, dataset='airq', verbose=False, label = "svt-bayes"):
+def svt(tolerance=1e-6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', verbose=False, label = "svt-bayes"):
     alg = "svt"
 
     tolerance = f"{tolerance:.15f}"
@@ -236,12 +267,13 @@ def svt(tolerance, tauscale, max_iter, tick=100, dataset='airq', verbose=False, 
                           "AND Tauscale=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (tolerance, tauscale, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (tolerance, tauscale, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def rosl(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=False, label = "rosl-bayes"):
+def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "rosl-bayes"):
     alg = "rosl"
 
     truncation = int(truncation)
@@ -269,12 +301,13 @@ def rosl(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=Fals
                           "AND Tolerance=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (truncation, tolerance, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def itersvd(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=False, label = "itersvd-bayes"):
+def itersvd(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "itersvd-bayes"):
     alg = "itersvd"
 
     truncation = int(truncation)
@@ -302,12 +335,13 @@ def itersvd(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=F
                           "AND Tolerance=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (truncation, tolerance, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def softimp(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=False, label = "softimp-bayes"):
+def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "softimp-bayes"):
     alg = "softimpute"
 
     truncation = int(truncation)
@@ -335,12 +369,13 @@ def softimp(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=F
                           "AND Tolerance=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (truncation, tolerance, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def cdrec(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=False, label = "cdrec-bayes"):
+def cdrec(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "cdrec-bayes"):
     alg = "cd"
 
     truncation = int(truncation)
@@ -368,34 +403,37 @@ def cdrec(truncation, tolerance, max_iter, tick=100, dataset='airq', verbose=Fal
                           "AND Tolerance=? "
                           "AND Max_iter=? "
                           "AND Label=?"
-                          , (truncation, tolerance, max_iter, label,)).fetchone()
+                          "AND Dataset=?"
+                          , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
     return rmse[0], rmse[1]
 
 
-def trmf(tolerance, max_iter, lambdaI, lambdaAR, lambdaLag, tick=100, dataset='airq', verbose=False, label = "trmf-bayes"):
+def trmf(tolerance=1e-3, max_iter=40, lambdaI=0.7, lambdaAR=0.7, lambdaLag=0.7, k=10, dataset='airq', verbose=False,label="trmf-bayes"):
     alg = "trmf"
+    TICKS = [100, 200, 300, 400, 500, 600, 700, 800]
+    rmses = []
+    runtimes = []
 
     max_iter = int(max_iter)
 
-    t_start = time.perf_counter()
-    result = trmfpy.main(dataset, tick,
-                         threshold=tolerance,
-                         max_iter=max_iter,
-                         lambdaI = lambdaI,
-                         lambdaAR = lambdaAR,
-                         lambdaLag = lambdaLag)
-    t_stop = time.perf_counter()
-    runtime = (t_stop - t_start) * 1e6
+    for t in TICKS:
+        t_start = time.perf_counter()
+        result = trmfpy.main(dataset, ticks=t,
+                             threshold=tolerance,
+                             max_iter=max_iter,
+                             lambdaI = lambdaI,
+                             lambdaAR = lambdaAR,
+                             lambdaLag = lambdaLag)
+        t_stop = time.perf_counter()
+        runtime = (t_stop - t_start) * 1e6
+        rmses.append(result)
+        runtimes.append(runtime)
 
-    print(f"tolerance: {tolerance}, max_iter: {max_iter}, lambdaI: {lambdaI}, lambdaAR: {lambdaAR}, lambdaLag: {lambdaLag}")
+    mean_rmse = mean(rmses)
+    mean_runtime = mean(runtimes)
 
-    conn = sqlite3.connect(ROOT_FOLDER + "/Results")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO TRMF(Dataset, Ticks, Tolerance, Max_iter, LambdaI, "
-                   "LambdaAR, LambdaLag, Runtime, Rmse, Label) "
-                   "VALUES (?, ? ,? ,? ,?, ?, ?, ?, ?, ?)"
-                   , (dataset, tick, tolerance, max_iter, lambdaI, lambdaAR, lambdaLag, runtime, result, label))
-    print(f"RMSE : {result}")
-    print(f"Runtime : {runtime}")
-    return result, runtime
+    print(f"RMSE : {mean_rmse}")
+    print(f"RUNTIME : {mean_runtime}")
+
+    return mean_rmse, mean_runtime

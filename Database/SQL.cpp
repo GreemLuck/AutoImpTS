@@ -25,9 +25,9 @@ std::string GetTableName(std::string &algorithm){
     } else if(algorithm == "tkcm"){
         return "TKCM";
     } else if(algorithm == "st-mvl") {
-        algorithm = "ST_MVL";
+        return "ST_MVL";
     } else if(algorithm == "spirit"){
-        algorithm = "Spirit";
+        return "Spirit";
     } else if(algorithm == "grouse"){
         return "Grouse";
     } else if(algorithm == "nnmf"){
@@ -67,7 +67,7 @@ void sql_insert(settings &set){
     }
     paramsNames = streamKeys.str();
     paramsValues = streamValues.str();
-    genericHeader = "Dataset,Ticks,";
+    genericHeader = "Dataset,";
     resultHeader = "Runtime,Rmse,Label";
 
     // Get the table name
@@ -87,7 +87,7 @@ void sql_insert(settings &set){
     stringStream.precision(15);
     stringStream <<
                  "INSERT INTO " << table << "(" << genericHeader << paramsNames << resultHeader << ") " <<
-                 "VALUES('" << set.dataset << "'," << set.tick << "," << paramsValues << set.runtime <<
+                 "VALUES('" << set.dataset << "',"  << paramsValues << set.runtime <<
                  "," << set.rmse;
     if(set.label.empty())
         stringStream << ",'');";
@@ -108,5 +108,33 @@ void sql_insert(settings &set){
     } else {
         cout << "Inserted successfully" << endl;
     }
+}
+
+bool is_in_db(settings &set){
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
+
+    rc = sqlite3_open("Results", &db);
+
+    if(rc){
+        cerr << "Can't open the database: " << sqlite3_errmsg(db) << endl;
+        return false;
+    } else {
+        cout << "Opened database successfully" << endl;
+    }
+
+    // Preparing the statement
+    std::ostringstream stmt;
+    stmt << "SELECT Rmse, Runtime FROM " << GetTableName(set.algorithm) << " WHERE "
+        << "Dataset=" << set.dataset << " AND ";
+    map<string, double>::iterator it;
+    for(it = set.params.begin(); std::distance(it, set.params.end()) > 1; it++){
+        stmt << it->first << "=" << it->second << " AND ";
+    }
+    it++;
+    stmt << it->first << "=" << it->second << ";";
+
+
 }
 };

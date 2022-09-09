@@ -1,6 +1,7 @@
 import sys, os
-import scipy as sp
 import numpy as np
+from time import perf_counter
+import sqlite3
 
 sys.path.append("exp-trmf-nips16/python/trmf")
 import trmf
@@ -10,34 +11,57 @@ __location__ = os.path.realpath(
 
 __root__ = os.path. abspath(os.path.join(__location__, os.pardir))
 
+LAG_SET = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-def main(dataset, ticks=100, max_iter=40, threshold=1e-6, lambdaI=0.7, lambdaAR=125, lambdaLag=4):
-    print("Starting TRMF ... ")
-    Y = sp.loadtxt(get_dataset_path(dataset))
+
+def main(dataset: str = 'airq',
+         ticks: int = 100,
+         k: int = 5,
+         max_iter: int = 40,
+         lambdaI: float = 0.75,
+         lambdaAR: float = 0.75,
+         lambdaLag: float = 0.75,
+         lag_set=LAG_SET):
+
+    print(f"Starting TRMF on {dataset}, tick={ticks} ... ")
+
+    ticks = int(ticks)
+    k = int(k)
+    lambdaI = float(lambdaI)
+    lambdaAR = float(lambdaAR)
+    lambdaLag = float(lambdaLag)
+
+    Y = np.loadtxt(get_dataset_path(dataset), dtype=float)
+
+    Ymiss = Y.copy()
     # Y = Y[:-(7 * 24), :]
-    missing_block(Y, ticks)
+    missing_block(Ymiss, ticks)
 
-    lag_set = sp.array(list(range(1, 25)) + list(range(7 * 24, 8 * 24)), dtype=sp.uint32)
-    # lag_set = sp.array(list(range(1, 7 * 24 + 1)), dtype=sp.uint32)
-    k = 60
-    # lambdaI = 0.7
-    # lambdaAR = 125
-    # lambdaLag = 4
-    window_size = 24
-    nr_windows = 7
-    # max_iter = 40
     threads = 40
-    seed = 0
     missing = False
-    transform = True
-    # threshold=0.5
     verbose = True
 
-    metrics = trmf.rolling_validate(Y, lag_set, k, window_size, nr_windows, lambdaI, lambdaAR, lambdaLag,
-                                    max_iter=max_iter, threshold=threshold, transform=transform, threads=threads,
-                                    seed=seed, missing=missing, verbose=verbose)
+    start = perf_counter()
+
+    m0 = trmf.Model.initialize(Ymiss, lag_set, k, seed=0)
+    trmf.train(Ymiss, m0,
+               lambdaI=lambdaI,
+               lambdaAR=lambdaAR,
+               lambdaLag=lambdaLag,
+               max_iter=max_iter, missing=missing, verbose=verbose, threads=threads)
+
+    end = perf_counter()
+    runtime = end - start
+
+    Ynew = m0.W.dot(m0.H.T)
+    rmse = np.sqrt(np.mean(Ynew-Y)**2)
+
+    # metrics = trmf.rolling_validate(Y, lag_set, k, window_size, nr_windows, lambdaI, lambdaAR, lambdaLag,
+    #                                 max_iter=max_iter, threshold=threshold, transform=transform, threads=threads,
+    #                                 seed=seed, missing=missing, verbose=verbose)
     print("TRMF executed.")
-    return metrics.rmse
+    sql_insert(dataset, k, max_iter, lambdaI, lambdaAR, lambdaLag, runtime, rmse)
+    return rmse, runtime
 
 
 def missing_block(Y, ticks):
@@ -49,7 +73,6 @@ def missing_block(Y, ticks):
     replace = np.empty(block_size)
     replace[:] = 0
     Y[starting_index:(block_size + starting_index), 0] = replace
-
     return Y
 
 
@@ -60,6 +83,7 @@ def dataset2folder(dataset):
         return "drift"
     return dataset
 
+
 def get_dataset_path(dataset):
     datapath = os.path.join(__root__, "Datasets", "real_world")
     filename = f"{dataset}_normal.txt"
@@ -67,5 +91,25 @@ def get_dataset_path(dataset):
     return filepath
 
 
+def sql_insert(dataset: str,
+               k: int,
+               max_iter: int,
+               lambdaI: float,
+               lambdaAR: float,
+               lambdaLag: float,
+               runtime,
+               rmse):
+    db_path = os.path.join(__root__, 'Results')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    qry = "INSERT INTO TRMF (Dataset, K, Max_iter, LambdaI, LambdaAR, LambdaLag, Runtime, Rmse, Label)" \
+          f"VALUES ('{dataset}', {k}, {max_iter}, {lambdaI}, {lambdaAR}, {lambdaLag}, {runtime}, {rmse}, '')"
+    cursor.execute(qry)
+    conn.commit()
+    conn.close()
+
+
 if __name__ == "__main__":
-    main('airq', 100)
+    r, t = main(**dict(arg.split('=') for arg in sys.argv[2:]))
+    print(f"RMSE : {r}")
+    print(f"Runtime : {t}")

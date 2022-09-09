@@ -51,7 +51,6 @@ const option::Descriptor usage[] =
                 {LAMBDA_LAG, 0, "", "set-lambdaLag", option::Arg::Optional, " --set-lambdaLag \tSet the lambdaLag parameter"},
                 {DATASET, 0, "d", "dataset", option::Arg::Optional, "  --dataset -d \tSet the dataset to work on."},
                 {LABEL, 0, "l", "label", option::Arg::Optional, "  --label -d \tSet a label to recognize the run in the database."},
-                {TICK, 0, "t", "tick", option::Arg::Optional, "  --tick -t \tSet the blocksize (per mille)."},
                 {UNKNOWN, 0, "", "",     option::Arg::None, "\nExamples:\n"
                                                             "  example --unknown -- --this_is_no_option\n"
                                                             "  example -unk --plus -ppp file1 file2\n"},
@@ -88,12 +87,6 @@ int parse(int argc, char **argv, settings &set){
         set.algorithm = options[ALG].arg;
     else
         set.algorithm = "cd";
-
-    // tick setup
-    if (options[TICK])
-        set.tick = std::stoull(options[TICK].arg);
-    else
-        set.tick = 100;
 
     // Automatisation option
     if (options[AUTO])

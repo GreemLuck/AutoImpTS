@@ -5,7 +5,6 @@
 #include "parser.h"
 #include "sqlite3.h"
 #include "Database/SQL.h"
-#include "AutoParam/BayesOpt.h"
 
 using namespace std;
 using namespace arma;
@@ -21,12 +20,12 @@ int main(int argc, char **argv) {
         SuccessiveHalving(set);
         Database::sql_insert(set);
         printSettings(set);
-    } else if(set.autoH == "bayesopt") {
-        BayesOpt(set);
     } else {
         Performance::Start_Benchmark(set);
-        Database::sql_insert(set);
-        printSettings(set);
+        if(!(set.algorithm == "trmf")) {
+            Database::sql_insert(set);
+            printSettings(set);
+        }
     }
 
     return 0;
@@ -42,7 +41,6 @@ void printSettings(settings &set){
         cout << it->first << " : " << it->second << endl;
         it++;
     }
-    cout << "Ticks : " << set.tick << endl <<
-         "Runtime : " << set.runtime << endl <<
+    cout << "Runtime : " << set.runtime << endl <<
          "RMSE : " << set.rmse << endl;
 }

@@ -501,33 +501,6 @@ Algorithms/TKCM.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.s
 .PHONY : Algorithms/TKCM.cpp.s
 
-AutoParam/BayesOpt.o: AutoParam/BayesOpt.cpp.o
-
-.PHONY : AutoParam/BayesOpt.o
-
-# target to build an object file
-AutoParam/BayesOpt.cpp.o:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.o
-.PHONY : AutoParam/BayesOpt.cpp.o
-
-AutoParam/BayesOpt.i: AutoParam/BayesOpt.cpp.i
-
-.PHONY : AutoParam/BayesOpt.i
-
-# target to preprocess a source file
-AutoParam/BayesOpt.cpp.i:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.i
-.PHONY : AutoParam/BayesOpt.cpp.i
-
-AutoParam/BayesOpt.s: AutoParam/BayesOpt.cpp.s
-
-.PHONY : AutoParam/BayesOpt.s
-
-# target to generate assembly for a file
-AutoParam/BayesOpt.cpp.s:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.s
-.PHONY : AutoParam/BayesOpt.cpp.s
-
 AutoParam/SuccessiveHalving.o: AutoParam/SuccessiveHalving.cpp.o
 
 .PHONY : AutoParam/SuccessiveHalving.o
@@ -795,9 +768,6 @@ help:
 	@echo "... Algorithms/TKCM.o"
 	@echo "... Algorithms/TKCM.i"
 	@echo "... Algorithms/TKCM.s"
-	@echo "... AutoParam/BayesOpt.o"
-	@echo "... AutoParam/BayesOpt.i"
-	@echo "... AutoParam/BayesOpt.s"
 	@echo "... AutoParam/SuccessiveHalving.o"
 	@echo "... AutoParam/SuccessiveHalving.i"
 	@echo "... AutoParam/SuccessiveHalving.s"

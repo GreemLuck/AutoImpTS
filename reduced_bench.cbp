@@ -173,12 +173,6 @@
 		<Unit filename="/mnt/f/dev/reduced-bench/Algorithms/TKCM.h">
 			<Option target="reduced_bench"/>
 		</Unit>
-		<Unit filename="/mnt/f/dev/reduced-bench/AutoParam/BayesOpt.cpp">
-			<Option target="reduced_bench"/>
-		</Unit>
-		<Unit filename="/mnt/f/dev/reduced-bench/AutoParam/BayesOpt.h">
-			<Option target="reduced_bench"/>
-		</Unit>
 		<Unit filename="/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.cpp">
 			<Option target="reduced_bench"/>
 		</Unit>

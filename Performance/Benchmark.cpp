@@ -33,7 +33,7 @@ using namespace Algorithms;
 
 namespace Performance
 {
-
+void generateLatLongFile(std::string destination, arma::mat &mat);
 void verifyRecovery(arma::mat &mat)
 {
     for (uint64_t j = 0; j < mat.n_cols; ++j)
@@ -106,15 +106,13 @@ int64_t Recovery_TKCM(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, d;
 
-    if(params.find(Parameters::TKCM::TRUNCATION) != params.end())
-        truncation = params[Parameters::TKCM::TRUNCATION];
-    else
-        truncation = 1;
+    if(params.find(Parameters::TKCM::TRUNCATION) == params.end())
+        params[Parameters::TKCM::TRUNCATION] = 1;
+    truncation = params[Parameters::TKCM::TRUNCATION];
 
-    if(params.find(Parameters::TKCM::D) != params.end())
-        d = params[Parameters::TKCM::D];
-    else
-        d = 1;
+    if(params.find(Parameters::TKCM::D) == params.end())
+        d = params[Parameters::TKCM::D] = 1;
+    d = params[Parameters::TKCM::D];
 
     // Local
     int64_t result;
@@ -139,26 +137,22 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
 {
     double alpha, beta, winSize;
 
-    if(params.find(Parameters::ST_MVL::ALPHA) != params.end())
-        alpha = params[Parameters::ST_MVL::ALPHA];
-    else
-        alpha = 2.0;
+    if(params.find(Parameters::ST_MVL::ALPHA) == params.end())
+        params[Parameters::ST_MVL::ALPHA] = 2.0;
+    alpha = params[Parameters::ST_MVL::ALPHA];
 
-    if(params.find(Parameters::ST_MVL::GAMMA) != params.end())
-        beta = params[Parameters::ST_MVL::GAMMA];
-    else
-        beta = 0.85;
+    if(params.find(Parameters::ST_MVL::GAMMA) == params.end())
+        params[Parameters::ST_MVL::GAMMA] = 0.85;
+    beta = params[Parameters::ST_MVL::GAMMA];
 
-    if(params.find(Parameters::ST_MVL::WIN_SIZE) != params.end())
-        winSize = params[Parameters::ST_MVL::WIN_SIZE];
-    else
-        winSize = 7;
+    if(params.find(Parameters::ST_MVL::WIN_SIZE) == params.end())
+        params[Parameters::ST_MVL::WIN_SIZE] = 7;
+    winSize = params[Parameters::ST_MVL::WIN_SIZE];
 
     // Local
     int64_t result;
-    // TODO: implement correctly latlong argument by adding it before calling benchmark
     const std::string latlong = "latlong_placeholder.txt";
-
+    generateLatLongFile(latlong, mat);
     ST_MVL stmvl(mat, latlong, alpha, beta, winSize);
 
     std::chrono::steady_clock::time_point begin;
@@ -182,20 +176,20 @@ int64_t Recovery_SPIRIT(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, winSize, lambda;
 
-    if(params.find(Parameters::SPIRIT::TRUNCATION) != params.end())
+    if(params.find(Parameters::SPIRIT::TRUNCATION) == params.end())
+        truncation = params[Parameters::SPIRIT::TRUNCATION] = 3;
+    else
         truncation = params[Parameters::SPIRIT::TRUNCATION];
-    else
-        truncation = 3;
 
-    if(params.find(Parameters::SPIRIT::WIN_SIZE) != params.end())
+    if(params.find(Parameters::SPIRIT::WIN_SIZE) == params.end())
+        winSize = params[Parameters::SPIRIT::WIN_SIZE] = 6;
+    else
         winSize = params[Parameters::SPIRIT::WIN_SIZE];
-    else
-        winSize = 6;
 
-    if(params.find(Parameters::SPIRIT::LAMBDA) != params.end())
-        lambda = params[Parameters::SPIRIT::LAMBDA];
+    if(params.find(Parameters::SPIRIT::LAMBDA) == params.end())
+        lambda = params[Parameters::SPIRIT::LAMBDA] = 1;
     else
-        lambda = 1;
+        lambda = params[Parameters::SPIRIT::LAMBDA];
 
     // Local
     int64_t result;
@@ -473,13 +467,14 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &para
     return result;
 }
 
-void Recovery_TRMF(std::string &dataset, settings &set){
-    double max_iter, tolerance, lambdaI, lambdaAR, lambdaLag;
+// depreciated
+double Recovery_TRMF(std::string &dataset, settings &set, u_int64_t tick){
+    double max_iter, tolerance, lambdaI, lambdaAR, lambdaLag, rmse;
 
     max_iter = set.params.find(Parameters::TRMF::MAX_ITER) != set.params.end()
             ? set.params[Parameters::TRMF::MAX_ITER] : 40;
-    tolerance = set.params.find(Parameters::TRMF::TOLERANCE) != set.params.end()
-            ? set.params[Parameters::TRMF::TOLERANCE] : 0.5;
+/*    tolerance = set.params.find(Parameters::TRMF::TOLERANCE) != set.params.end()
+            ? set.params[Parameters::TRMF::TOLERANCE] : 0.5;*/
     lambdaI = set.params.find(Parameters::TRMF::LAMBDA_I) != set.params.end()
             ? set.params[Parameters::TRMF::LAMBDA_I] : 0.7;
     lambdaAR = set.params.find(Parameters::TRMF::LAMBDA_AR) != set.params.end()
@@ -487,9 +482,7 @@ void Recovery_TRMF(std::string &dataset, settings &set){
     lambdaLag = set.params.find(Parameters::TRMF::LAMBDA_LAG) != set.params.end()
             ? set.params[Parameters::TRMF::LAMBDA_LAG] : 4;
 
-    // Local
-    std::chrono::steady_clock::time_point begin;
-    std::chrono::steady_clock::time_point end;
+
 
     // Python interpreter
     Py_Initialize();
@@ -513,7 +506,7 @@ void Recovery_TRMF(std::string &dataset, settings &set){
 
     // Prepare args
     PyObject * Dataset = PyUnicode_FromString(dataset.c_str());
-    PyObject * Ticks = PyLong_FromLong(set.tick);
+    PyObject * Ticks = PyLong_FromLong(tick);
     PyObject * Max_Iter = PyLong_FromLong(max_iter);
     PyObject * Tolerance = PyFloat_FromDouble(tolerance);
     PyObject * LambdaI = PyFloat_FromDouble(lambdaI);
@@ -528,16 +521,14 @@ void Recovery_TRMF(std::string &dataset, settings &set){
     PyObject * Dict = PyModule_GetDict(Module);
     PyObject * Func = PyDict_GetItemString(Dict, "main");
 
-    begin = std::chrono::steady_clock::now();
     PyObject * Result = PyObject_CallObject(Func, Args);
     if(!Result){
         PyErr_Print();
         std::cerr << "Error during TRMF runtime" << std::endl;
     }
-    end = std::chrono::steady_clock::now();
 
     if(PyNumber_Check(Result))
-        set.rmse = PyFloat_AsDouble(Result);
+        rmse = PyFloat_AsDouble(Result);
     else
         PyErr_Print();
 
@@ -548,14 +539,38 @@ void Recovery_TRMF(std::string &dataset, settings &set){
 
     Py_Finalize();
 
-    set.runtime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-    std::cout << "Time(TRMF) : " << set.runtime << std::endl;
-
     set.params[Parameters::TRMF::MAX_ITER] = max_iter;
-    set.params[Parameters::TRMF::TOLERANCE] = tolerance;
+    // set.params[Parameters::TRMF::TOLERANCE] = tolerance;
     set.params[Parameters::TRMF::LAMBDA_I] = lambdaI;
     set.params[Parameters::TRMF::LAMBDA_AR] = lambdaAR;
     set.params[Parameters::TRMF::LAMBDA_LAG] = lambdaLag;
+    return rmse;
+}
+
+double Recovery_TRMF2(std::string &dataset, settings &set, u_int64_t tick){
+    double max_iter, k, lambdaI, lambdaAR, lambdaLag, rmse;
+
+    lambdaI = set.params.find(Parameters::TRMF::LAMBDA_I) != set.params.end()
+              ? set.params[Parameters::TRMF::LAMBDA_I] : 0.7;
+    lambdaAR = set.params.find(Parameters::TRMF::LAMBDA_AR) != set.params.end()
+               ? set.params[Parameters::TRMF::LAMBDA_AR] : 125;
+    lambdaLag = set.params.find(Parameters::TRMF::LAMBDA_LAG) != set.params.end()
+                ? set.params[Parameters::TRMF::LAMBDA_LAG] : 4;
+    k = set.params.find(Parameters::TRMF::K) != set.params.end()
+            ? set.params[Parameters::TRMF::K] : 5;
+
+    currentPath = std::filesystem::current_path();
+    std::ostringstream oss;
+    oss << "python3 " << currentPath << "/Algorithms/trmfpy.py dataset=" << set.dataset <<
+        " k=" << k <<
+        " lambdaI=" << lambdaI <<
+        " lambdaAR=" << lambdaAR <<
+        " lambdaLag=" << lambdaLag <<
+        " ticks=" << tick;
+    std::string cmd = oss.str();
+    std::cout << cmd << std::endl;
+    system(cmd.c_str());
+    return 0;
 }
 
 
@@ -623,6 +638,12 @@ void Start_Benchmark(settings &set){
     arma::mat mat;
     std::ifstream file;
 
+    // TODO: Remove this hardcoded list
+    size_t nticks = 8;
+    u_int64_t ticks[] = {100, 200, 300, 400, 500, 600, 700, 800};
+    u_int64_t runtimeSum = 0;
+    double rmseSum = 0;
+
     std::string dataFolder = "Datasets/real_world/";
     currentPath = std::filesystem::current_path();
 
@@ -631,7 +652,20 @@ void Start_Benchmark(settings &set){
     std::string filePath = currentPath + "/" + dataFolder + dataFdName + "/" + fileName;
 
     if(set.algorithm == "trmf"){
-        Recovery_TRMF(set.dataset, set);
+        for(auto t: ticks) {
+            // Local
+            std::chrono::steady_clock::time_point begin;
+            std::chrono::steady_clock::time_point end;
+
+            begin = std::chrono::steady_clock::now();
+            rmseSum += Recovery_TRMF2(set.dataset, set, t);
+            end = std::chrono::steady_clock::now();
+
+            runtimeSum += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+            std::cout << "Time(TRMF) : " << set.runtime << std::endl;
+        }
+        set.rmse = rmseSum / (double) nticks;
+        set.runtime = runtimeSum / nticks;
         return;
     }
 
@@ -641,27 +675,32 @@ void Start_Benchmark(settings &set){
     if (file.is_open()) {
         mat.load(file, arma::raw_ascii);
     } else {
-        std::cerr << "can't open the fucking file" << std::endl;
+        std::cerr << "can't open the dataset file" << std::endl;
         exit(EXIT_FAILURE);
     }
     file.close();
 
     // Replace real data with nan
-    u_int64_t column = 0;
-    u_int64_t startingIndex = (u_int64_t) (mat.n_rows * 0.05);
-    u_int64_t blockSize = mat.n_rows * set.tick / 1000;
-    MissingBlock missing(column, startingIndex, blockSize, mat);
+    for(auto t : ticks){
+        arma::mat matcopy = mat;
+        u_int64_t column = 0;
+        u_int64_t startingIndex = (u_int64_t) (matcopy.n_rows * 0.05);
+        u_int64_t blockSize = mat.n_rows * t / 1000;
+        MissingBlock missing(column, startingIndex, blockSize, matcopy);
 
-    arma::vec reff = missing.extractBlock();
-    arma::vec missingVector(blockSize);
-    missingVector.fill(NAN);
-    missing.imputeBlock(missingVector);
+        arma::vec reff = missing.extractBlock();
+        arma::vec missingVector(blockSize);
+        missingVector.fill(NAN);
+        missing.imputeBlock(missingVector);
 
-    // Recover the matrix and get metrics
-    set.runtime = Performance::Recovery(mat, set.algorithm, set.params);
+        // Recover the matrix and get metrics
+        runtimeSum += Performance::Recovery(matcopy, set.algorithm, set.params);
 
-    arma::vec recovered = missing.extractBlock();
-    set.rmse = getRMSE_Vec(reff, recovered, missing.blockSize);
+        arma::vec recovered = missing.extractBlock();
+        rmseSum += getRMSE_Vec(reff, recovered, missing.blockSize);
+    }
+    set.rmse = rmseSum / (double) nticks;
+    set.runtime = runtimeSum / nticks;
 }
 
 double getRMSE_Vec(arma::vec &ref, arma::vec &forecast, int64_t blockSize){
@@ -674,6 +713,34 @@ double getRMSE_Vec(arma::vec &ref, arma::vec &forecast, int64_t blockSize){
     double mse = square_sum / (double)blockSize;
     double rmse = sqrt(mse);
     return rmse;
+}
+
+void generateLatLongFile(std::string destination, arma::mat &mat){
+    int n_rows = mat.n_rows;
+    int n_col = mat.n_cols;
+
+    std::vector<std::string> sensors;
+
+    double lat = 39.954047;
+    double lng = 116.348991;
+
+    for(int i = 0; i < n_col; i++){
+        int sensorId = 1000 + i;
+        sensors.push_back(std::to_string(sensorId) + ","
+                        + std::to_string(lat) + ","
+                        + std::to_string(lng));
+
+        if(i % 2 == 0)
+            lat += 0.01;
+        else
+            lng += 0.01;
+    }
+
+    std::ofstream file(destination);
+    file << "sensor_id,latitude,longitude" << std::endl;
+    for(auto sensor : sensors){
+        file << sensor << std::endl;
+    }
 }
 
 } // namespace Performance

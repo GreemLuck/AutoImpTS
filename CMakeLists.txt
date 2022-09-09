@@ -43,7 +43,7 @@ add_executable(
         Stats/Correlation.cpp Stats/Correlation.h
         Algebra/RSVD.cpp Algebra/RSVD.h
         AutoParam/SuccessiveHalving.cpp AutoParam/SuccessiveHalving.h
-        Database/SQL.cpp Database/SQL.h AutoParam/BayesOpt.cpp AutoParam/BayesOpt.h)
+        Database/SQL.cpp Database/SQL.h)
 target_include_directories(reduced_bench PUBLIC ${ARMADILLO_INCLUDE_DIR} ${Python3_INCLUDE_DIRS} include)
 target_link_libraries(reduced_bench ${ARMADILLO_LIBRARIES} ${Python3_LIBRARIES} -lmlpack -ldl)
 

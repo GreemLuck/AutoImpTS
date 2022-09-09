@@ -13,7 +13,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/reduced_bench.dir/Algorithms/SVT.cpp.o"
   "CMakeFiles/reduced_bench.dir/Algorithms/SoftImpute.cpp.o"
   "CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.o"
-  "CMakeFiles/reduced_bench.dir/AutoParam/BayesOpt.cpp.o"
   "CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o"
   "CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o"
   "CMakeFiles/reduced_bench.dir/MathIO/MatrixReadWrite.cpp.o"
