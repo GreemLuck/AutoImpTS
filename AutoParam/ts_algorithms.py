@@ -11,18 +11,18 @@ EXE = "reduced_bench"
 sys.path.append(os.path.join(ROOT_FOLDER, "Algorithms"))
 import trmfpy
 
-# CDREC_BOUNDS = {"truncation": (1, 10), "tolerance": (0, 1), "max_iter": (10, 1000)}
-CDREC_BOUNDS = {"truncation": (1, 10)}
+CDREC_BOUNDS = {"truncation": (1, 10), "tolerance": (1, 10), "max_iter": (10, 1000)}
+# CDREC_BOUNDS = {"truncation": (1, 10)}
 DYNAMMO_BOUNDS = {"truncation": (1, 10), "max_iter": (10, 200)}
 TKCM_BOUNDS = {"truncation": (1, 10), "d": (0, 10)}
-ST_MVL_BOUNDS = {"aplha": (0, 1), "gamma": (0, 1), "win_size": (0, 100)}
+ST_MVL_BOUNDS = {"alpha": (0, 5), "gamma": (0, 1), "win_size": (1, 100)}
 SPIRIT_BOUNDS = {"truncation": (1,10), "win_size": (0, 100), "lambda": (0,1)}
 GROUSE_BOUNDS = {"truncation": (1, 10)}
-NNMF_BOUNDS = {"tolerance": (0, 1), "truncation": (1, 10), "max_iter": (10, 1000)}
-SVT_BOUNDS = {"tolerance": (0, 1), "tauscale": (0, 1), "max_iter": (10, 1000)}
-ROSL_BOUDNS = {"tolerance": (0, 1), "truncation": (0, 1), "max_iter": (10, 1000)}
-ITERSVD_BOUNDS = {"tolerance": (0, 1), "truncation": (0, 1), "max_iter": (10, 1000)}
-SOFTIMP_BOUNDS = {"tolerance": (0, 1), "truncation": (0, 1), "max_iter": (10, 1000)}
+NNMF_BOUNDS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
+SVT_BOUNDS = {"tolerance": (1, 10), "tauscale": (0, 1), "max_iter": (10, 1000)}
+ROSL_BOUDNS = {"tolerance": (1, 10), "truncation": (0, 1), "max_iter": (10, 1000)}
+ITERSVD_BOUNDS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
+SOFTIMP_BOUNDS = {"tolerance": (1, 10), "truncation": (0, 1), "max_iter": (10, 1000)}
 TRMF_BOUNDS = {"lambdaI": (0, 1), "lambdaLag": (0, 1), "lambdaAR": (0, 1)}
 
 
@@ -68,7 +68,7 @@ def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False,
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM Dynnamo "
+    rmse = cursor.execute("SELECT Rmse, Runtime FROM Dynammo "
                           "WHERE Truncation=? "
                           "AND Max_iter=? "
                           "AND Label=?"

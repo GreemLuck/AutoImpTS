@@ -51,9 +51,10 @@ def sh_execute(algorithm=None, dataset=None,
     competitors = []
     for v in sample_zip:
         p = dict(zip(distribution_keys,v))
-        competitors.append(([], p))
+        competitors.append(([], p, []))
         # the first element of the tuples are rmse history
-        # the seconde is the parameters values
+        # the second is the parameters values
+        # the third is rmse history after elimination (for checking the correctness of the run)
 
     # setting up variables
     alg, _ = ts_algorithms.get_algorithm(algorithm)
@@ -66,8 +67,13 @@ def sh_execute(algorithm=None, dataset=None,
     while n_competitors > 1:
         resource_lst.append(resource)
         for c in tqdm(competitors[:n_competitors]):
-            rmse, _ = alg(dataset=dataset, **c[1], **{resource_name: resource})
+            print(c[1])
+            rmse, _ = alg(dataset=dataset, verbose=True, **c[1], **{resource_name: resource})
             c[0].append(rmse)
+        for c in tqdm(competitors[n_competitors:]):
+            print(c[1])
+            rmse, _ = alg(dataset=dataset, **c[1], **{resource_name: resource})
+            c[2].append(rmse)
         competitors = sorted(competitors, key=lambda r: r[0][-1])
         resource = math.floor(resource*eta)
         n_competitors = math.floor(n_competitors/2)
@@ -90,24 +96,33 @@ def sh_plot(competitors, algorithm=None, dataset=None, resources=[], resource_na
     colormap = plt.cm.get_cmap("Spectral")
     colors = [colormap(i) for i in np.linspace(0, 1, size)]
     ax.set_prop_cycle('color', colors)
+    ax.set_facecolor('#DCDCDC')
 
     for c in competitors:
         c_label = '\n'.join([f"{key}={value:.2f}" for key,value in c[1].items()]).rstrip()
         y = c[0]
         x = range(1, len(y)+1)
-        plt.plot(x, y, 'o-', label=c_label)
+
+        color=next(ax._get_lines.prop_cycler)['color']
+        plt.plot(x, y, 'o-', label=c_label, color=color)
+
+        if len(c[2])>0:
+            y2 = [c[0][-1]] + c[2]
+            x2 = range(len(y), len(y) + len(y2))
+            plt.plot(x2, y2, 'o--', color=color)
 
     plt.legend(prop={'size': 9})
     plt.xticks(range(1, n_rounds+1), labels=x_tick_labels, rotation=30)
     plt.ylabel("rmse")
+    plt.ylim(0,1)
     plt.title(f"Successive Halving\nalgorithm: {algorithm}\nsample_size: {size}")
 
-    plt.savefig(f"sh_{algorithm}_{dataset}_smpl{size}")
+    plt.savefig(f"Graphs/sh/sh_{algorithm}_{dataset}_smpl{size}")
     print(f"Figure saved as sh_{algorithm}_{dataset}_smpl{size}.png")
 
 
 if __name__ == "__main__":
-    sh_execute(algorithm='stmvl', dataset='airq', sample_size=12,
-               distribution={'alpha': (0,1,0.05), 'gamma':(0,1,0.05)},
-               resource_name='win_size',
+    sh_execute(algorithm='stmvl', dataset='airq', sample_size=9,
+               distribution={'alpha': (0,1,0.05), 'gamma': (0,1,0.05)},
+               resource_name='max_iter',
                resource_max=100, resource_min=5)

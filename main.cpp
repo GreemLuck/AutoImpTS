@@ -21,7 +21,11 @@ int main(int argc, char **argv) {
         Database::sql_insert(set);
         printSettings(set);
     } else {
-        Performance::Start_Benchmark(set);
+        if(!Database::is_in_db(set))
+        {
+            Performance::Start_Benchmark(set);
+            Database::sql_insert(set);
+        }
         if(!(set.algorithm == "trmf")) {
             Database::sql_insert(set);
             printSettings(set);

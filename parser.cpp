@@ -76,6 +76,9 @@ int parse(int argc, char **argv, settings &set){
     for (int i = 0; i < parse.nonOptionsCount(); ++i)
         std::cout << "Non-option #" << i << ": " << parse.nonOption(i) << "\n";
 
+    set.rmse =0;
+    set.runtime = 0;
+
     // dataset setup
     if (options[DATASET])
         set.dataset = options[DATASET].arg;

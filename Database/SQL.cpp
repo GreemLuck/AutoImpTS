@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <sstream>
+#include <cstring>
 
 #include "SQL.h"
 #include "sqlite3.h"
@@ -10,12 +11,23 @@
 using namespace std;
 namespace Database {
 
-static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+static int callback(void *set, int argc, char **argv, char **azColName) {
     int i;
+    settings *set_ptr = static_cast<settings *>(set);
     for(i = 0; i<argc; i++) {
         printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        if(strcmp(azColName[i], "Rmse") == 0) {
+            double v = stod(argv[i]);
+            set_ptr->rmse = v;
+        }
+        if(strcmp(azColName[i], "Runtime") == 0) {
+            int v = stoi(argv[i]);
+            set_ptr->runtime = v;
+        }
     }
     printf("\n");
+
+
     return 0;
 }
 
@@ -68,7 +80,7 @@ void sql_insert(settings &set){
     paramsNames = streamKeys.str();
     paramsValues = streamValues.str();
     genericHeader = "Dataset,";
-    resultHeader = "Runtime,Rmse,Label";
+    resultHeader = "Runtime,Rmse,Label,Runs";
 
     // Get the table name
     table = GetTableName(set.algorithm);
@@ -90,9 +102,10 @@ void sql_insert(settings &set){
                  "VALUES('" << set.dataset << "',"  << paramsValues << set.runtime <<
                  "," << set.rmse;
     if(set.label.empty())
-        stringStream << ",'');";
+        stringStream << ",''";
     else
-        stringStream << ",'" << set.label << "');";
+        stringStream << ",'" << set.label << "'";
+    stringStream << ",'" << set.runs << "');";
 
     const string& tmp = stringStream.str();
     const char *sql = tmp.c_str();
@@ -127,14 +140,34 @@ bool is_in_db(settings &set){
     // Preparing the statement
     std::ostringstream stmt;
     stmt << "SELECT Rmse, Runtime FROM " << GetTableName(set.algorithm) << " WHERE "
-        << "Dataset=" << set.dataset << " AND ";
-    map<string, double>::iterator it;
-    for(it = set.params.begin(); std::distance(it, set.params.end()) > 1; it++){
-        stmt << it->first << "=" << it->second << " AND ";
+        << "Dataset='" << set.dataset << "' AND ";
+    map<string, double>::iterator it = set.params.begin();
+    while(it != set.params.end()){
+        if(std::distance(it, set.params.end()) == 1)
+            stmt << it->first << "=" << it->second << ";";
+        else
+            stmt << it->first << "=" << it->second << " AND ";
+        it++;
     }
-    it++;
-    stmt << it->first << "=" << it->second << ";";
 
+    const string& tmp = stmt.str();
+    const char *sql = tmp.c_str();
 
+    cout << sql << endl;
+
+    rc = sqlite3_exec(db ,sql, callback, &set, &zErrMsg);
+    if(rc != SQLITE_OK){
+        cerr << "SQL error: " << zErrMsg << endl;
+        sqlite3_free(zErrMsg);
+    } else {
+        cout << "Done." << endl;
+    }
+    sqlite3_close(db);
+
+    if(set.rmse > 0 && set.runtime > 0){
+        cout << "Data already in databse.\nGetting results ... " << endl;
+        return true;
+    }
+    return false;
 }
 };

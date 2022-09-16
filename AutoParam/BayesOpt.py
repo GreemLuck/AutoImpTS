@@ -43,7 +43,6 @@ def tkcm(truncation, d):
 
 def stmvl(alpha, gamma, win_size):
     rmse, runtime = ts_algorithms.stmvl(alpha, gamma, win_size,
-                                        tick=TICKS,
                                         verbose=VERBOSE,
                                         dataset=DATASET,
                                         label=LABEL)
@@ -66,36 +65,42 @@ def grouse(truncation):
 
 
 def nnmf(truncation, tolerance, max_iter):
+    tolerance = 1.*10**-int(tolerance)
     rmse, runtime = ts_algorithms.nnmf(truncation, tolerance, max_iter,
                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def svt(tolerance, tauscale, max_iter):
+    tolerance = 1.*10**-int(tolerance)
     rmse, runtime = ts_algorithms.svt(tolerance, tauscale, max_iter,
-                                      tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                      verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def rosl(truncation, tolerance, max_iter):
+    tolerance = 1.*10**-int(tolerance)
     rmse, runtime = ts_algorithms.rosl(truncation, tolerance, max_iter,
                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def itersvd(truncation, tolerance, max_iter):
+    tolerance = 1.*10**-int(tolerance)
     rmse, runtime = ts_algorithms.itersvd(truncation, tolerance, max_iter,
                                           tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def softimp(truncation, tolerance, max_iter):
+    tolerance = 1.*10**-int(tolerance)
     rmse, runtime = ts_algorithms.softimp(truncation, tolerance, max_iter,
                                           tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
-def cdrec(truncation, tolerance=1e-5, max_iter=100):
+def cdrec(truncation, tolerance=5, max_iter=100):
+    tolerance = 1.*10**-int(tolerance)
     rmse, runtime = ts_algorithms.cdrec(truncation, tolerance, max_iter,
                                         tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse

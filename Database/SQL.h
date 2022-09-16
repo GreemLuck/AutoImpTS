@@ -11,7 +11,7 @@
 namespace Database {
 
 void sql_insert(settings &set);
-
+bool is_in_db(settings &set);
 };
 
 

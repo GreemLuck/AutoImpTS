@@ -16,6 +16,7 @@ struct settings {
     u_int64_t runtime;
     double rmse;
     std::string label;
+    std::string runs;
 };
 
 struct cd_settings : settings {

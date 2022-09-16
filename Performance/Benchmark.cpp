@@ -245,20 +245,17 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::map<std::string, double> &params)
     {
         double truncation, threshold, maxIter;
 
-        if(params.find(Parameters::NNMF::TRUNCATION) != params.end())
-            truncation = params[Parameters::NNMF::TRUNCATION];
-        else
-            truncation = 3;
+        if(params.find(Parameters::SVD::TRUNCATION) == params.end())
+            params[Parameters::SVD::TRUNCATION] = 3;
+        truncation = params[Parameters::SVD::TRUNCATION];
 
-        if(params.find(Parameters::NNMF::TOLERANCE) != params.end())
-            threshold = params[Parameters::NNMF::TOLERANCE];
-        else
-            threshold = 1e-6;
+        if(params.find(Parameters::CD::TOLERANCE) == params.end())
+            params[Parameters::CD::TOLERANCE] = 1e-6;
+        threshold = params[Parameters::CD::TOLERANCE];
 
-        if(params.find(Parameters::NNMF::MAX_ITER) != params.end())
-            maxIter = params[Parameters::NNMF::MAX_ITER];
-        else
-            maxIter = 100;
+        if(params.find(Parameters::CD::MAX_ITER) == params.end())
+            params[Parameters::CD::MAX_ITER] = 100;
+        maxIter = params[Parameters::CD::MAX_ITER];
 
         // Local
         int64_t result;
@@ -401,20 +398,18 @@ int64_t Recovery_IterativeSVD(arma::mat &mat, std::map<std::string, double> &par
 {
     double truncation, threshold, maxIter;
 
-    if(params.find(Parameters::SVD::TRUNCATION) != params.end())
-        truncation = params[Parameters::SVD::TRUNCATION];
-    else
-        truncation = 3;
+    if(params.find(Parameters::SVD::TRUNCATION) == params.end())
+        params[Parameters::SVD::TRUNCATION] = 3;
+    truncation = params[Parameters::SVD::TRUNCATION];
 
-    if(params.find(Parameters::SVD::TOLERANCE) != params.end())
-        threshold = params[Parameters::SVD::TOLERANCE];
-    else
-        threshold = 1e-6;
+    if(params.find(Parameters::SVD::TOLERANCE) == params.end())
+        params[Parameters::SVD::TOLERANCE] = 1e-6;
+    threshold = params[Parameters::SVD::TOLERANCE];
 
-    if(params.find(Parameters::SVD::MAX_ITER) != params.end())
-        maxIter = params[Parameters::SVD::MAX_ITER];
-    else
-        maxIter = 100;
+    if(params.find(Parameters::SVD::MAX_ITER) == params.end())
+        params[Parameters::SVD::MAX_ITER] = 100;
+    maxIter = params[Parameters::SVD::MAX_ITER];
+
     // Local
     int64_t result;
 
@@ -641,6 +636,8 @@ void Start_Benchmark(settings &set){
     // TODO: Remove this hardcoded list
     size_t nticks = 8;
     u_int64_t ticks[] = {100, 200, 300, 400, 500, 600, 700, 800};
+    std::vector<u_int64_t> runtimes;
+    std::vector<double> rmses;
     u_int64_t runtimeSum = 0;
     double rmseSum = 0;
 
@@ -653,19 +650,32 @@ void Start_Benchmark(settings &set){
 
     if(set.algorithm == "trmf"){
         for(auto t: ticks) {
+            uint64_t rmse;
+            double runtime;
             // Local
             std::chrono::steady_clock::time_point begin;
             std::chrono::steady_clock::time_point end;
 
             begin = std::chrono::steady_clock::now();
-            rmseSum += Recovery_TRMF2(set.dataset, set, t);
+            rmse = Recovery_TRMF2(set.dataset, set, t);
             end = std::chrono::steady_clock::now();
 
-            runtimeSum += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+            runtime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             std::cout << "Time(TRMF) : " << set.runtime << std::endl;
+
+            runtimes.push_back(runtime);
+            rmses.push_back(rmse);
+            rmseSum += rmse;
+            runtimeSum += runtime;
         }
         set.rmse = rmseSum / (double) nticks;
         set.runtime = runtimeSum / nticks;
+
+        std::ostringstream runsString;
+        for(int i = 0; i<rmses.size(); i++){
+            runsString << ticks[i] << "," << rmses[i] << "," << runtimes[i] << "\n";
+        }
+        std::cout << runsString.str() << std::endl;
         return;
     }
 
@@ -682,6 +692,8 @@ void Start_Benchmark(settings &set){
 
     // Replace real data with nan
     for(auto t : ticks){
+        uint64_t runtime;
+        double rmse;
         arma::mat matcopy = mat;
         u_int64_t column = 0;
         u_int64_t startingIndex = (u_int64_t) (matcopy.n_rows * 0.05);
@@ -694,13 +706,25 @@ void Start_Benchmark(settings &set){
         missing.imputeBlock(missingVector);
 
         // Recover the matrix and get metrics
-        runtimeSum += Performance::Recovery(matcopy, set.algorithm, set.params);
+        runtime = Performance::Recovery(matcopy, set.algorithm, set.params);
 
         arma::vec recovered = missing.extractBlock();
-        rmseSum += getRMSE_Vec(reff, recovered, missing.blockSize);
+        rmse = getRMSE_Vec(reff, recovered, missing.blockSize);
+
+        runtimes.push_back(runtime);
+        rmses.push_back(rmse);
+        rmseSum += rmse;
+        runtimeSum += runtime;
     }
     set.rmse = rmseSum / (double) nticks;
     set.runtime = runtimeSum / nticks;
+
+    std::ostringstream runsString;
+    for(int i = 0; i<rmses.size(); i++){
+        runsString << ticks[i] << "," << rmses[i] << "," << runtimes[i] << "\n";
+    }
+    std::cout << runsString.str() << std::endl;
+    set.runs =  runsString.str();
 }
 
 double getRMSE_Vec(arma::vec &ref, arma::vec &forecast, int64_t blockSize){

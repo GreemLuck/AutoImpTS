@@ -13,6 +13,7 @@ CREATE TABLE CDREC (
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
 );
 
@@ -23,6 +24,7 @@ CREATE TABLE Dynammo (
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Truncation, Max_iter, Label)
 );
 
@@ -33,6 +35,7 @@ CREATE TABLE TKCM (
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Truncation, d, Label)
 );
 
@@ -44,6 +47,7 @@ CREATE TABLE ST_MVL(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Alpha, Gamma, Win_Size, Label)
 );
 
@@ -55,6 +59,7 @@ CREATE TABLE Spirit(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Truncation, Lambda, Win_Size, Label)
 );
 
@@ -64,6 +69,7 @@ CREATE TABLE Grouse(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Truncation, Label)
 );
 
@@ -75,6 +81,7 @@ CREATE TABLE NNMF(
      Runtime     INT     NOT NULL,
      Rmse        REAL    NOT NULL,
      Label       TEXT   NOT NULL,
+     Runs        TEXT,
      PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
 );
 
@@ -86,6 +93,7 @@ CREATE TABLE SVT(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Tauscale, Tolerance, Max_iter, Label)
 );
 
@@ -97,6 +105,7 @@ CREATE TABLE ROSL(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
 );
 
@@ -108,6 +117,7 @@ CREATE TABLE IterSVD(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
 );
 
@@ -119,6 +129,7 @@ CREATE TABLE SoftImpute(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
 );
 
@@ -132,6 +143,7 @@ CREATE TABLE TRMF(
     Runtime     INT     NOT NULL,
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
+    Runs        TEXT,
     PRIMARY KEY(Dataset, K, Max_iter, LambdaAR, LambdaI, LambdaLag, Label)
 );
 
