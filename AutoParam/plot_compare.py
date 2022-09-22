@@ -1,32 +1,30 @@
 import sqlite3
 import matplotlib.pyplot as plt
 import numpy as np
+import BayesOpt
+import ts_algorithms
+import plotSH
+import random_search
+import random
 
-dataset = "airq"
-params_bench = {"truncation":3,
-                "max_iter":100,
-                "tolerance":1e-6}
-params_sh = {"truncation":1,
-             "max_iter":100,
-             "tolerance":1e-6}
-params_bayes = {"truncation":1,
-                "max_iter":275,
-                "tolerance":1e-8}
+alg_name = 'rosl'
+dataset = "chlorine"
+default_value = {"truncation":3,
+                 "max_iter": 100,
+                 "tolerance": 1e-6}
 
-def getdata(params):
-    db_path = "Results"
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    qry = f"SELECT Runs FROM NNMF " \
-          f"WHERE Truncation={params['truncation']} " \
-          f"AND Max_Iter={params['max_iter']} " \
-          f"AND Tolerance={params['tolerance']} " \
-          f"AND Dataset='{dataset}'"
-    cursor.execute(qry)
-    print(qry)
-    rows, = cursor.fetchone()
+bounds_sh = {"truncation":(1,10,1)}
+sample_size = 9
+do_sh = True
 
-    rows = rows.split("\n")
+bounds_bayes = {"truncation":(1,10), "max_iter":(50, 400), "tolerance":(0,10)}
+exploration = 5
+exploitation = 10
+
+random.seed(2)
+
+def getdata(runs):
+    rows = runs.split("\n")
     rows = [x.split(",") for x in rows]
     ticks, rmses, runtimes = list(zip(*rows[:-1]))
     ticks = [int(x) for x in ticks]
@@ -34,36 +32,45 @@ def getdata(params):
     runtimes = [int(x) for x in runtimes]
     return [ticks, rmses, runtimes]
 
-def setax(ax, x, y, setlabel=False, params=None, name=''):
-    if setlabel:
-        label = f"{name}\ntruncation: {params['truncation']}"
-        ax.plot(x, y, "o-", label=label)
-    else:
-        label = ''
+def plot_data(axes, ticks, rmses, runtimes, params, name='NoName'):
+    ax_rmse, ax_runtime = axes
+    str_params = '\n'.join([key + ": " + str(value) for key, value in params.items()])
+    ax_rmse.plot(ticks, rmses, "o-", label=f"{name}\n" + str_params)
+    ax_runtime.plot(ticks, runtimes, "o-", label=f"{name}")
 
-def main():
-    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 6))
-    ticks, rmses_bench, runtimes_bench = getdata(params_bench)
-    _, rmses_sh, runtimes_sh = getdata(params_sh)
-    _, rmses_bayes, runtimes_bayes = getdata(params_bayes)
+def main(alg_name='cd', dataset='airq'):
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 8), dpi=200)
+    alg_func, _ = ts_algorithms.get_algorithm(alg_name)
 
-    ax1.plot(ticks, rmses_bench, "o-", label=f"bench\n"
-                                             f"truncation: {params_bench['truncation']}\n"
-                                             f"max_iter: {params_bench['max_iter']}\n"
-                                             f"tolerance: {params_bench['tolerance']}")
-    ax2.plot(ticks, runtimes_bench, "o-", label=f"bench")
+    # Control (default values)
+    _, _, runs, params = alg_func(dataset=dataset, verbose=True)
+    ticks, rmses, runtimes = getdata(runs)
+    plot_data((ax1,  ax2), ticks, rmses, runtimes, params, name="Default")
 
-    ax1.plot(ticks, rmses_sh, "o-", label=f"sh\n"
-                                          f"truncation: {params_sh['truncation']}\n"
-                                          f"max_iter: {params_sh['max_iter']}\n"
-                                          f"tolerance: {params_sh['tolerance']}")
-    ax2.plot(ticks, runtimes_sh, "o-", label=f"sh")
+    # Successive Halving (if available)
+    if do_sh:
+        result = plotSH.sh_execute(algorithm=alg_name, dataset=dataset, sample_size=sample_size,
+                                   distribution=bounds_sh,
+                                   resource_name='max_iter',
+                                   resource_max=100, resource_min=5, keep_losers=False)
+        _, _, runs, params = alg_func(**result, dataset=dataset, verbose=True)
+        ticks, rmses, runtimes = getdata(runs)
+        plot_data((ax1,  ax2), ticks, rmses, runtimes, params, name="SuccessiveH")
 
-    ax1.plot(ticks, rmses_bayes, "o-", label=f"bayes\n"
-                                             f"truncation: {params_bayes['truncation']}\n"
-                                             f"max_iter: {params_bayes['max_iter']}\n"
-                                             f"tolerance: {params_bayes['tolerance']}")
-    ax2.plot(ticks, runtimes_bayes, "o-", label=f"bayes")
+    # BayesOpt
+    result = BayesOpt.main(alg_name, dataset=dataset, exploration=5, exploitation=7, bounds=bounds_bayes)
+    _, _, runs, params = alg_func(**result["params"], dataset=dataset, verbose=True)
+    ticks, rmses, runtimes = getdata(runs)
+    plot_data((ax1,  ax2), ticks, rmses, runtimes, params, name="Bayes")
+
+    # Random Search
+    result = random_search.rs_execute(algorithm=alg_name, dataset=dataset, sample_size=sample_size,
+                           distribution=bounds_sh)
+    _, _, runs, params = alg_func(**result, dataset=dataset, verbose=True)
+    print(runs)
+    print(params)
+    ticks, rmses, runtimes = getdata(runs)
+    plot_data((ax1,  ax2), ticks, rmses, runtimes, params, name="Random Search")
 
     ax1.set_title("rmse")
     ax1.set_xlabel("missing block size (permil)")
@@ -72,12 +79,33 @@ def main():
     ax2.set_title("runtime")
     ax2.set_xlabel("missing block size (permil)")
     ax2.set_ylabel("runtime (μs)")
-    fig.suptitle("NNMF comparison between benchmark parameters and autoparametrization algorithms parameters\n"
-                 f"({dataset})")
+    fig.suptitle(f"Algorithm: {alg_name}\n"
+                 f"Dataset: {dataset}\n"
+                 f"Comparing the best hyperparameter set of each autoparam algorithms")
     ax1.legend()
     ax2.legend()
     fig.tight_layout()
-    plt.savefig(f"Graphs/compare/nnmf_compare_{dataset}")
+    fig.savefig(f"Graphs/compare/{alg_name}_compare_{dataset}")
+    print(f"Saved in Graphs/compare/{alg_name}_compare_{dataset}")
+
+def bayes_example():
+    result = BayesOpt.main("cd")
+    alg, _ = ts_algorithms.get_algorithm("cd")
+    rmse, runtime, runs, *_ = alg(**result["params"], verbose=True)
+    print(rmse)
+    print(runtime)
+    print(runs)
+
+def sh_example():
+    result = plotSH.sh_execute(algorithm='cd', dataset='airq', sample_size=9,
+                               distribution={'truncation': (1,10,1)},
+                               resource_name='max_iter',
+                               resource_max=100, resource_min=5, keep_losers=False)
+    alg, _ = ts_algorithms.get_algorithm("cd")
+    rmse, runtime, runs, *_ = alg(**result, verbose=True)
+    print(rmse)
+    print(runtime)
+    print(runs)
 
 if __name__ == "__main__":
-    main()
+    main(alg_name=alg_name, dataset=dataset)

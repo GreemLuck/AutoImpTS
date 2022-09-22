@@ -140,7 +140,7 @@ bool is_in_db(settings &set){
     // Preparing the statement
     std::ostringstream stmt;
     stmt << "SELECT Rmse, Runtime FROM " << GetTableName(set.algorithm) << " WHERE "
-        << "Dataset='" << set.dataset << "' AND ";
+        << "Dataset='" << set.dataset << "' AND Label='" << set.label << "' AND ";
     map<string, double>::iterator it = set.params.begin();
     while(it != set.params.end()){
         if(std::distance(it, set.params.end()) == 1)

@@ -20,9 +20,9 @@ SPIRIT_BOUNDS = {"truncation": (1,10), "win_size": (0, 100), "lambda": (0,1)}
 GROUSE_BOUNDS = {"truncation": (1, 10)}
 NNMF_BOUNDS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
 SVT_BOUNDS = {"tolerance": (1, 10), "tauscale": (0, 1), "max_iter": (10, 1000)}
-ROSL_BOUDNS = {"tolerance": (1, 10), "truncation": (0, 1), "max_iter": (10, 1000)}
+ROSL_BOUDNS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
 ITERSVD_BOUNDS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
-SOFTIMP_BOUNDS = {"tolerance": (1, 10), "truncation": (0, 1), "max_iter": (10, 1000)}
+SOFTIMP_BOUNDS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
 TRMF_BOUNDS = {"lambdaI": (0, 1), "lambdaLag": (0, 1), "lambdaAR": (0, 1)}
 
 
@@ -68,14 +68,14 @@ def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False,
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM Dynammo "
+    rmse = cursor.execute("SELECT Rmse, Runtime, Runs FROM Dynammo "
                           "WHERE Truncation=? "
                           "AND Max_iter=? "
                           "AND Label=?"
                           "AND Dataset=?"
                           , (truncation, max_iter, label, dataset)).fetchone()
 
-    return rmse[0], rmse[1]
+    return rmse[0], rmse[1], rmse[2]
 
 
 def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label = "tkcm-bayes"):
@@ -208,9 +208,13 @@ def grouse(truncation=3, tick=100, dataset='airq', verbose=False, label = "grous
 def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "nnmf-bayes"):
     alg = "nnmf"
 
+    tol_return = tolerance
+
     truncation = int(truncation)
     tolerance = f"{tolerance:.15f}"
     max_iter = int(max_iter)
+
+    params = {'truncation': truncation, 'tolerance': tol_return, 'max_iter': max_iter}
 
     cmd = f"{ROOT_FOLDER}/{EXE} " \
           f"--alg={alg} " \
@@ -228,7 +232,7 @@ def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM NNMF "
+    rmse = cursor.execute("SELECT Rmse, Runtime, Runs FROM NNMF "
                           "WHERE Truncation=? "
                           "AND Tolerance=? "
                           "AND Max_iter=? "
@@ -236,7 +240,9 @@ def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
                           "AND Dataset=?"
                           , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
-    return rmse[0], rmse[1]
+    rmse, runtime, runs, *_ = rmse
+
+    return rmse, runtime, runs, params
 
 
 def svt(tolerance=1e-6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', verbose=False, label = "svt-bayes"):
@@ -276,9 +282,13 @@ def svt(tolerance=1e-6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', ve
 def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "rosl-bayes"):
     alg = "rosl"
 
+    tol_tmp = tolerance
+
     truncation = int(truncation)
     tolerance = f"{tolerance:.15f}"
     max_iter = int(max_iter)
+
+    params = {'truncation': truncation, 'max_iter': max_iter, 'tolerance': tol_tmp}
 
     cmd = f"{ROOT_FOLDER}/{EXE} " \
           f"--alg={alg} " \
@@ -296,7 +306,7 @@ def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM ROSL "
+    rmse = cursor.execute("SELECT Rmse, Runtime, Runs FROM ROSL "
                           "WHERE Truncation=? "
                           "AND Tolerance=? "
                           "AND Max_iter=? "
@@ -304,7 +314,8 @@ def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
                           "AND Dataset=?"
                           , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
-    return rmse[0], rmse[1]
+    rmse, runtime, runs, *_ = rmse
+    return rmse, runtime, runs, params
 
 
 def itersvd(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "itersvd-bayes"):
@@ -379,15 +390,17 @@ def cdrec(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', 
     alg = "cd"
 
     truncation = int(truncation)
-    tolerance = f"{tolerance:.15f}"
+    tolerance_cmd = f"{tolerance:.15f}"
     max_iter = int(max_iter)
+
+    params = {'truncation': truncation, 'tolerance': tolerance, 'max_iter': max_iter}
 
     cmd = f"{ROOT_FOLDER}/{EXE} " \
           f"--alg={alg} " \
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--set-truncation={truncation} " \
-          f"--set-tolerance={tolerance} " \
+          f"--set-tolerance={tolerance_cmd} " \
           f"--set-max-iter={max_iter} " \
           f"--label={label}"
 
@@ -398,15 +411,16 @@ def cdrec(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', 
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM CDREC "
+    rmse = cursor.execute("SELECT Rmse, Runtime, Runs FROM CDREC "
                           "WHERE Truncation=? "
                           "AND Tolerance=? "
                           "AND Max_iter=? "
                           "AND Label=?"
                           "AND Dataset=?"
-                          , (truncation, tolerance, max_iter, label, dataset)).fetchone()
+                          , (truncation, tolerance_cmd, max_iter, label, dataset)).fetchone()
+    rmse, runtime, runs, *_ = rmse
 
-    return rmse[0], rmse[1]
+    return rmse, runtime, runs, params
 
 
 def trmf(tolerance=1e-3, max_iter=40, lambdaI=0.7, lambdaAR=0.7, lambdaLag=0.7, k=10, dataset='airq', verbose=False,label="trmf-bayes"):

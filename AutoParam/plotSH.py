@@ -11,11 +11,12 @@ from tqdm import tqdm
 
 ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
 
-
+0
 def sh_execute(algorithm=None, dataset=None,
                sample_size=5,
                distribution={},
-               resource_name='max_iter', resource_max=100, resource_min=5):
+               resource_name='max_iter', resource_max=100, resource_min=5,
+               keep_losers=False):
     """ Starts the successive halving algorithm with the given settings
     Args:
             algorithm:      str
@@ -68,12 +69,13 @@ def sh_execute(algorithm=None, dataset=None,
         resource_lst.append(resource)
         for c in tqdm(competitors[:n_competitors]):
             print(c[1])
-            rmse, _ = alg(dataset=dataset, verbose=True, **c[1], **{resource_name: resource})
+            rmse, *_ = alg(dataset=dataset, verbose=True, **c[1], **{resource_name: resource})
             c[0].append(rmse)
-        for c in tqdm(competitors[n_competitors:]):
-            print(c[1])
-            rmse, _ = alg(dataset=dataset, **c[1], **{resource_name: resource})
-            c[2].append(rmse)
+        if keep_losers:
+            for c in tqdm(competitors[n_competitors:]):
+                print(c[1])
+                rmse, _ = alg(dataset=dataset, **c[1], **{resource_name: resource})
+                c[2].append(rmse)
         competitors = sorted(competitors, key=lambda r: r[0][-1])
         resource = math.floor(resource*eta)
         n_competitors = math.floor(n_competitors/2)
@@ -84,6 +86,7 @@ def sh_execute(algorithm=None, dataset=None,
 
     sh_plot(competitors, algorithm=algorithm, dataset=dataset,
             resources=resource_lst, resource_name=resource_name)
+    return competitors[0][1]
 
 
 def sh_plot(competitors, algorithm=None, dataset=None, resources=[], resource_name='resource'):
@@ -122,7 +125,7 @@ def sh_plot(competitors, algorithm=None, dataset=None, resources=[], resource_na
 
 
 if __name__ == "__main__":
-    sh_execute(algorithm='stmvl', dataset='airq', sample_size=9,
-               distribution={'alpha': (0,1,0.05), 'gamma': (0,1,0.05)},
+    sh_execute(algorithm='cd', dataset='airq', sample_size=9,
+               distribution={'truncation': (1,10,1)},
                resource_name='max_iter',
-               resource_max=100, resource_min=5)
+               resource_max=100, resource_min=5, keep_losers=False)

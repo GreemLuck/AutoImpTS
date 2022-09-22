@@ -12,6 +12,7 @@
 #include <cmath>
 
 #include "Benchmark.h"
+#include "../Database/SQL.h"
 #include <cassert>
 #include <filesystem>
 
@@ -67,16 +68,8 @@ int64_t Recovery_CD(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, threshold, maxIter;
 
-    if(params.find(Parameters::CD::TRUNCATION) == params.end())
-        params[Parameters::CD::TRUNCATION] = 3;
     truncation = params[Parameters::CD::TRUNCATION];
-
-    if(params.find(Parameters::CD::TOLERANCE) == params.end())
-        params[Parameters::CD::TOLERANCE] = 1e-6;
     threshold = params[Parameters::CD::TOLERANCE];
-
-    if(params.find(Parameters::CD::MAX_ITER) == params.end())
-        params[Parameters::CD::MAX_ITER] = 100;
     maxIter = params[Parameters::CD::MAX_ITER];
 
     // Local
@@ -106,12 +99,7 @@ int64_t Recovery_TKCM(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, d;
 
-    if(params.find(Parameters::TKCM::TRUNCATION) == params.end())
-        params[Parameters::TKCM::TRUNCATION] = 1;
     truncation = params[Parameters::TKCM::TRUNCATION];
-
-    if(params.find(Parameters::TKCM::D) == params.end())
-        d = params[Parameters::TKCM::D] = 1;
     d = params[Parameters::TKCM::D];
 
     // Local
@@ -137,16 +125,8 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
 {
     double alpha, beta, winSize;
 
-    if(params.find(Parameters::ST_MVL::ALPHA) == params.end())
-        params[Parameters::ST_MVL::ALPHA] = 2.0;
     alpha = params[Parameters::ST_MVL::ALPHA];
-
-    if(params.find(Parameters::ST_MVL::GAMMA) == params.end())
-        params[Parameters::ST_MVL::GAMMA] = 0.85;
     beta = params[Parameters::ST_MVL::GAMMA];
-
-    if(params.find(Parameters::ST_MVL::WIN_SIZE) == params.end())
-        params[Parameters::ST_MVL::WIN_SIZE] = 7;
     winSize = params[Parameters::ST_MVL::WIN_SIZE];
 
     // Local
@@ -165,7 +145,7 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
     end = std::chrono::steady_clock::now();
 
     result = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-    std::cout << "Time (STMVL): " << result << std::endl;
+    std:: cout << "Time (STMVL): " << result << std::endl;
     
     verifyRecovery(mat);
     return result;
@@ -175,21 +155,6 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
 int64_t Recovery_SPIRIT(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, winSize, lambda;
-
-    if(params.find(Parameters::SPIRIT::TRUNCATION) == params.end())
-        truncation = params[Parameters::SPIRIT::TRUNCATION] = 3;
-    else
-        truncation = params[Parameters::SPIRIT::TRUNCATION];
-
-    if(params.find(Parameters::SPIRIT::WIN_SIZE) == params.end())
-        winSize = params[Parameters::SPIRIT::WIN_SIZE] = 6;
-    else
-        winSize = params[Parameters::SPIRIT::WIN_SIZE];
-
-    if(params.find(Parameters::SPIRIT::LAMBDA) == params.end())
-        lambda = params[Parameters::SPIRIT::LAMBDA] = 1;
-    else
-        lambda = params[Parameters::SPIRIT::LAMBDA];
 
     // Local
     int64_t result;
@@ -213,10 +178,7 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation;
 
-    if(params.find(Parameters::GROUSE::TRUNCATION) != params.end())
-        truncation = params[Parameters::GROUSE::TRUNCATION];
-    else
-        truncation = 3;
+    truncation = params[Parameters::GROUSE::TRUNCATION];
 
     // Local
     int64_t result;
@@ -245,17 +207,9 @@ int64_t Recovery_GROUSE(arma::mat &mat, std::map<std::string, double> &params)
     {
         double truncation, threshold, maxIter;
 
-        if(params.find(Parameters::SVD::TRUNCATION) == params.end())
-            params[Parameters::SVD::TRUNCATION] = 3;
-        truncation = params[Parameters::SVD::TRUNCATION];
-
-        if(params.find(Parameters::CD::TOLERANCE) == params.end())
-            params[Parameters::CD::TOLERANCE] = 1e-6;
-        threshold = params[Parameters::CD::TOLERANCE];
-
-        if(params.find(Parameters::CD::MAX_ITER) == params.end())
-            params[Parameters::CD::MAX_ITER] = 100;
-        maxIter = params[Parameters::CD::MAX_ITER];
+        truncation = params[Parameters::NNMF::TRUNCATION];
+        threshold = params[Parameters::NNMF::TOLERANCE];
+        maxIter = params[Parameters::NNMF::MAX_ITER];
 
         // Local
         int64_t result;
@@ -279,15 +233,8 @@ int64_t Recovery_DynaMMo(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, maxIter;
 
-    if(params.find(Parameters::DYNAMMO::TRUNCATION) != params.end())
-        truncation = params[Parameters::DYNAMMO::TRUNCATION];
-    else
-        truncation = 3;
-
-    if(params.find(Parameters::DYNAMMO::MAX_ITER) != params.end())
-        maxIter = params[Parameters::DYNAMMO::MAX_ITER];
-    else
-        maxIter = 100;
+    truncation = params[Parameters::DYNAMMO::TRUNCATION];
+    maxIter = params[Parameters::DYNAMMO::MAX_ITER];
 
     // Local
     int64_t result;
@@ -315,27 +262,9 @@ int64_t Recovery_SVT(arma::mat &mat, std::map<std::string, double> &params)
 {
     double maxIter, threshold, tauscale;
 
-    if(params.find(Parameters::SVT::MAX_ITER) != params.end())
-        maxIter = params[Parameters::SVT::MAX_ITER];
-    else{
-        maxIter = 100;
-        params[Parameters::SVT::MAX_ITER] = maxIter;
-    }
-
-
-    if(params.find(Parameters::SVT::TOLERANCE) != params.end())
-        threshold = params[Parameters::SVT::TOLERANCE];
-    else {
-        threshold = 1e-4;
-        params[Parameters::SVT::TOLERANCE] = threshold;
-    }
-
-    if(params.find(Parameters::SVT::TAUSCALE) != params.end())
-        tauscale = params[Parameters::SVT::TAUSCALE];
-    else {
-        tauscale = 0.2;
-        params[Parameters::SVT::TAUSCALE] = tauscale;
-    }
+    maxIter = params[Parameters::SVT::MAX_ITER];
+    threshold = params[Parameters::SVT::TOLERANCE];
+    tauscale = params[Parameters::SVT::TAUSCALE];
 
     // Local
     int64_t result;
@@ -361,20 +290,9 @@ int64_t Recovery_ROSL(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, threshold, maxIter;
 
-    if(params.find(Parameters::ROSL::TRUNCATION) != params.end())
-        truncation = params[Parameters::ROSL::TRUNCATION];
-    else
-        truncation = 3;
-
-    if(params.find(Parameters::ROSL::TOLERANCE) != params.end())
-        threshold = params[Parameters::ROSL::TOLERANCE];
-    else
-        threshold = 1e-7;
-
-    if(params.find(Parameters::ROSL::MAX_ITER) != params.end())
-        maxIter = params[Parameters::ROSL::MAX_ITER];
-    else
-        maxIter = 500;
+    truncation = params[Parameters::ROSL::TRUNCATION];
+    threshold = params[Parameters::ROSL::TOLERANCE];
+    maxIter = params[Parameters::ROSL::MAX_ITER];
 
     // Local
     int64_t result;
@@ -398,16 +316,8 @@ int64_t Recovery_IterativeSVD(arma::mat &mat, std::map<std::string, double> &par
 {
     double truncation, threshold, maxIter;
 
-    if(params.find(Parameters::SVD::TRUNCATION) == params.end())
-        params[Parameters::SVD::TRUNCATION] = 3;
     truncation = params[Parameters::SVD::TRUNCATION];
-
-    if(params.find(Parameters::SVD::TOLERANCE) == params.end())
-        params[Parameters::SVD::TOLERANCE] = 1e-6;
     threshold = params[Parameters::SVD::TOLERANCE];
-
-    if(params.find(Parameters::SVD::MAX_ITER) == params.end())
-        params[Parameters::SVD::MAX_ITER] = 100;
     maxIter = params[Parameters::SVD::MAX_ITER];
 
     // Local
@@ -431,13 +341,6 @@ int64_t Recovery_IterativeSVD(arma::mat &mat, std::map<std::string, double> &par
 int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &params)
 {
     double truncation, threshold, maxIter;
-
-    maxIter = params.find(Parameters::SOFTIMPUTE::MAX_ITER) != params.end() ?
-            params[Parameters::SOFTIMPUTE::MAX_ITER] : 100;
-    truncation = params.find(Parameters::SOFTIMPUTE::TRUNCATION) != params.end() ?
-              params[Parameters::SOFTIMPUTE::TRUNCATION] : 3;
-    threshold = params.find(Parameters::SOFTIMPUTE::TOLERANCE) != params.end() ?
-                 params[Parameters::SOFTIMPUTE::TOLERANCE] : 1e-6;
 
     // Local
     int64_t result;
@@ -572,46 +475,133 @@ double Recovery_TRMF2(std::string &dataset, settings &set, u_int64_t tick){
 int64_t Recovery(arma::mat &mat, const std::string &algorithm, std::map<std::string, double> &params){
     if (algorithm == "cd")
     {
+        if(params.find(Parameters::CD::TRUNCATION) == params.end())
+            params[Parameters::CD::TRUNCATION] = 3;
+
+        if(params.find(Parameters::CD::TOLERANCE) == params.end())
+            params[Parameters::CD::TOLERANCE] = 1e-6;
+
+        if(params.find(Parameters::CD::MAX_ITER) == params.end())
+            params[Parameters::CD::MAX_ITER] = 100;
+
         return Recovery_CD(mat, params);
     }
     else if (algorithm == "tkcm")
     {
+        if(params.find(Parameters::TKCM::TRUNCATION) == params.end())
+            params[Parameters::TKCM::TRUNCATION] = 1;
+
+        if(params.find(Parameters::TKCM::D) == params.end())
+            params[Parameters::TKCM::D] = 1;
+
         return Recovery_TKCM(mat, params);
     }
     else if (algorithm == "st-mvl")
     {
+        if(params.find(Parameters::ST_MVL::ALPHA) == params.end())
+            params[Parameters::ST_MVL::ALPHA] = 2.0;
+
+        if(params.find(Parameters::ST_MVL::GAMMA) == params.end())
+            params[Parameters::ST_MVL::GAMMA] = 0.85;
+
+        if(params.find(Parameters::ST_MVL::WIN_SIZE) == params.end())
+            params[Parameters::ST_MVL::WIN_SIZE] = 7;
+
         return Recovery_ST_MVL(mat, params);
     }
     else if (algorithm == "spirit")
     {
+        if(params.find(Parameters::SPIRIT::TRUNCATION) == params.end())
+            params[Parameters::SPIRIT::TRUNCATION] = 3;
+
+        if(params.find(Parameters::SPIRIT::WIN_SIZE) == params.end())
+            params[Parameters::SPIRIT::WIN_SIZE] = 6;
+
+        if(params.find(Parameters::SPIRIT::LAMBDA) == params.end())
+            params[Parameters::SPIRIT::LAMBDA] = 1;
+
         return Recovery_SPIRIT(mat, params);
     }
     else if (algorithm == "grouse")
     {
+        if(params.find(Parameters::GROUSE::TRUNCATION) != params.end())
+            params[Parameters::GROUSE::TRUNCATION];
+
         return Recovery_GROUSE(mat, params);
     }
     else if (algorithm == "nnmf")
     {
+        if(params.find(Parameters::NNMF::TRUNCATION) == params.end())
+            params[Parameters::NNMF::TRUNCATION] = 3;
+
+        if(params.find(Parameters::NNMF::TOLERANCE) == params.end())
+            params[Parameters::NNMF::TOLERANCE] = 1e-6;
+
+        if(params.find(Parameters::NNMF::MAX_ITER) == params.end())
+            params[Parameters::NNMF::MAX_ITER] = 100;
+
         return Recovery_NNMF(mat, params);
     }
     else if (algorithm == "dynammo")
     {
+        if(params.find(Parameters::DYNAMMO::TRUNCATION) == params.end())
+            params[Parameters::DYNAMMO::TRUNCATION] = 3;
+
+        if(params.find(Parameters::DYNAMMO::MAX_ITER) == params.end())
+            params[Parameters::DYNAMMO::MAX_ITER] = 100;
+
         return Recovery_DynaMMo(mat, params);
     }
     else if (algorithm == "svt")
     {
+        if(params.find(Parameters::SVT::MAX_ITER) == params.end())
+            params[Parameters::SVT::MAX_ITER] = 100;
+
+        if(params.find(Parameters::SVT::TOLERANCE) == params.end())
+            params[Parameters::SVT::TOLERANCE] = 1e-4;
+
+        if(params.find(Parameters::SVT::TAUSCALE) == params.end())
+            params[Parameters::SVT::TAUSCALE] = 0.2;
+
         return Recovery_SVT(mat, params);
     }
     else if (algorithm == "rosl")
     {
+        if(params.find(Parameters::ROSL::TRUNCATION) == params.end())
+            params[Parameters::ROSL::TRUNCATION] = 3;
+
+        if(params.find(Parameters::ROSL::TOLERANCE) == params.end())
+            params[Parameters::ROSL::TOLERANCE] = 1e-6;
+
+        if(params.find(Parameters::ROSL::MAX_ITER) == params.end())
+            params[Parameters::ROSL::MAX_ITER] = 100;
+
         return Recovery_ROSL(mat, params);
     }
     else if (algorithm == "itersvd")
     {
+        if(params.find(Parameters::SVD::TRUNCATION) == params.end())
+            params[Parameters::SVD::TRUNCATION] = 3;
+
+        if(params.find(Parameters::SVD::TOLERANCE) == params.end())
+            params[Parameters::SVD::TOLERANCE] = 1e-6;
+
+        if(params.find(Parameters::SVD::MAX_ITER) == params.end())
+            params[Parameters::SVD::MAX_ITER] = 100;
+
         return Recovery_IterativeSVD(mat, params);
     }
     else if (algorithm == "softimpute")
     {
+        if(params.find(Parameters::SOFTIMPUTE::MAX_ITER) == params.end())
+                  params[Parameters::SOFTIMPUTE::MAX_ITER] = 100;
+
+        if(params.find(Parameters::SOFTIMPUTE::TRUNCATION) == params.end())
+                     params[Parameters::SOFTIMPUTE::TRUNCATION] = 3;
+
+        if(params.find(Parameters::SOFTIMPUTE::TOLERANCE) == params.end())
+                    params[Parameters::SOFTIMPUTE::TOLERANCE] = 1e-6;
+
         return Recovery_SoftImpute(mat, params);
     }
     else

@@ -19,12 +19,12 @@ import ts_algorithms
 RUNTIME_RATIO = 0
 TICKS = 100
 DATASET = "airq"
-LABEL = "bayseOpt"
+LABEL = "bayesOpt"
 VERBOSE = False
 
 
 def dynammo(truncation, max_iter):
-    rmse, runtime = ts_algorithms.dynammo(truncation, max_iter,
+    rmse, *_ = ts_algorithms.dynammo(truncation, max_iter,
                                           tick=TICKS,
                                           verbose=VERBOSE,
                                           dataset=DATASET,
@@ -33,7 +33,7 @@ def dynammo(truncation, max_iter):
 
 
 def tkcm(truncation, d):
-    rmse, runtime = ts_algorithms.tkcm(truncation, d,
+    rmse, *_ = ts_algorithms.tkcm(truncation, d,
                                        tick=TICKS,
                                        verbose=VERBOSE,
                                        dataset=DATASET,
@@ -42,7 +42,7 @@ def tkcm(truncation, d):
 
 
 def stmvl(alpha, gamma, win_size):
-    rmse, runtime = ts_algorithms.stmvl(alpha, gamma, win_size,
+    rmse, *_ = ts_algorithms.stmvl(alpha, gamma, win_size,
                                         verbose=VERBOSE,
                                         dataset=DATASET,
                                         label=LABEL)
@@ -50,7 +50,7 @@ def stmvl(alpha, gamma, win_size):
 
 
 def spirit(truncation, win_size, lbda):
-    rmse, runtime = ts_algorithms.spirit(truncation, win_size, lbda,
+    rmse, *_ = ts_algorithms.spirit(truncation, win_size, lbda,
                                          tick=TICKS,
                                          verbose=VERBOSE,
                                          dataset=DATASET,
@@ -59,55 +59,55 @@ def spirit(truncation, win_size, lbda):
 
 
 def grouse(truncation):
-    rmse, runtime = ts_algorithms.grouse(truncation,
+    rmse, *_ = ts_algorithms.grouse(truncation,
                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def nnmf(truncation, tolerance, max_iter):
     tolerance = 1.*10**-int(tolerance)
-    rmse, runtime = ts_algorithms.nnmf(truncation, tolerance, max_iter,
+    rmse, *_ = ts_algorithms.nnmf(truncation, tolerance, max_iter,
                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def svt(tolerance, tauscale, max_iter):
     tolerance = 1.*10**-int(tolerance)
-    rmse, runtime = ts_algorithms.svt(tolerance, tauscale, max_iter,
+    rmse, *_ = ts_algorithms.svt(tolerance, tauscale, max_iter,
                                       verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def rosl(truncation, tolerance, max_iter):
     tolerance = 1.*10**-int(tolerance)
-    rmse, runtime = ts_algorithms.rosl(truncation, tolerance, max_iter,
+    rmse, *_ = ts_algorithms.rosl(truncation, tolerance, max_iter,
                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def itersvd(truncation, tolerance, max_iter):
     tolerance = 1.*10**-int(tolerance)
-    rmse, runtime = ts_algorithms.itersvd(truncation, tolerance, max_iter,
+    rmse, *_ = ts_algorithms.itersvd(truncation, tolerance, max_iter,
                                           tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def softimp(truncation, tolerance, max_iter):
     tolerance = 1.*10**-int(tolerance)
-    rmse, runtime = ts_algorithms.softimp(truncation, tolerance, max_iter,
+    rmse, *_ = ts_algorithms.softimp(truncation, tolerance, max_iter,
                                           tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def cdrec(truncation, tolerance=5, max_iter=100):
     tolerance = 1.*10**-int(tolerance)
-    rmse, runtime = ts_algorithms.cdrec(truncation, tolerance, max_iter,
+    rmse, *_ = ts_algorithms.cdrec(truncation, tolerance, max_iter,
                                         tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
     return -rmse
 
 
 def trmf(lambdaI, lambdaAR, lambdaLag):
-    rmse, runtime = ts_algorithms.trmf(lambdaI=lambdaI,lambdaAR=lambdaAR, lambdaLag=lambdaLag, verbose=VERBOSE,
+    rmse, *_ = ts_algorithms.trmf(lambdaI=lambdaI,lambdaAR=lambdaAR, lambdaLag=lambdaLag, verbose=VERBOSE,
                                        dataset=DATASET, label=LABEL)
     return -rmse
 
@@ -154,15 +154,17 @@ algorithms = {
 }
 
 
-def main(alg_name, dataset="airq", tick=100, exploration=2, exploitation=5, verbose=False):
+def main(alg_name, dataset="airq", bounds=None, tick=100, exploration=2, exploitation=5, verbose=False):
     global TICKS
     global DATASET
     global VERBOSE
     TICKS = int(tick)
     DATASET = dataset
     VERBOSE = verbose
-
-    alg, bounds = algorithms[alg_name]
+    if bounds==None:
+        alg, bounds = algorithms[alg_name]
+    else:
+        alg, _ = algorithms[alg_name]
 
     optimizer = BayesianOptimization(
         f=alg,
@@ -180,7 +182,13 @@ def main(alg_name, dataset="airq", tick=100, exploration=2, exploitation=5, verb
 
     if optimizer.space.dim == 1:
         plot_grouse(optimizer, alg_name, dataset)
-    return optimizer.max
+
+    max_ = optimizer.max
+    if 'tolerance' in max_['params']:
+        tol = int(max_['params']['tolerance'])
+        max_['params']['tolerance'] = 1.*10**-tol
+
+    return max_
 
 
 if __name__ == "__main__":
