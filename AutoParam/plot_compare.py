@@ -8,7 +8,7 @@ import random_search
 import random
 
 alg_name = 'rosl'
-dataset = "chlorine"
+dataset = "climate"
 default_value = {"truncation":3,
                  "max_iter": 100,
                  "tolerance": 1e-6}
