@@ -76,7 +76,7 @@ def sh_execute(algorithm=None, dataset=None,
                 print(c[1])
                 rmse, _ = alg(dataset=dataset, **c[1], **{resource_name: resource})
                 c[2].append(rmse)
-        competitors = sorted(competitors, key=lambda r: r[0][-1])
+        competitors[:n_competitors] = sorted(competitors[:n_competitors], key=lambda r: r[0][-1])
         resource = math.floor(resource*eta)
         n_competitors = math.floor(n_competitors/2)
         pbar.update(1)

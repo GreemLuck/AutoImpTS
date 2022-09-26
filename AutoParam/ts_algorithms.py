@@ -321,9 +321,13 @@ def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
 def itersvd(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "itersvd-bayes"):
     alg = "itersvd"
 
+    tol_tmp = tolerance
+
     truncation = int(truncation)
     tolerance = f"{tolerance:.15f}"
     max_iter = int(max_iter)
+    params = {'truncation': truncation, 'max_iter': max_iter, 'tolerance': tol_tmp}
+
 
     cmd = f"{ROOT_FOLDER}/{EXE} " \
           f"--alg={alg} " \
@@ -341,7 +345,7 @@ def itersvd(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq'
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM IterSVD "
+    rmse = cursor.execute("SELECT Rmse, Runtime, Runs FROM IterSVD "
                           "WHERE Truncation=? "
                           "AND Tolerance=? "
                           "AND Max_iter=? "
@@ -349,15 +353,21 @@ def itersvd(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq'
                           "AND Dataset=?"
                           , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
-    return rmse[0], rmse[1]
+    rmse, runtime, runs, *_ = rmse
+    return rmse, runtime, runs, params
 
 
 def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "softimp-bayes"):
     alg = "softimpute"
 
+    tol_tmp = tolerance
+
     truncation = int(truncation)
     tolerance = f"{tolerance:.15f}"
     max_iter = int(max_iter)
+
+    params = {'truncation': truncation, 'max_iter': max_iter, 'tolerance': tol_tmp}
+
 
     cmd = f"{ROOT_FOLDER}/{EXE} " \
           f"--alg={alg} " \
@@ -375,7 +385,7 @@ def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq'
 
     conn = sqlite3.connect(ROOT_FOLDER + "/Results")
     cursor = conn.cursor()
-    rmse = cursor.execute("SELECT Rmse, Runtime FROM SoftImpute "
+    rmse = cursor.execute("SELECT Rmse, Runtime, Runs FROM SoftImpute "
                           "WHERE Truncation=? "
                           "AND Tolerance=? "
                           "AND Max_iter=? "
@@ -383,7 +393,8 @@ def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq'
                           "AND Dataset=?"
                           , (truncation, tolerance, max_iter, label, dataset)).fetchone()
 
-    return rmse[0], rmse[1]
+    rmse, runtime, runs, *_ = rmse
+    return rmse, runtime, runs, params
 
 
 def cdrec(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "cdrec-bayes"):

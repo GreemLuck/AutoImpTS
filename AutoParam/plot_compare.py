@@ -7,8 +7,8 @@ import plotSH
 import random_search
 import random
 
-alg_name = 'rosl'
-dataset = "climate"
+alg_name = 'softimpute'
+dataset = "meteo"
 default_value = {"truncation":3,
                  "max_iter": 100,
                  "tolerance": 1e-6}
@@ -108,4 +108,6 @@ def sh_example():
     print(runs)
 
 if __name__ == "__main__":
-    main(alg_name=alg_name, dataset=dataset)
+    datasets = ["airq", "chlorine", "climate", "drift10", "electricity", "meteo", "bafu", "temp"]
+    for d in datasets:
+        main(alg_name=alg_name, dataset=d)

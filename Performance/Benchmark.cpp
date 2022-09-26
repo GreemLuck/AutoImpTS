@@ -342,6 +342,10 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &para
 {
     double truncation, threshold, maxIter;
 
+    truncation = params[Parameters::SOFTIMPUTE::TRUNCATION];
+    threshold = params[Parameters::SOFTIMPUTE::TOLERANCE];
+    maxIter = params[Parameters::SOFTIMPUTE::MAX_ITER];
+
     // Local
     int64_t result;
 
@@ -357,10 +361,6 @@ int64_t Recovery_SoftImpute(arma::mat &mat, std::map<std::string, double>  &para
     std::cout << "Time (SoftImpute): " << result << std::endl;
     
     verifyRecovery(mat);
-
-    params[Parameters::SOFTIMPUTE::MAX_ITER] = maxIter;
-    params[Parameters::SOFTIMPUTE::TRUNCATION] = truncation;
-    params[Parameters::SOFTIMPUTE::TOLERANCE] = threshold;
 
     return result;
 }
