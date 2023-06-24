@@ -53,16 +53,10 @@ CMakeFiles/reduced_bench.dir/Algorithms/SoftImpute.cpp.o: Algorithms/SoftImpute.
 CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.o: Algorithms/TKCM.cpp
 CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.o: Algorithms/TKCM.h
 
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: Algebra/MissingBlock.hpp
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: AutoParam/SuccessiveHalving.cpp
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: AutoParam/SuccessiveHalving.h
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: Database/SQL.h
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: MathIO/MatrixReadWrite.h
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: Performance/Benchmark.h
-CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o: parser.h
-
 CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o: Database/SQL.cpp
 CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o: Database/SQL.h
+CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o: Scenarios/Scenario.h
+CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o: Scenarios/ScenarioContext.h
 CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o: parser.h
 CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o: include/sqlite3.h
 
@@ -88,6 +82,9 @@ CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Database/SQL.h
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: MathIO/MatrixReadWrite.h
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Performance/Benchmark.cpp
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Performance/Benchmark.h
+CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Performance/MisalignRedux.h
+CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Scenarios/Scenario.h
+CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Scenarios/ScenarioContext.h
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: Stats/Correlation.h
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: parser.h
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: /usr/include/python3.8/Python.h
@@ -178,18 +175,45 @@ CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: /usr/include/python3.8
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: /usr/include/python3.8/warnings.h
 CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o: /usr/include/python3.8/weakrefobject.h
 
+CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.o: Performance/MisalignRedux.cpp
+CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.o: Performance/MisalignRedux.h
+
+CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o: Scenarios/MCAR.cpp
+CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o: Scenarios/MCAR.h
+CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o: Scenarios/Scenario.h
+CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o: Scenarios/ScenarioContext.h
+
+CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.o: Scenarios/MissingBlock.cpp
+CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.o: Scenarios/MissingBlock.h
+CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.o: Scenarios/Scenario.h
+
+CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o: Scenarios/MCAR.h
+CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o: Scenarios/MissingBlock.h
+CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o: Scenarios/Scenario.cpp
+CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o: Scenarios/Scenario.h
+
+CMakeFiles/reduced_bench.dir/Scenarios/ScenarioContext.cpp.o: Scenarios/Scenario.h
+CMakeFiles/reduced_bench.dir/Scenarios/ScenarioContext.cpp.o: Scenarios/ScenarioContext.cpp
+CMakeFiles/reduced_bench.dir/Scenarios/ScenarioContext.cpp.o: Scenarios/ScenarioContext.h
+
 CMakeFiles/reduced_bench.dir/Stats/Correlation.cpp.o: Stats/Correlation.cpp
 CMakeFiles/reduced_bench.dir/Stats/Correlation.cpp.o: Stats/Correlation.h
 
 CMakeFiles/reduced_bench.dir/main.cpp.o: Algebra/MissingBlock.hpp
-CMakeFiles/reduced_bench.dir/main.cpp.o: AutoParam/SuccessiveHalving.h
 CMakeFiles/reduced_bench.dir/main.cpp.o: Database/SQL.h
 CMakeFiles/reduced_bench.dir/main.cpp.o: MathIO/MatrixReadWrite.h
 CMakeFiles/reduced_bench.dir/main.cpp.o: Performance/Benchmark.h
+CMakeFiles/reduced_bench.dir/main.cpp.o: Performance/MisalignRedux.h
+CMakeFiles/reduced_bench.dir/main.cpp.o: Scenarios/MCAR.h
+CMakeFiles/reduced_bench.dir/main.cpp.o: Scenarios/MissingBlock.h
+CMakeFiles/reduced_bench.dir/main.cpp.o: Scenarios/Scenario.h
+CMakeFiles/reduced_bench.dir/main.cpp.o: Scenarios/ScenarioContext.h
 CMakeFiles/reduced_bench.dir/main.cpp.o: main.cpp
 CMakeFiles/reduced_bench.dir/main.cpp.o: parser.h
 CMakeFiles/reduced_bench.dir/main.cpp.o: include/sqlite3.h
 
+CMakeFiles/reduced_bench.dir/parser.cpp.o: Scenarios/Scenario.h
+CMakeFiles/reduced_bench.dir/parser.cpp.o: Scenarios/ScenarioContext.h
 CMakeFiles/reduced_bench.dir/parser.cpp.o: parser.cpp
 CMakeFiles/reduced_bench.dir/parser.cpp.o: parser.h
 CMakeFiles/reduced_bench.dir/parser.cpp.o: include/optionparser.h

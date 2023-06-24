@@ -190,7 +190,7 @@ void SPIRIT::doSpirit(arma::mat &A, uint64_t k0, uint64_t w, double lambda)
         
     }
     
-    // pull data in col 0, rows [range] from recon into A
+    // pull data in col 0, rows [rangeIncluded] from recon into A
     for (uint64_t i = blockStart; i <= blockEnd; ++i)
     {
         A.at(i, 0) = recon.at(i, 0);

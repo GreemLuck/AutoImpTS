@@ -14,7 +14,8 @@ CREATE TABLE CDREC (
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE Dynammo (
@@ -25,7 +26,8 @@ CREATE TABLE Dynammo (
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Truncation, Max_iter, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Truncation, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE TKCM (
@@ -36,7 +38,8 @@ CREATE TABLE TKCM (
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Truncation, d, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Truncation, d, Label, Misaligned)
 );
 
 CREATE TABLE ST_MVL(
@@ -48,7 +51,8 @@ CREATE TABLE ST_MVL(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Alpha, Gamma, Win_Size, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Alpha, Gamma, Win_Size, Label, Misaligned)
 );
 
 CREATE TABLE Spirit(
@@ -60,7 +64,8 @@ CREATE TABLE Spirit(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Truncation, Lambda, Win_Size, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Truncation, Lambda, Win_Size, Label, Misaligned)
 );
 
 CREATE TABLE Grouse(
@@ -70,7 +75,8 @@ CREATE TABLE Grouse(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Truncation, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Truncation, Label, Misaligned)
 );
 
 CREATE TABLE NNMF(
@@ -82,7 +88,8 @@ CREATE TABLE NNMF(
      Rmse        REAL    NOT NULL,
      Label       TEXT   NOT NULL,
      Runs        TEXT,
-     PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
+     Misaligned  INT    NOT NULL,
+     PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE SVT(
@@ -94,7 +101,8 @@ CREATE TABLE SVT(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Tauscale, Tolerance, Max_iter, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Tauscale, Tolerance, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE ROSL(
@@ -106,7 +114,8 @@ CREATE TABLE ROSL(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE IterSVD(
@@ -118,7 +127,8 @@ CREATE TABLE IterSVD(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE SoftImpute(
@@ -130,7 +140,8 @@ CREATE TABLE SoftImpute(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, Tolerance, Truncation, Max_iter, Label, Misaligned)
 );
 
 CREATE TABLE TRMF(
@@ -144,6 +155,7 @@ CREATE TABLE TRMF(
     Rmse        REAL    NOT NULL,
     Label       TEXT    NOT NULL,
     Runs        TEXT,
-    PRIMARY KEY(Dataset, K, Max_iter, LambdaAR, LambdaI, LambdaLag, Label)
+    Misaligned  INT    NOT NULL,
+    PRIMARY KEY(Dataset, K, Max_iter, LambdaAR, LambdaI, LambdaLag, Label, Misaligned)
 );
 

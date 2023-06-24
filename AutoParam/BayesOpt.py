@@ -18,6 +18,7 @@ import ts_algorithms
 
 RUNTIME_RATIO = 0
 TICKS = 100
+SCENARIO = "MISSINGBLOCK"
 DATASET = "airq"
 LABEL = "bayesOpt"
 VERBOSE = False
@@ -27,7 +28,7 @@ def dynammo(truncation, max_iter):
     rmse, *_ = ts_algorithms.dynammo(truncation, max_iter,
                                           tick=TICKS,
                                           verbose=VERBOSE,
-                                          dataset=DATASET,
+                                          dataset=DATASET, scenario=SCENARIO,
                                           label=LABEL)
     return -rmse
 
@@ -36,7 +37,7 @@ def tkcm(truncation, d):
     rmse, *_ = ts_algorithms.tkcm(truncation, d,
                                        tick=TICKS,
                                        verbose=VERBOSE,
-                                       dataset=DATASET,
+                                       dataset=DATASET, scenario=SCENARIO,
                                        label=LABEL)
     return -rmse
 
@@ -44,7 +45,7 @@ def tkcm(truncation, d):
 def stmvl(alpha, gamma, win_size):
     rmse, *_ = ts_algorithms.stmvl(alpha, gamma, win_size,
                                         verbose=VERBOSE,
-                                        dataset=DATASET,
+                                        dataset=DATASET, scenario=SCENARIO,
                                         label=LABEL)
     return -rmse
 
@@ -53,63 +54,65 @@ def spirit(truncation, win_size, lbda):
     rmse, *_ = ts_algorithms.spirit(truncation, win_size, lbda,
                                          tick=TICKS,
                                          verbose=VERBOSE,
-                                         dataset=DATASET,
+                                         dataset=DATASET, scenario=SCENARIO,
                                          label=LABEL)
+    if rmse >= float("inf"):
+        rmse = float("inf")
     return -rmse
 
 
 def grouse(truncation):
     rmse, *_ = ts_algorithms.grouse(truncation,
-                                         tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                         tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
 
 def nnmf(truncation, tolerance, max_iter):
     tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.nnmf(truncation, tolerance, max_iter,
-                                       tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                       tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
 
 def svt(tolerance, tauscale, max_iter):
     tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.svt(tolerance, tauscale, max_iter,
-                                      verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                      verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
 
 def rosl(truncation, tolerance, max_iter):
-    tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.rosl(truncation, tolerance, max_iter,
-                                       tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                       tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
 
 def itersvd(truncation, tolerance, max_iter):
-    tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.itersvd(truncation, tolerance, max_iter,
-                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
 
 def softimp(truncation, tolerance, max_iter):
-    tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.softimp(truncation, tolerance, max_iter,
-                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
 
 def cdrec(truncation, tolerance=5, max_iter=100):
-    tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.cdrec(truncation, tolerance, max_iter,
-                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, label=LABEL)
+                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
     return -rmse
 
-
-def trmf(lambdaI, lambdaAR, lambdaLag):
-    rmse, *_ = ts_algorithms.trmf(lambdaI=lambdaI,lambdaAR=lambdaAR, lambdaLag=lambdaLag, verbose=VERBOSE,
-                                       dataset=DATASET, label=LABEL)
+def minimise_runtime(tolerance, max_iter):
+    rmse, runtime, *_ = ALG_FUNC(FIX_TRUNCATION, tolerance, max_iter,
+                             verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO)
     return -rmse
+
+# def trmf(lambdaI, lambdaAR, lambdaLag):
+#     rmse, *_ = ts_algorithms.trmf(lambdaI=lambdaI,lambdaAR=lambdaAR, lambdaLag=lambdaLag, verbose=VERBOSE,
+#                                        dataset=DATASET, scenario=SCENARIO, label=LABEL)
+#     return -rmse
 
 
 def plot_grouse(bo, alg, dataset):
@@ -149,22 +152,34 @@ algorithms = {
     "iter-svd": (itersvd, ts_algorithms.ITERSVD_BOUNDS),
     "svd": (itersvd, ts_algorithms.ITERSVD_BOUNDS),
     "softimpute": (softimp, ts_algorithms.SOFTIMP_BOUNDS),
-    "softimp": (softimp, ts_algorithms.SOFTIMP_BOUNDS),
-    "trmf": (trmf, ts_algorithms.TRMF_BOUNDS)
+    "softimp": (softimp, ts_algorithms.SOFTIMP_BOUNDS)
 }
 
 
-def main(alg_name, dataset="airq", bounds=None, tick=100, exploration=2, exploitation=5, verbose=False):
+def main(alg_name, dataset="airq", bounds=None, tick=100, exploration=2, exploitation=5, verbose=False, alg_func=None,
+         process_runtime=False, max_runtime=0, fix_truncation=3, scenario="MISSINGBLOCK"):
     global TICKS
     global DATASET
     global VERBOSE
+    global ALG_FUNC
+    global MAX_RUNTIME
+    global FIX_TRUNCATION
+
     TICKS = int(tick)
     DATASET = dataset
+    SCENARIO = scenario
     VERBOSE = verbose
+    ALG_FUNC = alg_func
+    MAX_RUNTIME = max_runtime
+    FIX_TRUNCATION = fix_truncation
+
     if bounds==None:
         alg, bounds = algorithms[alg_name]
     else:
         alg, _ = algorithms[alg_name]
+
+    if process_runtime:
+        alg = minimise_runtime
 
     optimizer = BayesianOptimization(
         f=alg,
@@ -184,9 +199,9 @@ def main(alg_name, dataset="airq", bounds=None, tick=100, exploration=2, exploit
         plot_grouse(optimizer, alg_name, dataset)
 
     max_ = optimizer.max
-    if 'tolerance' in max_['params']:
-        tol = int(max_['params']['tolerance'])
-        max_['params']['tolerance'] = 1.*10**-tol
+    # if 'tolerance' in max_['params']:
+    #     tol = int(max_['params']['tolerance'])
+    #     max_['params']['tolerance'] = 1.*10**-tol
 
     return max_
 

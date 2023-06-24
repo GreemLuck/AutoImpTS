@@ -197,7 +197,7 @@ SQLITE_API int sqlite3_libversion_number(void);
 **
 ** ^The sqlite3_compileoption_get() function allows iterating
 ** over the list of options that were defined at compile time by
-** returning the N-th compile time option string.  ^If N is out of range,
+** returning the N-th compile time option string.  ^If N is out of rangeIncluded,
 ** sqlite3_compileoption_get() returns a NULL pointer.  ^The SQLITE_
 ** prefix is omitted from any strings returned by
 ** sqlite3_compileoption_get().
@@ -467,7 +467,7 @@ SQLITE_API int sqlite3_exec(
 #define SQLITE_NOLFS       22   /* Uses OS features not supported on host */
 #define SQLITE_AUTH        23   /* Authorization denied */
 #define SQLITE_FORMAT      24   /* Not used */
-#define SQLITE_RANGE       25   /* 2nd parameter to sqlite3_bind out of range */
+#define SQLITE_RANGE       25   /* 2nd parameter to sqlite3_bind out of rangeIncluded */
 #define SQLITE_NOTADB      26   /* File opened that is not a database file */
 #define SQLITE_NOTICE      27   /* Notifications from sqlite3_log() */
 #define SQLITE_WARNING     28   /* Warnings from sqlite3_log() */
@@ -1520,7 +1520,7 @@ struct sqlite3_vfs {
 ** The xShmLock method on [sqlite3_io_methods] may use values
 ** between 0 and this upper bound as its "offset" argument.
 ** The SQLite core will never attempt to acquire or release a
-** lock outside of this range
+** lock outside of this rangeIncluded
 */
 #define SQLITE_SHM_NLOCK        8
 
@@ -4517,7 +4517,7 @@ typedef struct sqlite3_context sqlite3_context;
 ** exceeds limits imposed by [sqlite3_limit]([SQLITE_LIMIT_LENGTH]) or
 ** [SQLITE_MAX_LENGTH].
 ** ^[SQLITE_RANGE] is returned if the parameter
-** index is out of range.  ^[SQLITE_NOMEM] is returned if malloc() fails.
+** index is out of rangeIncluded.  ^[SQLITE_NOMEM] is returned if malloc() fails.
 **
 ** See also: [sqlite3_bind_parameter_count()],
 ** [sqlite3_bind_parameter_name()], and [sqlite3_bind_parameter_index()].
@@ -4575,7 +4575,7 @@ SQLITE_API int sqlite3_bind_parameter_count(sqlite3_stmt*);
 **
 ** ^The first host parameter has an index of 1, not 0.
 **
-** ^If the value N is out of range or if the N-th parameter is
+** ^If the value N is out of rangeIncluded or if the N-th parameter is
 ** nameless, then NULL is returned.  ^The returned string is
 ** always in UTF-8 encoding even if the named parameter was
 ** originally specified as UTF-16 in [sqlite3_prepare16()],
@@ -4917,7 +4917,7 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt);
 ** [sqlite3_column_count()].
 **
 ** If the SQL statement does not currently point to a valid row, or if the
-** column index is out of range, the result is undefined.
+** column index is out of rangeIncluded, the result is undefined.
 ** These routines may only be called when the most recent call to
 ** [sqlite3_step()] has returned [SQLITE_ROW] and neither
 ** [sqlite3_reset()] nor [sqlite3_finalize()] have been called subsequently.
@@ -6282,7 +6282,7 @@ SQLITE_API sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
 **
 ** ^The sqlite3_db_name(D,N) interface returns a pointer to the schema name
 ** for the N-th database on database connection D, or a NULL pointer of N is
-** out of range.  An N value of 0 means the main database file.  An N of 1 is
+** out of rangeIncluded.  An N value of 0 means the main database file.  An N of 1 is
 ** the "temp" schema.  Larger values of N correspond to various ATTACH-ed
 ** databases.
 **
@@ -6687,7 +6687,7 @@ SQLITE_API int sqlite3_db_release_memory(sqlite3*);
 ** the the soft heap limit is set to the value of the hard heap limit.
 ** ^The soft heap limit is automatically enabled whenever the hard heap
 ** limit is enabled. ^When sqlite3_hard_heap_limit64(N) is invoked and
-** the soft heap limit is outside the range of 1..N, then the soft heap
+** the soft heap limit is outside the rangeIncluded of 1..N, then the soft heap
 ** limit is set to N.  ^Invoking sqlite3_soft_heap_limit64(0) when the
 ** hard heap limit is enabled makes the soft heap limit equal to the
 ** hard heap limit.
@@ -8197,7 +8197,7 @@ SQLITE_API void sqlite3_str_reset(sqlite3_str*);
 ** [sqlite3_str_value(X)] after any subsequent method call on the same
 ** object.  ^Applications may change the content of the string returned
 ** by [sqlite3_str_value(X)] as long as they do not write into any bytes
-** outside the range of 0 to [sqlite3_str_length(X)] and do not read or
+** outside the rangeIncluded of 0 to [sqlite3_str_length(X)] and do not read or
 ** write any byte after any subsequent sqlite3_str method call.
 */
 SQLITE_API int sqlite3_str_errcode(sqlite3_str*);
@@ -9897,7 +9897,7 @@ SQLITE_API int sqlite3_vtab_rhs_value(sqlite3_index_info*, int, sqlite3_value **
 ** ^The requested measurement is written into a variable pointed to by
 ** the "pOut" parameter.
 ** Parameter "idx" identifies the specific loop to retrieve statistics for.
-** Loops are numbered starting from zero. ^If idx is out of range - less than
+** Loops are numbered starting from zero. ^If idx is out of rangeIncluded - less than
 ** zero or greater than or equal to the total number of loops used to implement
 ** the statement - a non-zero value is returned and the variable that pOut
 ** points to is unchanged.

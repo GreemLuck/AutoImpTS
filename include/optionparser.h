@@ -1258,7 +1258,7 @@ namespace option
         }
 
         /**
-         * @brief Returns <b><code>nonOptions()[i]</code></b> (@e without checking if i is in range!).
+         * @brief Returns <b><code>nonOptions()[i]</code></b> (@e without checking if i is in rangeIncluded!).
          */
         const char* nonOption(int i)
         {

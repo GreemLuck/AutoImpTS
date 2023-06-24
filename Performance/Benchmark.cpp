@@ -35,6 +35,10 @@ using namespace Algorithms;
 namespace Performance
 {
 void generateLatLongFile(std::string destination, arma::mat &mat);
+std::pair<double, u_int64_t> run(arma::mat &mat, std::string input, settings &set);
+std::vector<std::tuple<int, int, int>> find_missing_blocks(const arma::mat& B);
+void enlarge_missing_blocks(arma::mat& missing);
+
 void verifyRecovery(arma::mat &mat)
 {
     for (uint64_t j = 0; j < mat.n_cols; ++j)
@@ -132,7 +136,9 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
     // Local
     int64_t result;
     const std::string latlong = "latlong_placeholder.txt";
-    generateLatLongFile(latlong, mat);
+    std::ifstream f(latlong.c_str());
+    if(!f.good())
+        generateLatLongFile(latlong, mat);
     ST_MVL stmvl(mat, latlong, alpha, beta, winSize);
 
     std::chrono::steady_clock::time_point begin;
@@ -155,6 +161,10 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
 int64_t Recovery_SPIRIT(arma::mat &mat, std::map<std::string, double> &params)
 {
     double truncation, winSize, lambda;
+
+    truncation = params[Parameters::SPIRIT::TRUNCATION];
+    winSize = params[Parameters::SPIRIT::WIN_SIZE];
+    lambda = params[Parameters::SPIRIT::LAMBDA];
 
     // Local
     int64_t result;
@@ -619,7 +629,7 @@ std::string DName2Folder(std::string dataset){
     return dataset;
 }
 
-void Start_Benchmark(settings &set){
+void Start_Benchmark(settings &set, Scenarios::scenario_settings &scenarioSettings, arma::mat refference){
     arma::mat mat;
     std::ifstream file;
 
@@ -631,88 +641,61 @@ void Start_Benchmark(settings &set){
     u_int64_t runtimeSum = 0;
     double rmseSum = 0;
 
-    std::string dataFolder = "Datasets/real_world/";
     currentPath = std::filesystem::current_path();
 
-    std::string dataFdName = DName2Folder(set.dataset);
-    std::string fileName = set.dataset + "_normal.txt";
-    std::string filePath = currentPath + "/" + dataFolder + dataFdName + "/" + fileName;
-
     if(set.algorithm == "trmf"){
-        for(auto t: ticks) {
-            uint64_t rmse;
-            double runtime;
-            // Local
-            std::chrono::steady_clock::time_point begin;
-            std::chrono::steady_clock::time_point end;
-
-            begin = std::chrono::steady_clock::now();
-            rmse = Recovery_TRMF2(set.dataset, set, t);
-            end = std::chrono::steady_clock::now();
-
-            runtime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-            std::cout << "Time(TRMF) : " << set.runtime << std::endl;
-
-            runtimes.push_back(runtime);
-            rmses.push_back(rmse);
-            rmseSum += rmse;
-            runtimeSum += runtime;
-        }
-        set.rmse = rmseSum / (double) nticks;
-        set.runtime = runtimeSum / nticks;
-
-        std::ostringstream runsString;
-        for(int i = 0; i<rmses.size(); i++){
-            runsString << ticks[i] << "," << rmses[i] << "," << runtimes[i] << "\n";
-        }
-        std::cout << runsString.str() << std::endl;
         return;
     }
 
-    // Creating the dataset matrix
-    file.open(filePath);
-
-    if (file.is_open()) {
-        mat.load(file, arma::raw_ascii);
-    } else {
-        std::cerr << "can't open the dataset file" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    file.close();
-
     // Replace real data with nan
-    for(auto t : ticks){
-        uint64_t runtime;
-        double rmse;
-        arma::mat matcopy = mat;
-        u_int64_t column = 0;
-        u_int64_t startingIndex = (u_int64_t) (matcopy.n_rows * 0.05);
-        u_int64_t blockSize = mat.n_rows * t / 1000;
-        MissingBlock missing(column, startingIndex, blockSize, matcopy);
+    int numScenarios = scenarioSettings.input_paths.size();
+    unsigned int numThreads = 1;
+    std::vector<std::thread> threads;
 
-        arma::vec reff = missing.extractBlock();
-        arma::vec missingVector(blockSize);
-        missingVector.fill(NAN);
-        missing.imputeBlock(missingVector);
-
-        // Recover the matrix and get metrics
-        runtime = Performance::Recovery(matcopy, set.algorithm, set.params);
-
-        arma::vec recovered = missing.extractBlock();
-        rmse = getRMSE_Vec(reff, recovered, missing.blockSize);
-
-        runtimes.push_back(runtime);
-        rmses.push_back(rmse);
-        rmseSum += rmse;
-        runtimeSum += runtime;
+    if(set.multi_t){
+        numThreads = std::thread::hardware_concurrency() > numScenarios ? numScenarios : std::thread::hardware_concurrency();
     }
-    set.rmse = rmseSum / (double) nticks;
+
+    std::vector<std::pair<double, u_int64_t>> results;
+    results.resize(numScenarios);
+
+    std::cout << "Using " << numThreads << " threads" << std::endl;
+    for (int t = 0; t < numThreads; t++ ) {
+        int start = t * numScenarios / numThreads;
+        int end = (t + 1) * numScenarios / numThreads;
+        threads.emplace_back([&refference, scenarioSettings, &set, start, end, &results, t]() {
+            std::cout << "Start of thread" << t << std::endl;
+            for(int i = start; i < end; i++) {
+                results[i] = run(refference, scenarioSettings.input_paths[i], set);
+            }
+            std::cout << "End of thread" << t << std::endl;
+        });
+    }
+
+    for (auto& t : threads){
+        t.join();
+    }
+
+    for (auto& p: results){
+        rmseSum += p.first;
+        rmses.push_back(p.first);
+        runtimeSum += p.second;
+        runtimes.push_back(p.second);
+    }
+
+    set.rmse = isinf(rmseSum / (double) nticks) ? DBL_MAX : rmseSum / (double) nticks;
     set.runtime = runtimeSum / nticks;
 
     std::ostringstream runsString;
     for(int i = 0; i<rmses.size(); i++){
-        runsString << ticks[i] << "," << rmses[i] << "," << runtimes[i] << "\n";
+        std::string input = scenarioSettings.input_paths[i];
+        std::string number = input.substr(input.find_last_of('_') + 1);
+        number = number.substr(0, number.find_last_of('.'));
+        runsString << number << "," << rmses[i] << "," << runtimes[i] << "\n";
     }
+    std::ofstream runs("_data/out/results.txt");
+    runs << runsString.str();
+    runs.close();
     std::cout << runsString.str() << std::endl;
     set.runs =  runsString.str();
 }
@@ -726,7 +709,18 @@ double getRMSE_Vec(arma::vec &ref, arma::vec &forecast, int64_t blockSize){
     }
     double mse = square_sum / (double)blockSize;
     double rmse = sqrt(mse);
+    if(isinf(rmse))
+        rmse = DBL_MAX;
     return rmse;
+}
+
+double getRMSE_Mat(arma::mat ref, arma::mat recovered, arma::mat missing){
+    arma::umat mask = arma::find_nonfinite(missing);
+    arma::mat ref_masked = ref(mask);
+    arma::mat recovered_masked = recovered(mask);
+
+    arma::mat diff = ref_masked - recovered_masked;
+    return arma::norm(diff, "fro") / std::sqrt(diff.n_elem);
 }
 
 void generateLatLongFile(std::string destination, arma::mat &mat){
@@ -754,6 +748,109 @@ void generateLatLongFile(std::string destination, arma::mat &mat){
     file << "sensor_id,latitude,longitude" << std::endl;
     for(auto sensor : sensors){
         file << sensor << std::endl;
+    }
+    file.close();
+}
+
+std::pair<double, u_int64_t>  run(arma::mat &mat, std::string input, settings &set){
+    uint64_t runtime;
+    double rmse;
+
+//    if(set.misaligned) {
+//        startingIndex--;
+//        blockSize += 2;
+//    }
+
+    // Get the tcase from the file name
+    std::string number = input.substr(input.find_last_of('_') + 1);
+    number = number.substr(0, number.find_last_of('.'));
+    int tcase = std::stoi(number);
+
+    arma::mat missing;
+    missing.load(input, arma::raw_ascii);
+    arma::mat recovered = missing;
+
+    if(set.misaligned){
+        enlarge_missing_blocks(recovered);
+        // For testing purposes
+        // recovered.save("_data/enlarge_test/data_" + std::to_string(tcase)+".txt", arma::raw_ascii);
+    }
+
+    // Recover the matrix and get metrics
+    runtime = Performance::Recovery(recovered, set.algorithm, set.params);
+
+
+    // Dont forget to remove the first and last point of all missing blocks before the recovery to get better
+    // results for misalignement
+    if(set.misaligned){
+        auto missing_blocks = find_missing_blocks(missing);
+        for(auto missing_block: missing_blocks){
+            int missing_start = std::get<0>(missing_block);
+            int missing_size = std::get<1>(missing_block);
+            int missing_col = std::get<2>(missing_block);
+            arma::vec z = MisalignRedux::linear_interpolation(recovered(missing_start, missing_col),
+                                                              recovered(missing_start + missing_size, missing_col),
+                                                              missing_size);
+            arma::vec y = MisalignRedux::linear_interpolation(missing(missing_start, missing_col),
+                                                              missing(missing_start + missing_size, missing_col),
+                                                              missing_size);
+            recovered = recovered - (z - y);
+        }
+    }
+
+    std::string mat_filename = "_data/out/data_"+std::to_string(tcase)+".txt";
+    recovered.save(mat_filename, arma::raw_ascii);
+
+    rmse = getRMSE_Mat(mat, recovered, missing);
+    std::cout << "RMSE OF '" << input << "': " << rmse << std::endl;
+    return std::make_pair(rmse, runtime);
+}
+
+// Returns list of tuple as (start, size, column), start is include but start + size is exclude.
+std::vector<std::tuple<int, int, int>> find_missing_blocks(const arma::mat& B) {
+    std::vector<std::tuple<int, int, int>> missing_blocks;
+    for (arma::uword j = 0; j < B.n_cols; ++j) {
+        int start_index = -1;
+        int block_size = 0;
+        for (arma::uword i = 0; i < B.n_rows; ++i) {
+            if (!arma::is_finite(B(i, j))) {
+                if (start_index == -1) {
+                    start_index = i;
+                }
+                ++block_size;
+            } else {
+                if (start_index != -1) {
+                    missing_blocks.emplace_back(start_index, block_size, j);
+                    start_index = -1;
+                    block_size = 0;
+                }
+            }
+        }
+        if (start_index != -1) {
+            missing_blocks.emplace_back(start_index, block_size, j);
+        }
+    }
+    return missing_blocks;
+}
+
+void enlarge_missing_blocks(arma::mat& missing){
+    std::vector<std::tuple<int, int, int>> missing_blocks = find_missing_blocks(missing);
+    for(auto missing_block: missing_blocks){
+        int missing_start = std::get<0>(missing_block);
+        int missing_size = std::get<1>(missing_block);
+        int missing_end = missing_start + missing_size;
+        int missing_col = std::get<2>(missing_block);
+
+        if(missing_size < 3){ // Prevent removing small gaps
+            continue;
+        }
+
+        if(missing_start != 0){
+            missing(missing_start - 1,missing_col) = NAN;
+        }
+        if(missing_end != missing.n_rows){
+            missing(missing_end, missing_col) = NAN;
+        }
     }
 }
 

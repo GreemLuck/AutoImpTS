@@ -6,51 +6,51 @@
 
 #IncludeRegexTransform: 
 
-/mnt/f/dev/reduced-bench/Algebra/CentroidDecomposition.h
+/mnt/c/dev/reduced-bench/Algebra/CentroidDecomposition.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algebra/MissingBlock.hpp
+/mnt/c/dev/reduced-bench/Algebra/MissingBlock.hpp
 mlpack/core.hpp
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/CDMissingValueRecovery.h
+/mnt/c/dev/reduced-bench/Algorithms/CDMissingValueRecovery.h
 cmath
 -
 ../Algebra/CentroidDecomposition.h
-/mnt/f/dev/reduced-bench/Algebra/CentroidDecomposition.h
+/mnt/c/dev/reduced-bench/Algebra/CentroidDecomposition.h
 ../Algebra/MissingBlock.hpp
-/mnt/f/dev/reduced-bench/Algebra/MissingBlock.hpp
+/mnt/c/dev/reduced-bench/Algebra/MissingBlock.hpp
 ../Stats/Correlation.h
-/mnt/f/dev/reduced-bench/Stats/Correlation.h
+/mnt/c/dev/reduced-bench/Stats/Correlation.h
 
-/mnt/f/dev/reduced-bench/Algorithms/DynaMMo.h
+/mnt/c/dev/reduced-bench/Algorithms/DynaMMo.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/GROUSE.h
+/mnt/c/dev/reduced-bench/Algorithms/GROUSE.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/IterativeSVD.h
+/mnt/c/dev/reduced-bench/Algorithms/IterativeSVD.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/NMFMissingValueRecovery.h
+/mnt/c/dev/reduced-bench/Algorithms/NMFMissingValueRecovery.h
 mlpack/core.hpp
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/ROSL.h
+/mnt/c/dev/reduced-bench/Algorithms/ROSL.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/SPIRIT.h
+/mnt/c/dev/reduced-bench/Algorithms/SPIRIT.h
 tuple
 -
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/ST_MVL.h
+/mnt/c/dev/reduced-bench/Algorithms/ST_MVL.h
 map
 -
 array
@@ -58,37 +58,23 @@ array
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/SVT.h
+/mnt/c/dev/reduced-bench/Algorithms/SVT.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/SoftImpute.h
+/mnt/c/dev/reduced-bench/Algorithms/SoftImpute.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Algorithms/TKCM.h
+/mnt/c/dev/reduced-bench/Algorithms/TKCM.h
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.cpp
-iostream
--
-vector
--
-SuccessiveHalving.h
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.h
-../Database/SQL.h
-/mnt/f/dev/reduced-bench/Database/SQL.h
-
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.h
-../Performance/Benchmark.h
-/mnt/f/dev/reduced-bench/Performance/Benchmark.h
-
-/mnt/f/dev/reduced-bench/Database/SQL.h
+/mnt/c/dev/reduced-bench/Database/SQL.h
 ../parser.h
-/mnt/f/dev/reduced-bench/parser.h
+/mnt/c/dev/reduced-bench/parser.h
 
-/mnt/f/dev/reduced-bench/MathIO/MatrixReadWrite.h
+/mnt/c/dev/reduced-bench/MathIO/MatrixReadWrite.h
 string
 -
 fstream
@@ -98,7 +84,7 @@ vector
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/Performance/Benchmark.cpp
+/mnt/c/dev/reduced-bench/Performance/Benchmark.cpp
 Python.h
 -
 chrono
@@ -112,69 +98,79 @@ vector
 cmath
 -
 Benchmark.h
-/mnt/f/dev/reduced-bench/Performance/Benchmark.h
+/mnt/c/dev/reduced-bench/Performance/Benchmark.h
 ../Database/SQL.h
-/mnt/f/dev/reduced-bench/Database/SQL.h
+/mnt/c/dev/reduced-bench/Database/SQL.h
 cassert
 -
 filesystem
 -
 ../Algorithms/CDMissingValueRecovery.h
-/mnt/f/dev/reduced-bench/Algorithms/CDMissingValueRecovery.h
+/mnt/c/dev/reduced-bench/Algorithms/CDMissingValueRecovery.h
 ../Algorithms/TKCM.h
-/mnt/f/dev/reduced-bench/Algorithms/TKCM.h
+/mnt/c/dev/reduced-bench/Algorithms/TKCM.h
 ../Algorithms/ST_MVL.h
-/mnt/f/dev/reduced-bench/Algorithms/ST_MVL.h
+/mnt/c/dev/reduced-bench/Algorithms/ST_MVL.h
 ../Algorithms/SPIRIT.h
-/mnt/f/dev/reduced-bench/Algorithms/SPIRIT.h
+/mnt/c/dev/reduced-bench/Algorithms/SPIRIT.h
 ../Algorithms/GROUSE.h
-/mnt/f/dev/reduced-bench/Algorithms/GROUSE.h
+/mnt/c/dev/reduced-bench/Algorithms/GROUSE.h
 ../Algorithms/NMFMissingValueRecovery.h
-/mnt/f/dev/reduced-bench/Algorithms/NMFMissingValueRecovery.h
+/mnt/c/dev/reduced-bench/Algorithms/NMFMissingValueRecovery.h
 ../Algorithms/DynaMMo.h
-/mnt/f/dev/reduced-bench/Algorithms/DynaMMo.h
+/mnt/c/dev/reduced-bench/Algorithms/DynaMMo.h
 ../Algorithms/SVT.h
-/mnt/f/dev/reduced-bench/Algorithms/SVT.h
+/mnt/c/dev/reduced-bench/Algorithms/SVT.h
 ../Algorithms/ROSL.h
-/mnt/f/dev/reduced-bench/Algorithms/ROSL.h
+/mnt/c/dev/reduced-bench/Algorithms/ROSL.h
 ../Algorithms/IterativeSVD.h
-/mnt/f/dev/reduced-bench/Algorithms/IterativeSVD.h
+/mnt/c/dev/reduced-bench/Algorithms/IterativeSVD.h
 ../Algorithms/SoftImpute.h
-/mnt/f/dev/reduced-bench/Algorithms/SoftImpute.h
+/mnt/c/dev/reduced-bench/Algorithms/SoftImpute.h
 
-/mnt/f/dev/reduced-bench/Performance/Benchmark.h
+/mnt/c/dev/reduced-bench/Performance/Benchmark.h
 mlpack/core.hpp
 -
 ../MathIO/MatrixReadWrite.h
-/mnt/f/dev/reduced-bench/MathIO/MatrixReadWrite.h
+/mnt/c/dev/reduced-bench/MathIO/MatrixReadWrite.h
 ../Algebra/MissingBlock.hpp
-/mnt/f/dev/reduced-bench/Algebra/MissingBlock.hpp
+/mnt/c/dev/reduced-bench/Algebra/MissingBlock.hpp
+MisalignRedux.h
+/mnt/c/dev/reduced-bench/Performance/MisalignRedux.h
 ../parser.h
-/mnt/f/dev/reduced-bench/parser.h
+/mnt/c/dev/reduced-bench/parser.h
 
-/mnt/f/dev/reduced-bench/Stats/Correlation.h
+/mnt/c/dev/reduced-bench/Performance/MisalignRedux.h
+mlpack/core.hpp
+-
 armadillo
 -
 
-/mnt/f/dev/reduced-bench/main.cpp
-iostream
+/mnt/c/dev/reduced-bench/Scenarios/Scenario.h
+armadillo
 -
-Performance/Benchmark.h
-/mnt/f/dev/reduced-bench/Performance/Benchmark.h
-AutoParam/SuccessiveHalving.h
-/mnt/f/dev/reduced-bench/AutoParam/SuccessiveHalving.h
-parser.h
-/mnt/f/dev/reduced-bench/parser.h
-sqlite3.h
-/mnt/f/dev/reduced-bench/sqlite3.h
-Database/SQL.h
-/mnt/f/dev/reduced-bench/Database/SQL.h
+regex
+-
 
-/mnt/f/dev/reduced-bench/parser.h
+/mnt/c/dev/reduced-bench/Scenarios/ScenarioContext.h
+armadillo
+-
+regex
+-
+Scenario.h
+/mnt/c/dev/reduced-bench/Scenarios/Scenario.h
+
+/mnt/c/dev/reduced-bench/Stats/Correlation.h
+armadillo
+-
+
+/mnt/c/dev/reduced-bench/parser.h
 iostream
 -
 map
 -
+Scenarios/ScenarioContext.h
+/mnt/c/dev/reduced-bench/Scenarios/ScenarioContext.h
 
 /usr/include/python3.8/Python.h
 patchlevel.h
@@ -677,8 +673,4 @@ cpython/unicodeobject.h
 /usr/include/python3.8/warnings.h
 
 /usr/include/python3.8/weakrefobject.h
-
-include/sqlite3.h
-stdarg.h
--
 

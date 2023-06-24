@@ -80,13 +80,13 @@ void sql_insert(settings &set){
     paramsNames = streamKeys.str();
     paramsValues = streamValues.str();
     genericHeader = "Dataset,";
-    resultHeader = "Runtime,Rmse,Label,Runs";
+    resultHeader = "Runtime,Rmse,Label,Runs,Misaligned";
 
     // Get the table name
     table = GetTableName(set.algorithm);
 
     // Open database
-    rc = sqlite3_open("Results", &db);
+    rc = sqlite3_open("results.db", &db);
 
     if(rc){
         cerr << "Can't open the database: " << sqlite3_errmsg(db) << endl;
@@ -105,7 +105,7 @@ void sql_insert(settings &set){
         stringStream << ",''";
     else
         stringStream << ",'" << set.label << "'";
-    stringStream << ",'" << set.runs << "');";
+    stringStream << ",'" << set.runs << "'," << int(set.misaligned) <<  ");";
 
     const string& tmp = stringStream.str();
     const char *sql = tmp.c_str();

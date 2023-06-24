@@ -20,6 +20,7 @@ const double EARTH_RADIUS = 6378137.0; //earth radius
 
 namespace Algorithms
 {
+    uint64_t ST_MVL::currentId = 0;
 
 inline double ST_MVL::ComputeSpatialWeight(double dis)
 {
@@ -49,6 +50,7 @@ ST_MVL::ST_MVL(arma::mat &_missing, const std::string &latlong,
     //
     // Step 1 : lat-long
     //
+    id = currentId++;
     std::vector<double> latitude;
     std::vector<double> longitude;
     
@@ -127,7 +129,7 @@ void ST_MVL::doSTMVL()
     arma::mat equation(columnCount, 5); // 5 means 4 four views and residual
     
     std::ifstream srEquation;
-    srEquation.open(equationFile, std::ios::in);
+    srEquation.open(equationFile + "_" + std::to_string(id), std::ios::in);
     
     uint64_t count = 0;
     
@@ -513,7 +515,7 @@ void ST_MVL::GenerateTrainingCase()
         }
         
         std::ofstream swTrain;
-        swTrain.open(trainingFolder + "train_" + std::to_string(j) + ".txt", std::ios::out);
+        swTrain.open(trainingFolder + std::to_string(id) + "_train_" + std::to_string(j) + ".txt", std::ios::out);
         swTrain << caseCount << std::endl;
         swTrain << std::setprecision(15);//appx. matches C#
         
@@ -595,14 +597,14 @@ void ST_MVL::FourView(uint64_t sensorCount)
     std::cout << "Run Square Error..." << std::endl;
     
     std::ofstream sw;
-    sw.open(equationFile, std::ios::out);
+    sw.open(equationFile + "_" + std::to_string(id), std::ios::out);
     sw << std::setprecision(15);//appx. matches C#
     //std::cout << "training error(MAE): " << std::endl;
     
     for (uint64_t j = 0; j < sensorCount; j++)
     {
         std::ifstream sr;
-        sr.open(trainingFolder + "train_" + std::to_string(j) + ".txt", std::ios::in);
+        sr.open(trainingFolder + std::to_string(id) + "_train_" + std::to_string(j) + ".txt", std::ios::in);
         std::string buffer;
         uint64_t count = 0;
         

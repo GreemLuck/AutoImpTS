@@ -8,8 +8,9 @@
 #include <iostream>
 #include <map>
 
+#include "Scenarios/ScenarioContext.h"
+
 struct settings {
-    std::string autoH;
     std::string dataset;
     std::string algorithm;
     std::map<std::string, double> params;
@@ -17,6 +18,8 @@ struct settings {
     double rmse;
     std::string label;
     std::string runs;
+    bool misaligned;
+    bool multi_t;
 };
 
 struct cd_settings : settings {
@@ -98,10 +101,14 @@ namespace Parameters{
 }
 
 
-enum optionIndex { UNKNOWN, HELP, AUTO, ALG, PARAMS, TRUNCATION, MAX_ITER, TOLERANCE,
-        D, ALPHA, GAMMA, WIN_SIZE, LAMBDA, TAUSCALE, LAMBDA_I, LAMBDA_AR, LAMBDA_LAG,
-        LABEL, DATASET };
+enum optionIndex {
+    UNKNOWN,
+    HELP, MULTI_T, MISALIGNED, ALG, PARAMS, SCENARIO_TYPE, SCENARIO_VARIABLES, SCENARIO_OUTPATH,
+    TRUNCATION, MAX_ITER, TOLERANCE, D, ALPHA, GAMMA, WIN_SIZE, LAMBDA,
+    TAUSCALE, LAMBDA_I, LAMBDA_AR, LAMBDA_LAG,
+    LABEL, DATASET
+};
 
-int parse(int argc, char **argv, settings &set);
+int parse(int argc, char **argv, settings &set, Scenarios::scenario_settings &scenarioSettings);
 
 #endif //REDUCED_BENCH_PARSER_H

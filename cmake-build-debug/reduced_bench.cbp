@@ -44,6 +44,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/usr/include/python3.8"/>
 					<Add directory="/mnt/c/dev/reduced-bench/include"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
@@ -67,6 +68,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/usr/include/python3.8"/>
 					<Add directory="/mnt/c/dev/reduced-bench/include"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
@@ -171,6 +173,12 @@
 		<Unit filename="/mnt/c/dev/reduced-bench/Algorithms/TKCM.h">
 			<Option target="reduced_bench"/>
 		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Database/SQL.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Database/SQL.h">
+			<Option target="reduced_bench"/>
+		</Unit>
 		<Unit filename="/mnt/c/dev/reduced-bench/MathIO/MatrixReadWrite.cpp">
 			<Option target="reduced_bench"/>
 		</Unit>
@@ -183,22 +191,49 @@
 		<Unit filename="/mnt/c/dev/reduced-bench/Performance/Benchmark.h">
 			<Option target="reduced_bench"/>
 		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Performance/MisalignRedux.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Performance/MisalignRedux.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Scenarios/MCAR.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Scenarios/MCAR.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Scenarios/MissingBlock.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Scenarios/MissingBlock.h">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Scenarios/Scenario.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/Scenarios/Scenario.h">
+			<Option target="reduced_bench"/>
+		</Unit>
 		<Unit filename="/mnt/c/dev/reduced-bench/Stats/Correlation.cpp">
 			<Option target="reduced_bench"/>
 		</Unit>
 		<Unit filename="/mnt/c/dev/reduced-bench/Stats/Correlation.h">
 			<Option target="reduced_bench"/>
 		</Unit>
-		<Unit filename="/mnt/c/dev/reduced-bench/Testing.cpp">
+		<Unit filename="/mnt/c/dev/reduced-bench/include/sqlite3.c">
 			<Option target="reduced_bench"/>
 		</Unit>
-		<Unit filename="/mnt/c/dev/reduced-bench/Testing.h">
+		<Unit filename="/mnt/c/dev/reduced-bench/include/sqlite3.h">
 			<Option target="reduced_bench"/>
 		</Unit>
 		<Unit filename="/mnt/c/dev/reduced-bench/main.cpp">
 			<Option target="reduced_bench"/>
 		</Unit>
-		<Unit filename="/mnt/c/dev/reduced-bench/main.h">
+		<Unit filename="/mnt/c/dev/reduced-bench/parser.cpp">
+			<Option target="reduced_bench"/>
+		</Unit>
+		<Unit filename="/mnt/c/dev/reduced-bench/parser.h">
 			<Option target="reduced_bench"/>
 		</Unit>
 		<Unit filename="/mnt/c/dev/reduced-bench/CMakeLists.txt">

@@ -42,8 +42,10 @@ add_executable(
         Algebra/MissingBlock.hpp
         Stats/Correlation.cpp Stats/Correlation.h
         Algebra/RSVD.cpp Algebra/RSVD.h
-        AutoParam/SuccessiveHalving.cpp AutoParam/SuccessiveHalving.h
-        Database/SQL.cpp Database/SQL.h)
+        Database/SQL.cpp Database/SQL.h Performance/MisalignRedux.cpp Performance/MisalignRedux.h Scenarios/MissingBlock.cpp Scenarios/MissingBlock.h Scenarios/Scenario.h Scenarios/MissingBlock.cpp Scenarios/MissingBlock.h Scenarios/MCAR.cpp Scenarios/MCAR.h Scenarios/Scenario.cpp
+        Scenarios/ScenarioContext.h Scenarios/ScenarioContext.cpp)
 target_include_directories(reduced_bench PUBLIC ${ARMADILLO_INCLUDE_DIR} ${Python3_INCLUDE_DIRS} include)
+target_compile_options(reduced_bench PRIVATE -pg) # Progiling
+target_link_options(reduced_bench PRIVATE -pg) # Profiling
 target_link_libraries(reduced_bench ${ARMADILLO_LIBRARIES} ${Python3_LIBRARIES} -lmlpack -ldl)
 

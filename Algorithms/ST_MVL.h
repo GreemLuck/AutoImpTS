@@ -44,9 +44,11 @@ class ST_MVL
     
     const uint64_t temporal_threshold = 5;
     const static uint64_t viewCount = 4;
-  
-  public:
-    
+    static uint64_t currentId;
+    uint64_t id;
+
+public:
+
     // aux
     inline double ComputeSpatialWeight(double dis);
     
@@ -103,8 +105,6 @@ class ST_MVL
 
 // Auxiliary
 
-
 } // namespace Algorithms
-
 
 

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/f/dev/reduced-bench
+CMAKE_SOURCE_DIR = /mnt/c/dev/reduced-bench
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/f/dev/reduced-bench
+CMAKE_BINARY_DIR = /mnt/c/dev/reduced-bench
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/f/dev/reduced-bench/CMakeFiles /mnt/f/dev/reduced-bench/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles /mnt/c/dev/reduced-bench/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/f/dev/reduced-bench/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/dev/reduced-bench/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -501,33 +501,6 @@ Algorithms/TKCM.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.s
 .PHONY : Algorithms/TKCM.cpp.s
 
-AutoParam/SuccessiveHalving.o: AutoParam/SuccessiveHalving.cpp.o
-
-.PHONY : AutoParam/SuccessiveHalving.o
-
-# target to build an object file
-AutoParam/SuccessiveHalving.cpp.o:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.o
-.PHONY : AutoParam/SuccessiveHalving.cpp.o
-
-AutoParam/SuccessiveHalving.i: AutoParam/SuccessiveHalving.cpp.i
-
-.PHONY : AutoParam/SuccessiveHalving.i
-
-# target to preprocess a source file
-AutoParam/SuccessiveHalving.cpp.i:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.i
-.PHONY : AutoParam/SuccessiveHalving.cpp.i
-
-AutoParam/SuccessiveHalving.s: AutoParam/SuccessiveHalving.cpp.s
-
-.PHONY : AutoParam/SuccessiveHalving.s
-
-# target to generate assembly for a file
-AutoParam/SuccessiveHalving.cpp.s:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/AutoParam/SuccessiveHalving.cpp.s
-.PHONY : AutoParam/SuccessiveHalving.cpp.s
-
 Database/SQL.o: Database/SQL.cpp.o
 
 .PHONY : Database/SQL.o
@@ -608,6 +581,141 @@ Performance/Benchmark.s: Performance/Benchmark.cpp.s
 Performance/Benchmark.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.s
 .PHONY : Performance/Benchmark.cpp.s
+
+Performance/MisalignRedux.o: Performance/MisalignRedux.cpp.o
+
+.PHONY : Performance/MisalignRedux.o
+
+# target to build an object file
+Performance/MisalignRedux.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.o
+.PHONY : Performance/MisalignRedux.cpp.o
+
+Performance/MisalignRedux.i: Performance/MisalignRedux.cpp.i
+
+.PHONY : Performance/MisalignRedux.i
+
+# target to preprocess a source file
+Performance/MisalignRedux.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.i
+.PHONY : Performance/MisalignRedux.cpp.i
+
+Performance/MisalignRedux.s: Performance/MisalignRedux.cpp.s
+
+.PHONY : Performance/MisalignRedux.s
+
+# target to generate assembly for a file
+Performance/MisalignRedux.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.s
+.PHONY : Performance/MisalignRedux.cpp.s
+
+Scenarios/MCAR.o: Scenarios/MCAR.cpp.o
+
+.PHONY : Scenarios/MCAR.o
+
+# target to build an object file
+Scenarios/MCAR.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o
+.PHONY : Scenarios/MCAR.cpp.o
+
+Scenarios/MCAR.i: Scenarios/MCAR.cpp.i
+
+.PHONY : Scenarios/MCAR.i
+
+# target to preprocess a source file
+Scenarios/MCAR.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.i
+.PHONY : Scenarios/MCAR.cpp.i
+
+Scenarios/MCAR.s: Scenarios/MCAR.cpp.s
+
+.PHONY : Scenarios/MCAR.s
+
+# target to generate assembly for a file
+Scenarios/MCAR.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.s
+.PHONY : Scenarios/MCAR.cpp.s
+
+Scenarios/MissingBlock.o: Scenarios/MissingBlock.cpp.o
+
+.PHONY : Scenarios/MissingBlock.o
+
+# target to build an object file
+Scenarios/MissingBlock.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.o
+.PHONY : Scenarios/MissingBlock.cpp.o
+
+Scenarios/MissingBlock.i: Scenarios/MissingBlock.cpp.i
+
+.PHONY : Scenarios/MissingBlock.i
+
+# target to preprocess a source file
+Scenarios/MissingBlock.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.i
+.PHONY : Scenarios/MissingBlock.cpp.i
+
+Scenarios/MissingBlock.s: Scenarios/MissingBlock.cpp.s
+
+.PHONY : Scenarios/MissingBlock.s
+
+# target to generate assembly for a file
+Scenarios/MissingBlock.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.s
+.PHONY : Scenarios/MissingBlock.cpp.s
+
+Scenarios/Scenario.o: Scenarios/Scenario.cpp.o
+
+.PHONY : Scenarios/Scenario.o
+
+# target to build an object file
+Scenarios/Scenario.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o
+.PHONY : Scenarios/Scenario.cpp.o
+
+Scenarios/Scenario.i: Scenarios/Scenario.cpp.i
+
+.PHONY : Scenarios/Scenario.i
+
+# target to preprocess a source file
+Scenarios/Scenario.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.i
+.PHONY : Scenarios/Scenario.cpp.i
+
+Scenarios/Scenario.s: Scenarios/Scenario.cpp.s
+
+.PHONY : Scenarios/Scenario.s
+
+# target to generate assembly for a file
+Scenarios/Scenario.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.s
+.PHONY : Scenarios/Scenario.cpp.s
+
+Scenarios/ScenarioContext.o: Scenarios/ScenarioContext.cpp.o
+
+.PHONY : Scenarios/ScenarioContext.o
+
+# target to build an object file
+Scenarios/ScenarioContext.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/ScenarioContext.cpp.o
+.PHONY : Scenarios/ScenarioContext.cpp.o
+
+Scenarios/ScenarioContext.i: Scenarios/ScenarioContext.cpp.i
+
+.PHONY : Scenarios/ScenarioContext.i
+
+# target to preprocess a source file
+Scenarios/ScenarioContext.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/ScenarioContext.cpp.i
+.PHONY : Scenarios/ScenarioContext.cpp.i
+
+Scenarios/ScenarioContext.s: Scenarios/ScenarioContext.cpp.s
+
+.PHONY : Scenarios/ScenarioContext.s
+
+# target to generate assembly for a file
+Scenarios/ScenarioContext.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/ScenarioContext.cpp.s
+.PHONY : Scenarios/ScenarioContext.cpp.s
 
 Stats/Correlation.o: Stats/Correlation.cpp.o
 
@@ -768,9 +876,6 @@ help:
 	@echo "... Algorithms/TKCM.o"
 	@echo "... Algorithms/TKCM.i"
 	@echo "... Algorithms/TKCM.s"
-	@echo "... AutoParam/SuccessiveHalving.o"
-	@echo "... AutoParam/SuccessiveHalving.i"
-	@echo "... AutoParam/SuccessiveHalving.s"
 	@echo "... Database/SQL.o"
 	@echo "... Database/SQL.i"
 	@echo "... Database/SQL.s"
@@ -780,6 +885,21 @@ help:
 	@echo "... Performance/Benchmark.o"
 	@echo "... Performance/Benchmark.i"
 	@echo "... Performance/Benchmark.s"
+	@echo "... Performance/MisalignRedux.o"
+	@echo "... Performance/MisalignRedux.i"
+	@echo "... Performance/MisalignRedux.s"
+	@echo "... Scenarios/MCAR.o"
+	@echo "... Scenarios/MCAR.i"
+	@echo "... Scenarios/MCAR.s"
+	@echo "... Scenarios/MissingBlock.o"
+	@echo "... Scenarios/MissingBlock.i"
+	@echo "... Scenarios/MissingBlock.s"
+	@echo "... Scenarios/Scenario.o"
+	@echo "... Scenarios/Scenario.i"
+	@echo "... Scenarios/Scenario.s"
+	@echo "... Scenarios/ScenarioContext.o"
+	@echo "... Scenarios/ScenarioContext.i"
+	@echo "... Scenarios/ScenarioContext.s"
 	@echo "... Stats/Correlation.o"
 	@echo "... Stats/Correlation.i"
 	@echo "... Stats/Correlation.s"

@@ -13,16 +13,22 @@ file(REMOVE_RECURSE
   "CMakeFiles/reduced_bench.dir/Algorithms/SVT.cpp.o"
   "CMakeFiles/reduced_bench.dir/Algorithms/SoftImpute.cpp.o"
   "CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.o"
+  "CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o"
   "CMakeFiles/reduced_bench.dir/MathIO/MatrixReadWrite.cpp.o"
   "CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.o"
+  "CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.o"
+  "CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o"
+  "CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.o"
+  "CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o"
   "CMakeFiles/reduced_bench.dir/Stats/Correlation.cpp.o"
-  "CMakeFiles/reduced_bench.dir/Testing.cpp.o"
+  "CMakeFiles/reduced_bench.dir/include/sqlite3.c.o"
   "CMakeFiles/reduced_bench.dir/main.cpp.o"
+  "CMakeFiles/reduced_bench.dir/parser.cpp.o"
   "reduced_bench"
   "reduced_bench.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang CXX)
+foreach(lang C CXX)
   include(CMakeFiles/reduced_bench.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()

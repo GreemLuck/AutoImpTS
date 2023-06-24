@@ -501,6 +501,33 @@ Algorithms/TKCM.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Algorithms/TKCM.cpp.s
 .PHONY : Algorithms/TKCM.cpp.s
 
+Database/SQL.o: Database/SQL.cpp.o
+
+.PHONY : Database/SQL.o
+
+# target to build an object file
+Database/SQL.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Database/SQL.cpp.o
+.PHONY : Database/SQL.cpp.o
+
+Database/SQL.i: Database/SQL.cpp.i
+
+.PHONY : Database/SQL.i
+
+# target to preprocess a source file
+Database/SQL.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Database/SQL.cpp.i
+.PHONY : Database/SQL.cpp.i
+
+Database/SQL.s: Database/SQL.cpp.s
+
+.PHONY : Database/SQL.s
+
+# target to generate assembly for a file
+Database/SQL.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Database/SQL.cpp.s
+.PHONY : Database/SQL.cpp.s
+
 MathIO/MatrixReadWrite.o: MathIO/MatrixReadWrite.cpp.o
 
 .PHONY : MathIO/MatrixReadWrite.o
@@ -555,6 +582,114 @@ Performance/Benchmark.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/Benchmark.cpp.s
 .PHONY : Performance/Benchmark.cpp.s
 
+Performance/MisalignRedux.o: Performance/MisalignRedux.cpp.o
+
+.PHONY : Performance/MisalignRedux.o
+
+# target to build an object file
+Performance/MisalignRedux.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.o
+.PHONY : Performance/MisalignRedux.cpp.o
+
+Performance/MisalignRedux.i: Performance/MisalignRedux.cpp.i
+
+.PHONY : Performance/MisalignRedux.i
+
+# target to preprocess a source file
+Performance/MisalignRedux.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.i
+.PHONY : Performance/MisalignRedux.cpp.i
+
+Performance/MisalignRedux.s: Performance/MisalignRedux.cpp.s
+
+.PHONY : Performance/MisalignRedux.s
+
+# target to generate assembly for a file
+Performance/MisalignRedux.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Performance/MisalignRedux.cpp.s
+.PHONY : Performance/MisalignRedux.cpp.s
+
+Scenarios/MCAR.o: Scenarios/MCAR.cpp.o
+
+.PHONY : Scenarios/MCAR.o
+
+# target to build an object file
+Scenarios/MCAR.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.o
+.PHONY : Scenarios/MCAR.cpp.o
+
+Scenarios/MCAR.i: Scenarios/MCAR.cpp.i
+
+.PHONY : Scenarios/MCAR.i
+
+# target to preprocess a source file
+Scenarios/MCAR.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.i
+.PHONY : Scenarios/MCAR.cpp.i
+
+Scenarios/MCAR.s: Scenarios/MCAR.cpp.s
+
+.PHONY : Scenarios/MCAR.s
+
+# target to generate assembly for a file
+Scenarios/MCAR.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MCAR.cpp.s
+.PHONY : Scenarios/MCAR.cpp.s
+
+Scenarios/MissingBlock.o: Scenarios/MissingBlock.cpp.o
+
+.PHONY : Scenarios/MissingBlock.o
+
+# target to build an object file
+Scenarios/MissingBlock.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.o
+.PHONY : Scenarios/MissingBlock.cpp.o
+
+Scenarios/MissingBlock.i: Scenarios/MissingBlock.cpp.i
+
+.PHONY : Scenarios/MissingBlock.i
+
+# target to preprocess a source file
+Scenarios/MissingBlock.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.i
+.PHONY : Scenarios/MissingBlock.cpp.i
+
+Scenarios/MissingBlock.s: Scenarios/MissingBlock.cpp.s
+
+.PHONY : Scenarios/MissingBlock.s
+
+# target to generate assembly for a file
+Scenarios/MissingBlock.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/MissingBlock.cpp.s
+.PHONY : Scenarios/MissingBlock.cpp.s
+
+Scenarios/Scenario.o: Scenarios/Scenario.cpp.o
+
+.PHONY : Scenarios/Scenario.o
+
+# target to build an object file
+Scenarios/Scenario.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.o
+.PHONY : Scenarios/Scenario.cpp.o
+
+Scenarios/Scenario.i: Scenarios/Scenario.cpp.i
+
+.PHONY : Scenarios/Scenario.i
+
+# target to preprocess a source file
+Scenarios/Scenario.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.i
+.PHONY : Scenarios/Scenario.cpp.i
+
+Scenarios/Scenario.s: Scenarios/Scenario.cpp.s
+
+.PHONY : Scenarios/Scenario.s
+
+# target to generate assembly for a file
+Scenarios/Scenario.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Scenarios/Scenario.cpp.s
+.PHONY : Scenarios/Scenario.cpp.s
+
 Stats/Correlation.o: Stats/Correlation.cpp.o
 
 .PHONY : Stats/Correlation.o
@@ -582,32 +717,32 @@ Stats/Correlation.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Stats/Correlation.cpp.s
 .PHONY : Stats/Correlation.cpp.s
 
-Testing.o: Testing.cpp.o
+include/sqlite3.o: include/sqlite3.c.o
 
-.PHONY : Testing.o
+.PHONY : include/sqlite3.o
 
 # target to build an object file
-Testing.cpp.o:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Testing.cpp.o
-.PHONY : Testing.cpp.o
+include/sqlite3.c.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/include/sqlite3.c.o
+.PHONY : include/sqlite3.c.o
 
-Testing.i: Testing.cpp.i
+include/sqlite3.i: include/sqlite3.c.i
 
-.PHONY : Testing.i
+.PHONY : include/sqlite3.i
 
 # target to preprocess a source file
-Testing.cpp.i:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Testing.cpp.i
-.PHONY : Testing.cpp.i
+include/sqlite3.c.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/include/sqlite3.c.i
+.PHONY : include/sqlite3.c.i
 
-Testing.s: Testing.cpp.s
+include/sqlite3.s: include/sqlite3.c.s
 
-.PHONY : Testing.s
+.PHONY : include/sqlite3.s
 
 # target to generate assembly for a file
-Testing.cpp.s:
-	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/Testing.cpp.s
-.PHONY : Testing.cpp.s
+include/sqlite3.c.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/include/sqlite3.c.s
+.PHONY : include/sqlite3.c.s
 
 main.o: main.cpp.o
 
@@ -635,6 +770,33 @@ main.s: main.cpp.s
 main.cpp.s:
 	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+parser.o: parser.cpp.o
+
+.PHONY : parser.o
+
+# target to build an object file
+parser.cpp.o:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/parser.cpp.o
+.PHONY : parser.cpp.o
+
+parser.i: parser.cpp.i
+
+.PHONY : parser.i
+
+# target to preprocess a source file
+parser.cpp.i:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/parser.cpp.i
+.PHONY : parser.cpp.i
+
+parser.s: parser.cpp.s
+
+.PHONY : parser.s
+
+# target to generate assembly for a file
+parser.cpp.s:
+	$(MAKE) -f CMakeFiles/reduced_bench.dir/build.make CMakeFiles/reduced_bench.dir/parser.cpp.s
+.PHONY : parser.cpp.s
 
 # Help Target
 help:
@@ -687,21 +849,39 @@ help:
 	@echo "... Algorithms/TKCM.o"
 	@echo "... Algorithms/TKCM.i"
 	@echo "... Algorithms/TKCM.s"
+	@echo "... Database/SQL.o"
+	@echo "... Database/SQL.i"
+	@echo "... Database/SQL.s"
 	@echo "... MathIO/MatrixReadWrite.o"
 	@echo "... MathIO/MatrixReadWrite.i"
 	@echo "... MathIO/MatrixReadWrite.s"
 	@echo "... Performance/Benchmark.o"
 	@echo "... Performance/Benchmark.i"
 	@echo "... Performance/Benchmark.s"
+	@echo "... Performance/MisalignRedux.o"
+	@echo "... Performance/MisalignRedux.i"
+	@echo "... Performance/MisalignRedux.s"
+	@echo "... Scenarios/MCAR.o"
+	@echo "... Scenarios/MCAR.i"
+	@echo "... Scenarios/MCAR.s"
+	@echo "... Scenarios/MissingBlock.o"
+	@echo "... Scenarios/MissingBlock.i"
+	@echo "... Scenarios/MissingBlock.s"
+	@echo "... Scenarios/Scenario.o"
+	@echo "... Scenarios/Scenario.i"
+	@echo "... Scenarios/Scenario.s"
 	@echo "... Stats/Correlation.o"
 	@echo "... Stats/Correlation.i"
 	@echo "... Stats/Correlation.s"
-	@echo "... Testing.o"
-	@echo "... Testing.i"
-	@echo "... Testing.s"
+	@echo "... include/sqlite3.o"
+	@echo "... include/sqlite3.i"
+	@echo "... include/sqlite3.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... parser.o"
+	@echo "... parser.i"
+	@echo "... parser.s"
 .PHONY : help
 
 
