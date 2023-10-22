@@ -1,0 +1,8 @@
+*.png
+.cmake/
+_data/
+Graphs/*
+*.out
+*.sqlite
+Results
+results.db
