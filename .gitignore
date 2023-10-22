@@ -1,7 +1,11 @@
 *.png
 .cmake/
-_data/
 Graphs/*
+!Graphs/.gitkeep
+_data/in/*
+!_data/in/.gitkeep
+_data/out/*
+!_data/out/.gitkeep
 *.out
 *.sqlite
 Results
@@ -12,13 +16,24 @@ build/
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
+cmake_build_debug/
 Makefile
 
+# Copmpiled C/C++ files
 *.out
 *.so
 *.dll
 *.exe
 
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Caching files
+__pycache__/
+
+# IDE specific files
 .idea/
 .vscode/
 

@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS "-fopenmp")
 
 find_package(Armadillo REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development)
+find_package(mlpack REQUIRED)
 
 message("Python_FOUND:${Python_FOUND}")
 message("Python_VERSION:${Python_VERSION}")
@@ -13,39 +14,88 @@ message("Python_Development_FOUND:${Python_Development_FOUND}")
 message("Python_LIBRARIES:${Python_LIBRARIES}")
 message("Python Include Dir:${Python3_INCLUDE_DIRS}")
 message("Python Lib dir: ${Python3_LIBRARIES}")
-add_executable(
-        reduced_bench
 
+set(SOURCE_FILES
         main.cpp
-        parser.h parser.cpp
-        include/sqlite3.h include/sqlite3.c
+        parser.cpp
+        include/sqlite3.c
+
+        Performance/Benchmark.cpp
+        MathIO/MatrixReadWrite.cpp
+
+        Algebra/Auxiliary.cpp
+
+        Algorithms/TKCM.cpp
+        Algorithms/ST_MVL.cpp
+        Algorithms/SPIRIT.cpp
+        Algorithms/GROUSE.cpp
+        Algorithms/NMFMissingValueRecovery.cpp
+        Algorithms/DynaMMo.cpp
+        Algorithms/SVT.cpp
+        Algorithms/ROSL.cpp
+        Algorithms/IterativeSVD.cpp
+        Algorithms/SoftImpute.cpp
+
+        Algorithms/CDMissingValueRecovery.cpp
+        Algebra/CentroidDecomposition.cpp
+        Stats/Correlation.cpp
+        Algebra/RSVD.cpp
+        Database/SQL.cpp 
+        Performance/MisalignRedux.cpp 
+        Scenarios/MissingBlock.cpp 
+        Scenarios/MissingBlock.cpp
+        Scenarios/MCAR.cpp 
+        Scenarios/Scenario.cpp
+        Scenarios/ScenarioContext.cpp
+)
+
+set(HEADER_FILES
+        parser.h
+        include/sqlite3.h
         Algebra/MissingBlock.hpp
+        Performance/Benchmark.h
+        MathIO/MatrixReadWrite.h
+        Algebra/Auxiliary.h
+        Algorithms/TKCM.h
+        Algorithms/ST_MVL.h
+        Algorithms/SPIRIT.h
+        Algorithms/GROUSE.h
+        Algorithms/NMFMissingValueRecovery.h
+        Algorithms/DynaMMo.h
+        Algorithms/SVT.h
+        Algorithms/ROSL.h
+        Algorithms/IterativeSVD.h
+        Algorithms/SoftImpute.h
+        Algorithms/CDMissingValueRecovery.h
+        Algebra/CentroidDecomposition.h
+        Stats/Correlation.h
+        Algebra/RSVD.h
+        Database/SQL.h
+        Performance/MisalignRedux.h
+        Scenarios/MissingBlock.h
+        Scenarios/Scenario.h
+        Scenarios/MCAR.h
+        Scenarios/ScenarioContext.h
+)
 
-        Performance/Benchmark.cpp Performance/Benchmark.h
-        MathIO/MatrixReadWrite.cpp MathIO/MatrixReadWrite.h
+add_executable(reduced_bench ${SOURCE_FILES} ${HEADER_FILES})
 
-        Algebra/Auxiliary.cpp Algebra/Auxiliary.h
+target_include_directories(
+        reduced_bench PUBLIC 
+        ${ARMADILLO_INCLUDE_DIR} 
+        ${Python3_INCLUDE_DIRS} 
+        ${MLPACK_INCLUDE_DIRS}
+        include
+)
 
-        Algorithms/TKCM.cpp Algorithms/TKCM.h
-        Algorithms/ST_MVL.cpp Algorithms/ST_MVL.h
-        Algorithms/SPIRIT.cpp Algorithms/SPIRIT.h
-        Algorithms/GROUSE.cpp Algorithms/GROUSE.h
-        Algorithms/NMFMissingValueRecovery.cpp Algorithms/NMFMissingValueRecovery.h
-        Algorithms/DynaMMo.cpp Algorithms/DynaMMo.h
-        Algorithms/SVT.cpp Algorithms/SVT.h
-        Algorithms/ROSL.cpp Algorithms/ROSL.h
-        Algorithms/IterativeSVD.cpp Algorithms/IterativeSVD.h
-        Algorithms/SoftImpute.cpp Algorithms/SoftImpute.h
-
-        Algorithms/CDMissingValueRecovery.cpp Algorithms/CDMissingValueRecovery.h
-        Algebra/CentroidDecomposition.cpp Algebra/CentroidDecomposition.h
-        Algebra/MissingBlock.hpp
-        Stats/Correlation.cpp Stats/Correlation.h
-        Algebra/RSVD.cpp Algebra/RSVD.h
-        Database/SQL.cpp Database/SQL.h Performance/MisalignRedux.cpp Performance/MisalignRedux.h Scenarios/MissingBlock.cpp Scenarios/MissingBlock.h Scenarios/Scenario.h Scenarios/MissingBlock.cpp Scenarios/MissingBlock.h Scenarios/MCAR.cpp Scenarios/MCAR.h Scenarios/Scenario.cpp
-        Scenarios/ScenarioContext.h Scenarios/ScenarioContext.cpp)
-target_include_directories(reduced_bench PUBLIC ${ARMADILLO_INCLUDE_DIR} ${Python3_INCLUDE_DIRS} include)
 target_compile_options(reduced_bench PRIVATE -pg) # Progiling
 target_link_options(reduced_bench PRIVATE -pg) # Profiling
-target_link_libraries(reduced_bench ${ARMADILLO_LIBRARIES} ${Python3_LIBRARIES} -lmlpack -ldl)
+
+target_link_libraries(
+        reduced_bench
+        ${MLPACK_LIBRARIES} 
+        ${ARMADILLO_LIBRARIES} 
+        ${Python3_LIBRARIES} 
+        -ldl
+)
 

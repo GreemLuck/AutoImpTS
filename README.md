@@ -20,3 +20,10 @@ project. Here's how to use it:
     ``` bash
    ./setup.sh
     ```
+5. Build the project
+    ``` bash
+    mkdir build
+    cd build
+    cmake ..
+    make
+    ```
