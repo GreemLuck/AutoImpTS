@@ -7,4 +7,4 @@ sudo apt-get update
 sudo apt-get install -y libarmadillo-dev
 
 # Install Python packages
-pip install -r requirements.txt
+pip install -r python_packages.txt
