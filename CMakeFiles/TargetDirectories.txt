@@ -1,3 +1,0 @@
-/mnt/c/dev/reduced-bench/CMakeFiles/rebuild_cache.dir
-/mnt/c/dev/reduced-bench/CMakeFiles/edit_cache.dir
-/mnt/c/dev/reduced-bench/CMakeFiles/reduced_bench.dir
