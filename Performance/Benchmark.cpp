@@ -791,10 +791,10 @@ std::pair<double, u_int64_t>  run(arma::mat &mat, std::string input, settings &s
             arma::vec z = MisalignRedux::linear_interpolation(recovered(missing_start, missing_col),
                                                               recovered(missing_start + missing_size, missing_col),
                                                               missing_size);
-            arma::vec y = MisalignRedux::linear_interpolation(missing(missing_start, missing_col),
-                                                              missing(missing_start + missing_size, missing_col),
+            arma::vec y = MisalignRedux::linear_interpolation(mat(missing_start, missing_col),
+                                                              mat(missing_start + missing_size, missing_col),
                                                               missing_size);
-            recovered = recovered - (z - y);
+            recovered.submat(missing_start, missing_col, missing_start + missing_size-1, missing_col) -= (z - y);
         }
     }
 

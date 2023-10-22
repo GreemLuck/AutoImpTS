@@ -55,5 +55,5 @@ def rs_execute(algorithm=None, dataset=None,
     return competitors[0][0]
 
 if __name__ == "__main__":
-    rs_execute(algorithm="cd", dataset="airq", sample_size=4,
-               distribution={"truncation": (1,10,1)})
+    rs_execute(algorithm="stmvl", dataset="airq", sample_size=5,
+               distribution=ts_algorithms.ST_MVL_BOUNDS_STEP, fixed_param={})

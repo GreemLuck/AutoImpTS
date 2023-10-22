@@ -1,9 +1,5 @@
 import os
-import sys
 from pathlib import Path
-import sqlite3
-import time
-from numpy import mean
 import numpy as np
 
 ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
@@ -34,8 +30,8 @@ GROUSE_BOUNDS_STEP = {"truncation": (1, 10, 1)}
 NNMF_BOUNDS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
 NNMF_BOUNDS_STEP = {"tolerance": (1, 10, 1), "truncation": (1, 10, 1), "max_iter": (10, 1000, 1)}
 
-SVT_BOUNDS = {"tolerance": (1, 10), "tauscale": (0, 1), "max_iter": (10, 1000)}
-SVT_BOUNDS_STEP = {"tolerance": (1, 10, 1), "tauscale": (0, 1, 0.01), "max_iter": (10, 1000, 1)}
+SVT_BOUNDS = {"tolerance": (1, 10), "tauscale": (0, 1), "max_iter": (10, 300)}
+SVT_BOUNDS_STEP = {"tolerance": (1, 10, 1), "tauscale": (0, 1, 0.01), "max_iter": (10, 300, 1)}
 
 ROSL_BOUDNS = {"tolerance": (1, 10), "truncation": (1, 10), "max_iter": (10, 1000)}
 ROSL_BOUDNS_STEP = {"tolerance": (1, 10, 1), "truncation": (1, 10, 1), "max_iter": (10, 1000, 1)}
@@ -99,7 +95,7 @@ def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False,
     return rmse, runtime, params
 
 
-def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label = "tkcm-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label="tkcm-bayes", misaligned=False, parallel=True, scenario="MCAR"):
     alg = "tkcm"
 
     truncation = int(truncation)

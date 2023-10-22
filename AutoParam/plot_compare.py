@@ -1,4 +1,6 @@
 import sqlite3
+import time
+
 import matplotlib.pyplot as plt
 import numpy as np
 import BayesOpt
@@ -25,7 +27,7 @@ exploration = 5
 exploitation = 7
 
 n_particles = 4
-n_iter = 20
+n_iter = 5
 
 swarmp_flag = True
 default_flag = False
@@ -294,6 +296,13 @@ def store_data(alg, dataset, folder_name, misaligned=False, auto_alg='none', sce
     alg_func, alg_bounds, alg_bounds_step = ts_algorithms.get_algorithm(alg)
     data_path = '_data/out/'
     store_path = f'Graphs/store_data/{folder_name}/{alg}/{dataset}/'
+    is_timed = False
+    start = 0
+    stop = 0
+    runtime = 0
+
+    if auto_alg != 'none':
+        start = time.time()
 
     if auto_alg == 'none':
         alg_func(dataset=dataset, misaligned=misaligned, scenario=scenario)
@@ -323,6 +332,12 @@ def store_data(alg, dataset, folder_name, misaligned=False, auto_alg='none', sce
 
     Path(store_path).mkdir(parents=True, exist_ok=True)
 
+    #add the time to the file results.txt mon reuf
+    if auto_alg != 'none':
+        stop = time.time()
+        runtime = stop - start
+        with open(data_path + "/results.txt", 'a') as f:
+            f.write("\n" + str(runtime))
 
 
     copy_folder_contents(data_path, store_path)
@@ -428,8 +443,13 @@ def copy_folder_contents(src_folder, dest_folder):
 if __name__ == "__main__":
     # misaligned_compare_matrix('cdrec', 'airq', 100)
     #misaligned_compare_matrix('chlorine')
-    datasets = ["chlorine"]
-    algorithms = ["cdrec", "svt", "stmvl", "spirit", "grouse", "nnmf", "rosl", "itersvd", "dynammo", "softimpute", "tkcm"]
+    datasets = ["chlorine", "airq", "temp", "drift", "climate", "electricity", "meteo", "bafu"]
+    algorithms = ["svt", "stmvl", "spirit", "grouse", "nnmf", "rosl", "itersvd", "dynammo", "softimpute", "tkcm"]
+    autoparam = ["bayes", "swarm", "random_search"]
 
-    for a in algorithms:
-        store_data(a, "chlorine", "post_processing", misaligned=True, auto_alg="none")
+    for p in autoparam:
+        store_data("svt", "temp", p, auto_alg=p);
+    # for a in algorithms:
+    #     for d in datasets:
+    #         for p in autoparam:
+    #             store_data(a, d, p, auto_alg=p)
