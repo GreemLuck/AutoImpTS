@@ -15,7 +15,7 @@ ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
 def sh_execute(algorithm=None, dataset=None,
                sample_size=5,
                distribution={},
-               resource_name='max_iter', resource_max=100, resource_min=5,
+               resource_max=80, resource_min=10,
                keep_losers=False):
     """ Starts the successive halving algorithm with the given settings
     Args:
@@ -42,12 +42,9 @@ def sh_execute(algorithm=None, dataset=None,
     sample_lst = []
     for key in distribution_keys:
         min_v, max_v, step = distribution[key]
-        try:
-            distri_lst = list(np.arange(*distribution[key]))
-            sample_lst.append(random.sample(distri_lst, sample_size))
-        except ValueError:
-            raise ValueError(f"Sample size is not supported. "
-                             f"Got {sample_size}, expected {min_v - max_v}.")
+        distri_lst = list(np.arange(*distribution[key]))
+        sample_lst.append(random.choices(distri_lst, k=sample_size))
+        
     sample_zip = zip(*sample_lst)
     competitors = []
     for v in sample_zip:
@@ -58,7 +55,7 @@ def sh_execute(algorithm=None, dataset=None,
         # the third is rmse history after elimination (for checking the correctness of the run)
 
     # setting up variables
-    alg, _ = ts_algorithms.get_algorithm(algorithm)
+    alg, _, _ = ts_algorithms.get_algorithm(algorithm)
     n_competitors = sample_size
     eta = np.exp( np.log(resource_max/float(resource_min))/(math.floor(np.log(sample_size)/np.log(2.))-1))
     resource = resource_min
@@ -69,12 +66,12 @@ def sh_execute(algorithm=None, dataset=None,
         resource_lst.append(resource)
         for c in tqdm(competitors[:n_competitors]):
             print(c[1])
-            rmse, *_ = alg(dataset=dataset, verbose=True, **c[1], **{resource_name: resource})
+            rmse, *_ = alg(dataset=dataset, verbose=True, **c[1], **{"scenv": f"{resource},{resource},{resource}"})
             c[0].append(rmse)
         if keep_losers:
             for c in tqdm(competitors[n_competitors:]):
                 print(c[1])
-                rmse, _ = alg(dataset=dataset, **c[1], **{resource_name: resource})
+                rmse, _ = alg(dataset=dataset, **c[1], **{"scenv": f"{resource},{resource},{resource}"})
                 c[2].append(rmse)
         competitors[:n_competitors] = sorted(competitors[:n_competitors], key=lambda r: r[0][-1])
         resource = math.floor(resource*eta)
@@ -85,7 +82,7 @@ def sh_execute(algorithm=None, dataset=None,
     print(competitors)
 
     sh_plot(competitors, algorithm=algorithm, dataset=dataset,
-            resources=resource_lst, resource_name=resource_name)
+            resources=resource_lst, resource_name="Missing data percentage")
     return competitors[0][1]
 
 

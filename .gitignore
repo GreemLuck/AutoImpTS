@@ -6,6 +6,8 @@ _data/in/*
 !_data/in/.gitkeep
 _data/out/*
 !_data/out/.gitkeep
+_data/data.csv
+_data/data_autoparam.csv
 *.out
 *.sqlite
 Results

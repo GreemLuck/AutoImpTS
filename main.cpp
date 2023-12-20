@@ -18,6 +18,7 @@ void printSettings(settings &set);
 std::string DName2Folder(std::string dataset);
 void delete_dir_content(const std::filesystem::path &path);
 Scenarios::ScenarioContext createScenarioInstance(Scenarios::scenario_settings scenario);
+void write_to_csv(const std::string& filename, settings& settings_data, Scenarios::scenario_settings& scenario);
 
 int main(int argc, char **argv) {
     settings set;
@@ -43,7 +44,8 @@ int main(int argc, char **argv) {
     scenarioContext.runScenario(reference, scenario);
 
     Performance::Start_Benchmark(set, scenario, reference);
-//    printSettings(set);
+    write_to_csv("_data/data.csv", set, scenario);
+    //    printSettings(set);
 
     return 0;
 }
@@ -84,4 +86,26 @@ std::string DName2Folder(std::string dataset){
     if(dataset == "drift10")
         return "drift";
     return dataset;
+}
+
+void write_to_csv(const std::string& filename, settings& settings_data, Scenarios::scenario_settings& scenario) {
+    std::ofstream file(filename, std::ios::app);
+    std::string processed_runs = settings_data.runs;
+    std::replace(processed_runs.begin(), processed_runs.end(), '\n', ';');
+    
+    // Write headers
+    if (file.tellp() == 0) {
+        file << "Dataset,Algorithm,Params,Runtime,RMSE,Runs,Misaligned,Multi_T,Scenario_Type,Scenario_Variables\n";
+    }
+
+    file << settings_data.dataset << "," << settings_data.algorithm << ",";
+    for (const auto& p : settings_data.params) {
+        file << p.first << "=" << p.second << ";";
+    }
+    file << ',' << settings_data.runtime << ',' << settings_data.rmse << ',' << '"' << processed_runs << '"' << ','
+             << settings_data.misaligned << ',' << settings_data.multi_t << ',' << (scenario.type == Scenarios::Type::MCAR ? "MCAR" : "MISSBLOCK") 
+             << ',' << '"' << scenario.variables << '"' << '\n';
+    
+    file.close();
+    std::cout << "Results added to " << filename << std::endl;
 }

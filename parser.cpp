@@ -48,7 +48,8 @@ const option::Descriptor usage[] =
                  "  --scenario, -s \tSet the type of scenario (mcar,missp,blackout)."},
                 {SCENARIO_VARIABLES, 0, "", "scenv", option::Arg::Optional,
                  "  --scenv \tSet the scenario variables as {v1,v2,v3,...} "
-                 "\t\t - mcar : to, from, steps, blockSize, nBlocks"},
+                 "\t\t - mcar : from, to, steps, block size, # of blocks"
+                 "\t\t - missp : from, to, steps, affected column, starting row"},
                 {SCENARIO_OUTPATH, 0, "", "sceno", option::Arg::Optional,
                  "  --sceno \tSaves the scenario resulting matrices in the given path"},
                 {TRUNCATION, 0, "", "set-truncation", option::Arg::Optional,

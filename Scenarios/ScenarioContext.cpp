@@ -42,6 +42,7 @@ namespace Scenarios {
             params = std::vector<int>(scenarioVariables.begin() + 3, scenarioVariables.end());
         } else {
             tcases = rangeIncluded(10, 80, 10);
+            scenarioSettings.variables = "10,80,10";
         }
 
         for (auto t: tcases) {

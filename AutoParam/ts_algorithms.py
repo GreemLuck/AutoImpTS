@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
-EXE = "reduced_bench"
+EXE = "build/reduced_bench"
 DB_FILE_NAME = 'results.db'
 
 # sys.path.append(os.path.join(ROOT_FOLDER, "Algorithms"))
@@ -67,7 +67,7 @@ def get_algorithm(alg):
     return algorithms[alg]
 
 
-def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False, label = "dynammo-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False, label = "dynammo-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "dynammo"
 
     truncation = int(truncation)
@@ -80,6 +80,7 @@ def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False,
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-max-iter={max_iter} " \
           f"--label={label} " \
@@ -95,7 +96,7 @@ def dynammo(truncation=3, max_iter=100, tick=100, dataset='airq', verbose=False,
     return rmse, runtime, params
 
 
-def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label="tkcm-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label="tkcm-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "tkcm"
 
     truncation = int(truncation)
@@ -108,6 +109,7 @@ def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label="tkcm
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-d={d} " \
           f"--label={label} " \
@@ -126,7 +128,7 @@ def tkcm(truncation=2, d=5, tick=100, dataset='airq', verbose=False, label="tkcm
     return rmse, runtime, params
 
 
-def stmvl(alpha=2, gamma=0.4, win_size=7, dataset='airq', misaligned=False, verbose=False, label = "stmvl-bayes", parallel=True, scenario="MCAR"):
+def stmvl(alpha=2, gamma=0.4, win_size=7, dataset='airq', misaligned=False, verbose=False, label = "stmvl-bayes", parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "st-mvl"
 
     alpha_temp = alpha
@@ -142,6 +144,7 @@ def stmvl(alpha=2, gamma=0.4, win_size=7, dataset='airq', misaligned=False, verb
           f"--alg={alg} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-alpha={alpha} " \
           f"--set-gamma={gamma} " \
           f"--set-win-size={win_size} " \
@@ -161,7 +164,7 @@ def stmvl(alpha=2, gamma=0.4, win_size=7, dataset='airq', misaligned=False, verb
     return rmse, runtime, params
 
 
-def spirit(truncation=3, win_size=6, lbda=1, tick=100, dataset='airq', verbose=False, label = "spirit-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def spirit(truncation=3, win_size=6, lbda=1, tick=100, dataset='airq', verbose=False, label = "spirit-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "spirit"
 
     lbda_temp = lbda
@@ -177,6 +180,7 @@ def spirit(truncation=3, win_size=6, lbda=1, tick=100, dataset='airq', verbose=F
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-lambda={lbda} " \
           f"--set-win-size={win_size} " \
@@ -195,7 +199,7 @@ def spirit(truncation=3, win_size=6, lbda=1, tick=100, dataset='airq', verbose=F
     return rmse, runtime, params
 
 
-def grouse(truncation=3, tick=100, dataset='airq', verbose=False, label = "grouse-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def grouse(truncation=3, tick=100, dataset='airq', verbose=False, label = "grouse-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "grouse"
 
     truncation = int(truncation)
@@ -207,6 +211,7 @@ def grouse(truncation=3, tick=100, dataset='airq', verbose=False, label = "grous
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--label={label} " \
           f"--misaligned={misaligned}"
@@ -223,7 +228,7 @@ def grouse(truncation=3, tick=100, dataset='airq', verbose=False, label = "grous
     return rmse, runtime, params
 
 
-def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "nnmf-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "nnmf-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "nnmf"
 
     tol_return = tolerance
@@ -239,6 +244,7 @@ def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-tolerance={tolerance} " \
           f"--set-max-iter={max_iter} " \
@@ -257,7 +263,7 @@ def nnmf(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
     return rmse, runtime, params
 
 
-def svt(tolerance=6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', misaligned=False, verbose=False, label = "svt-bayes", parallel=True, scenario="MCAR"):
+def svt(tolerance=6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', misaligned=False, verbose=False, label = "svt-bayes", parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "svt"
 
     tolerance = 1.*10**-int(tolerance)
@@ -276,6 +282,7 @@ def svt(tolerance=6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', misal
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-tolerance={tolerance} " \
           f"--set-tauscale={tauscale} " \
           f"--set-max-iter={max_iter} " \
@@ -297,7 +304,7 @@ def svt(tolerance=6, tauscale=0.2, max_iter=100, tick=100, dataset='airq', misal
     return rmse, runtime, params
 
 
-def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "rosl-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "rosl-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "rosl"
 
     tolerance = 1.*10**-int(tolerance)
@@ -314,6 +321,7 @@ def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-tolerance={tolerance} " \
           f"--set-max-iter={max_iter} " \
@@ -332,7 +340,7 @@ def rosl(truncation=4, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', v
     return rmse, runtime, params
 
 
-def itersvd(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "itersvd-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def itersvd(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "itersvd-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "itersvd"
 
     tolerance = 1.*10**-int(tolerance)
@@ -349,6 +357,7 @@ def itersvd(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', v
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-tolerance={tolerance} " \
           f"--set-max-iter={max_iter} " \
@@ -367,7 +376,7 @@ def itersvd(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', v
     return rmse, runtime, params
 
 
-def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "softimp-bayes", misaligned=False, parallel=True, scenario="MCAR"):
+def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq', verbose=False, label = "softimp-bayes", misaligned=False, parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "softimpute"
 
     tolerance = 1.*10**-int(tolerance)
@@ -385,6 +394,7 @@ def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq'
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-tolerance={tolerance} " \
           f"--set-max-iter={max_iter} " \
@@ -403,7 +413,7 @@ def softimp(truncation=3, tolerance=1e-6, max_iter=100, tick=100, dataset='airq'
     return rmse, runtime, params
 
 
-def cdrec(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', misaligned=False, verbose=False, label = "cdrec-bayes", parallel=True, scenario="MCAR"):
+def cdrec(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', misaligned=False, verbose=False, label = "cdrec-bayes", parallel=True, scenario="MISSINGBLOCK", scenv=""):
     alg = "cd"
 
     tolerance = 1.*10**-int(tolerance)
@@ -419,6 +429,7 @@ def cdrec(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', mis
           f"--tick={tick} " \
           f"--dataset={dataset} " \
           f"--scenario={scenario} " \
+          f"--scenv={scenv} " \
           f"--set-truncation={truncation} " \
           f"--set-tolerance={tolerance_cmd} " \
           f"--set-max-iter={max_iter} " \
@@ -441,6 +452,11 @@ def cdrec(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', mis
 def read_results(filename):
     # Read the data from the text file
     data = np.genfromtxt(filename, delimiter=',')
+
+    # Check if the data is 1D (i.e., only one row in the file)
+    if data.ndim == 1:
+        # Reshape the data to be a 2D array with one row
+        data = data.reshape(1, -1)
 
     # Separate the data into individual arrays
     ids = data[:, 0].astype(int)      # Convert the id to int

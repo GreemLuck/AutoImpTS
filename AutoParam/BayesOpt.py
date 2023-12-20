@@ -184,7 +184,6 @@ def main(alg_name, dataset="airq", bounds=None, tick=100, exploration=2, exploit
     optimizer = BayesianOptimization(
         f=alg,
         pbounds=bounds,
-        random_state=2,
     )
 
     # logger = JSONLogger(path=os.path.join(ROOT_FOLDER, "BayesLogs", alg + "_" + dataset))

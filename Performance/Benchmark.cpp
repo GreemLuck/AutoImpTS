@@ -633,9 +633,6 @@ void Start_Benchmark(settings &set, Scenarios::scenario_settings &scenarioSettin
     arma::mat mat;
     std::ifstream file;
 
-    // TODO: Remove this hardcoded list
-    size_t nticks = 8;
-    u_int64_t ticks[] = {100, 200, 300, 400, 500, 600, 700, 800};
     std::vector<u_int64_t> runtimes;
     std::vector<double> rmses;
     u_int64_t runtimeSum = 0;
@@ -683,8 +680,8 @@ void Start_Benchmark(settings &set, Scenarios::scenario_settings &scenarioSettin
         runtimes.push_back(p.second);
     }
 
-    set.rmse = isinf(rmseSum / (double) nticks) ? DBL_MAX : rmseSum / (double) nticks;
-    set.runtime = runtimeSum / nticks;
+    set.rmse = isinf(rmseSum / (double) numScenarios) ? DBL_MAX : rmseSum / (double) numScenarios;
+    set.runtime = runtimeSum / numScenarios;
 
     std::ostringstream runsString;
     for(int i = 0; i<rmses.size(); i++){

@@ -27,12 +27,9 @@ def rs_execute(algorithm=None, dataset=None,
     sample_lst = []
     for key in distribution_keys:
         min_v, max_v, step = distribution[key]
-        try:
-            distri_lst = list(np.arange(*distribution[key]))
-            sample_lst.append(random.sample(distri_lst, sample_size))
-        except ValueError:
-            raise ValueError(f"Sample size is not supported. "
-                             f"Got {sample_size}, expected {min_v - max_v}.")
+        distri_lst = list(np.arange(*distribution[key]))
+        sample_lst.append(random.choices(distri_lst, k=sample_size))
+
     sample_zip = zip(*sample_lst)
     competitors = []
     for v in sample_zip:
@@ -52,7 +49,7 @@ def rs_execute(algorithm=None, dataset=None,
 
     print(competitors)
 
-    return competitors[0][0]
+    return competitors[0]
 
 if __name__ == "__main__":
     rs_execute(algorithm="stmvl", dataset="airq", sample_size=5,
