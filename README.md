@@ -96,6 +96,7 @@ To run the autoparameterization algorithm
 ``` bash
 python3 AutoParam/start_imputation_benchmarks.py [arguments]
 ```
+You can run `python3 AutoParam/start_imputation_benchmark.py --help` to get more help
 
 ### Arguments
 

@@ -9,10 +9,14 @@ import json
 exploration_values = [10, 5, 15, 1, 19]
 exploitation_values = [10, 15, 5, 19, 1]
 sample_size = [5, 10, 20, 50]
-repetitions = 20
+nparticles = [12, 24]
+niter = [5, 10, 15, 20]
+repetitions = 10
 
 # command = "python3 AutoParam/start_imputation_benchmarks.py --technique bayes --algorithm cdrec --dataset airq --scenario MCAR"
-command = "python3 AutoParam/start_imputation_benchmarks.py --technique rsearch --algorithm cdrec --dataset airq --scenario MCAR"
+# command = "python3 AutoParam/start_imputation_benchmarks.py --technique rsearch --algorithm cdrec --dataset airq --scenario MCAR"
+command = "python3 AutoParam/start_imputation_benchmarks.py --technique swarm_particle --algorithm cdrec --dataset airq --scenario MCAR"
+
 
 # total_iterations = sum(sample_size) * repetitions
 # with tqdm(total=total_iterations, desc="Running Algorithms", unit="iteration") as pbar:
@@ -22,21 +26,24 @@ command = "python3 AutoParam/start_imputation_benchmarks.py --technique rsearch 
 #             subprocess.run(full_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 #             pbar.update(1)
 
-# total_iterations = sum(sample_size) * repetitions
+# total_iterations = len(nparticles) * len(niter) * repetitions
 # with tqdm(total=total_iterations, desc="Running Algorithms", unit="iteration") as pbar:
-#     for s in sample_size:
-#         for _ in range(repetitions):
-#             full_command = f"{command} --sample_size={s}"
-#             subprocess.run(full_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-#             pbar.update(1)
+#     for s in nparticles:
+#         for i in niter:
+#             for _ in range(repetitions):
+#                 full_command = f"{command} --niter=10 --nparticles={s} --niter={i}"
+#                 subprocess.run(full_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+#                 pbar.update(1)
+
+# quit()
 
 
 # Add a label line for each autoparam settings value
 
 df = pd.read_csv('_data/data_autoparam.csv')
 # First filter out all the rows that are not from the rsearch technique
-df_filtered = df.loc[df['Autoparam'] == 'rsearch']
-# Then take the AutoParam_Settings column and parse it to get the values and create a new column for each value
+df_filtered = df.loc[df['Autoparam'] == 'succ_halving']
+# df_filtered = df_filtered.drop_duplicates(subset='Autoparam_Settings', keep='first')
 
 def parse_column(row):
     for value in row:
@@ -64,17 +71,46 @@ def get_values(json_str):
         return str(tuple(data.values()))
     else:
         return tuple(data.values())[0]
-
-
-
-df_filtered['Autoparam_Settings'] = df_filtered['Autoparam_Settings'].apply(get_values)
     
+def extract_sample_size(json_str):
+    try:
+        json_obj = json.loads(json_str.replace("'", '"'))
+        print(json_obj)
+        return json_obj['sample_size']
+    except json.JSONDecodeError:
+        return None
 
-fig = sns.boxplot(data=df_filtered, x='Autoparam_Settings', y='Average_RMSE', hue='Autoparam_Settings', legend=False)
-fig.set(xlabel='Autoparam Settings (exploration, exploitation)', ylabel='Average RMSE')
+
+df_filtered['Sample_Size'] = df_filtered['Autoparam_Settings'].apply(extract_sample_size)
+    
+print(df_filtered['Average_RMSE'])
+
+fig = sns.lineplot(
+    data=df_filtered, 
+    x='Sample_Size', 
+    y='Average_RMSE', 
+    legend=False, 
+    style='Autoparam', 
+    markers=True, 
+    dashes=False
+    )
+fig.set(xlabel='Sample Size', ylabel='Average RMSE')
+ax2 = fig.twinx()
+fig2 = sns.lineplot(
+    data=df_filtered, 
+    x='Sample_Size', 
+    y='Total_Runtime', 
+    ax=ax2, color='red', 
+    legend=False, 
+    style='Autoparam', 
+    markers=True, 
+    dashes=False
+    )
+fig2.set(ylabel='Total Runtime (s)')
+fig2.set_yscale('log')
 # make the boxplot median line bigger
-for line in fig.get_lines():
-    line.set_linewidth(3)
+# for line in fig.get_lines():
+#     line.set_linewidth(3)
 
 
 # plt.xticks(df_filtered['Autoparam_Settings'], ha='right')
@@ -82,4 +118,4 @@ for line in fig.get_lines():
 # plt.ylabel('Average_RMSE')
 # plt.title('Scatter plot of Average_RMSE vs Autoparam_Settings')
 # plt.tight_layout()
-plt.savefig("_data/rsearch.png")
+plt.savefig("_data/cdrec_rsearch.png")

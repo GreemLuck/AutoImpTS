@@ -51,7 +51,7 @@ def main(args):
         row.append({"niter": args.niter, "nparticles": args.nparticles})
         print(f"Running Particle Swarm Optimization with {args.algorithm} on {args.dataset} ...")
         result, rmse = swarm_particle.ps_execute(algorithm=args.algorithm, dataset=args.dataset, distribution=alg_bounds_step,sample_size=args.nparticles,
-                                               n_iter=args.nitem, fixed_param={"verbose": False, "scenario": args.scenario})
+                                               n_iter=args.niter, fixed_param={"verbose": False, "scenario": args.scenario})
         print(result)
         print(rmse)
         row.append(rmse)
@@ -60,8 +60,10 @@ def main(args):
     elif args.technique == 'succ_halving':
         row.append({'sample_size': args.sample_size})
         print(f"Runing Successive Halving with {args.algorithm} on {args.dataset} ... ")
-        result = plotSH.sh_execute(algorithm=args.algorithm, dataset=args.dataset, sample_size=args.sample_size, distribution=alg_bounds_step)
-        print(result)
+        rmseRuntime, result, _ = plotSH.sh_execute(algorithm=args.algorithm, dataset=args.dataset, sample_size=args.sample_size, distribution=alg_bounds_step)
+        rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, **result)
+        row.append(rmse)
+        row.append(params)
     elif args.technique == 'none':
         row.append({})
         print(f"Running {args.algorithm} on {args.dataset} with default values ...")
@@ -69,7 +71,7 @@ def main(args):
         print(params)
         print(rmse)
         row.append(rmse)
-        row.append(result)
+        row.append(params)
 
     end_time = time.time()
     row.append(end_time - start_time)
@@ -104,14 +106,14 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--algorithm",
-        choices=['cdrec','svt','nnmf'],
+        choices=['cdrec','svt','nnmf', 'stmvl', 'grouse', 'rosl', 'softimpute', 'dynammo'],
         required=True,
         help="Algorithm to use for imputation."
     )
 
     parser.add_argument(
         "--dataset",
-        choices=['airq', 'drift10', 'gas'],
+        choices=['airq', 'drift10', 'gas', 'climate', 'temp', 'baffu', 'chlorine', 'electricity', 'meteo'],
         required=True,
         help="Dataset to use."
     )
@@ -134,7 +136,7 @@ if __name__ == "__main__":
         "--sample_size",
         type=int,
         default=15,
-        help="Sample size for random search. Default is 15."
+        help="Sample size for random search or successive halving. Default is 15."
     )
 
     parser.add_argument(

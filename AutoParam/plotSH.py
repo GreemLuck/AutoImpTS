@@ -81,9 +81,9 @@ def sh_execute(algorithm=None, dataset=None,
 
     print(competitors)
 
-    sh_plot(competitors, algorithm=algorithm, dataset=dataset,
-            resources=resource_lst, resource_name="Missing data percentage")
-    return competitors[0][1]
+    # sh_plot(competitors, algorithm=algorithm, dataset=dataset,
+    #         resources=resource_lst, resource_name="Missing data percentage")
+    return competitors[0]
 
 
 def sh_plot(competitors, algorithm=None, dataset=None, resources=[], resource_name='resource'):

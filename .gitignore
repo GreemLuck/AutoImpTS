@@ -8,6 +8,8 @@ _data/out/*
 !_data/out/.gitkeep
 _data/data.csv
 _data/data_autoparam.csv
+_data/_technical/ST-MVL/TrainingFolder/*
+!_data/_technical/ST-MVL/TrainingFolder/.gitkeep
 *.out
 *.sqlite
 Results
@@ -40,3 +42,8 @@ __pycache__/
 .vscode/
 
 reduced_bench
+
+# Personal Files
+draw_graphs.py
+multi_run.py
+run_commands.py

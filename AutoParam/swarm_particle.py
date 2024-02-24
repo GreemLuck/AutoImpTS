@@ -92,12 +92,9 @@ def ps_execute(algorithm=None, dataset=None,
         min_v, max_v, step = distribution[key]
         X_min.append(min_v)
         X_max.append(max_v)
-        try:
-            distri_lst = list(np.arange(*distribution[key]))
-            sample_lst.append(random.sample(distri_lst, sample_size))
-        except ValueError:
-            raise ValueError(f"Sample size is not supported. "
-                             f"Got {sample_size}, expected {min_v - max_v}.")
+        distri_lst = list(np.arange(*distribution[key]))
+        sample_lst.append(random.choices(distri_lst, k=sample_size))
+    
     sample_zip = zip(*sample_lst)
 
     alg, *_ = ts_algorithms.get_algorithm(algorithm)

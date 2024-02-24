@@ -140,6 +140,7 @@ int64_t Recovery_ST_MVL(arma::mat &mat, std::map<std::string, double> &params)
     if(!f.good())
         generateLatLongFile(latlong, mat);
     ST_MVL stmvl(mat, latlong, alpha, beta, winSize);
+    stmvl.GenerateTrainingCase();
 
     std::chrono::steady_clock::time_point begin;
     std::chrono::steady_clock::time_point end;
