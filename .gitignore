@@ -8,6 +8,8 @@ _data/out/*
 !_data/out/.gitkeep
 _data/data.csv
 _data/data_autoparam.csv
+_data/_technical/ST-MVL/*
+!_data/_technical/ST-MVL/TrainingFolder
 _data/_technical/ST-MVL/TrainingFolder/*
 !_data/_technical/ST-MVL/TrainingFolder/.gitkeep
 *.out
