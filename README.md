@@ -1,4 +1,4 @@
-# AutoBench:  Benchmark of Imputation Techniques in Time Series and Autoparameterization Techniques
+# AutoImpute:  Benchmark of Imputation Techniques in Time Series and Autoparameterization Techniques
 
 This project presents an alternative implementation of <a href="https://github.com/eXascaleInfolab/bench-vldb20">ImputeBench</a>, a benchmark suite for time series imputation algorithms. Our version builds upon the original by retaining the basic functionalities while introducing enhanced features aimed at providing more flexibility and efficiency. These enhancements include:
 - Enhanced customization of imputation algorithm hyperparameters, allowing for more tailored algorithm performance.
@@ -29,7 +29,7 @@ project. Here's how to use it:
 ### Steps
 1. Clone this repository to your local machine
     ``` bash
-   git clone https://github.com/GreemLuck/autobench.git
+   git clone https://github.com/GreemLuck/AutoImpute.git
     ```
 2. Run the setup script
     ``` bash
