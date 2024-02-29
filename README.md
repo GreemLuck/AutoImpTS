@@ -1,4 +1,4 @@
-# AutoImpute:  Benchmark of Imputation Techniques in Time Series and Autoparameterization Techniques
+# AutoImpTS:  Benchmark of Imputation Techniques in Time Series and Autoparameterization Techniques
 
 This project presents an alternative implementation of <a href="https://github.com/eXascaleInfolab/bench-vldb20">ImputeBench</a>, a benchmark suite for time series imputation algorithms. Our version builds upon the original by retaining the basic functionalities while introducing enhanced features aimed at providing more flexibility and efficiency. These enhancements include:
 - Enhanced customization of imputation algorithm hyperparameters, allowing for more tailored algorithm performance.
