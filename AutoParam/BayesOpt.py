@@ -28,7 +28,9 @@ def dynammo(truncation, max_iter):
     rmse, *_ = ts_algorithms.dynammo(truncation, max_iter,
                                           tick=TICKS,
                                           verbose=VERBOSE,
-                                          dataset=DATASET, scenario=SCENARIO,
+                                          dataset=DATASET, 
+                                          scenario=SCENARIO,
+                                          parallel=MULTITHREAD,
                                           label=LABEL)
     return -rmse
 
@@ -37,7 +39,9 @@ def tkcm(truncation, d):
     rmse, *_ = ts_algorithms.tkcm(truncation, d,
                                        tick=TICKS,
                                        verbose=VERBOSE,
-                                       dataset=DATASET, scenario=SCENARIO,
+                                       dataset=DATASET, 
+                                       scenario=SCENARIO,
+                                       parallel=MULTITHREAD,
                                        label=LABEL)
     return -rmse
 
@@ -45,7 +49,9 @@ def tkcm(truncation, d):
 def stmvl(alpha, gamma, win_size):
     rmse, *_ = ts_algorithms.stmvl(alpha, gamma, win_size,
                                         verbose=VERBOSE,
-                                        dataset=DATASET, scenario=SCENARIO,
+                                        dataset=DATASET, 
+                                        scenario=SCENARIO,
+                                        parallel=MULTITHREAD,
                                         label=LABEL)
     return -rmse
 
@@ -54,7 +60,9 @@ def spirit(truncation, win_size, lbda):
     rmse, *_ = ts_algorithms.spirit(truncation, win_size, lbda,
                                          tick=TICKS,
                                          verbose=VERBOSE,
-                                         dataset=DATASET, scenario=SCENARIO,
+                                         dataset=DATASET, 
+                                         scenario=SCENARIO,
+                                         parallel=MULTITHREAD,
                                          label=LABEL)
     if rmse >= float("inf"):
         rmse = float("inf")
@@ -63,55 +71,92 @@ def spirit(truncation, win_size, lbda):
 
 def grouse(truncation):
     rmse, *_ = ts_algorithms.grouse(truncation,
-                                         tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                         tick=TICKS, 
+                                         verbose=VERBOSE, 
+                                         dataset=DATASET, 
+                                         scenario=SCENARIO,
+                                         parallel=MULTITHREAD, 
+                                         label=LABEL)
     return -rmse
 
 
 def nnmf(truncation, tolerance, max_iter):
     tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.nnmf(truncation, tolerance, max_iter,
-                                       tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                       tick=TICKS,
+                                       verbose=VERBOSE, 
+                                       dataset=DATASET, 
+                                       scenario=SCENARIO,
+                                       parallel=MULTITHREAD, 
+                                       label=LABEL)
     return -rmse
 
 
 def svt(tolerance, tauscale, max_iter):
     tolerance = 1.*10**-int(tolerance)
     rmse, *_ = ts_algorithms.svt(tolerance, tauscale, max_iter,
-                                      verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                      verbose=VERBOSE, 
+                                      dataset=DATASET, 
+                                      scenario=SCENARIO,
+                                      parallel=MULTITHREAD, 
+                                      label=LABEL)
     return -rmse
 
 
 def rosl(truncation, tolerance, max_iter):
     rmse, *_ = ts_algorithms.rosl(truncation, tolerance, max_iter,
-                                       tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                       tick=TICKS, 
+                                       verbose=VERBOSE, 
+                                       dataset=DATASET, 
+                                       scenario=SCENARIO,
+                                       parallel=MULTITHREAD, 
+                                       label=LABEL)
     return -rmse
 
 
 def itersvd(truncation, tolerance, max_iter):
     rmse, *_ = ts_algorithms.itersvd(truncation, tolerance, max_iter,
-                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                          tick=TICKS, 
+                                          verbose=VERBOSE, 
+                                          dataset=DATASET, 
+                                          scenario=SCENARIO,
+                                          parallel=MULTITHREAD, 
+                                          label=LABEL)
     return -rmse
 
 
 def softimp(truncation, tolerance, max_iter):
     rmse, *_ = ts_algorithms.softimp(truncation, tolerance, max_iter,
-                                          tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                          tick=TICKS, 
+                                          verbose=VERBOSE, 
+                                          dataset=DATASET, 
+                                          scenario=SCENARIO,
+                                          parallel=MULTITHREAD, 
+                                          label=LABEL)
     return -rmse
 
 
 def cdrec(truncation, tolerance=5, max_iter=100):
     rmse, *_ = ts_algorithms.cdrec(truncation, tolerance, max_iter,
-                                        tick=TICKS, verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO, label=LABEL)
+                                        tick=TICKS, 
+                                        verbose=VERBOSE, 
+                                        dataset=DATASET, 
+                                        scenario=SCENARIO,
+                                        parallel=MULTITHREAD, 
+                                        label=LABEL)
     return -rmse
 
 def minimise_runtime(tolerance, max_iter):
     rmse, runtime, *_ = ALG_FUNC(FIX_TRUNCATION, tolerance, max_iter,
-                             verbose=VERBOSE, dataset=DATASET, scenario=SCENARIO)
+                             verbose=VERBOSE, 
+                             dataset=DATASET, 
+                             scenario=SCENARIO,
+                             parallel=MULTITHREAD)
     return -rmse
 
 # def trmf(lambdaI, lambdaAR, lambdaLag):
 #     rmse, *_ = ts_algorithms.trmf(lambdaI=lambdaI,lambdaAR=lambdaAR, lambdaLag=lambdaLag, verbose=VERBOSE,
-#                                        dataset=DATASET, scenario=SCENARIO, label=LABEL)
+#                                        dataset=DATASET, scenario=SCENARIO, parallel=MULTITHREAD, label=LABEL)
 #     return -rmse
 
 
@@ -157,17 +202,20 @@ algorithms = {
 
 
 def main(alg_name, dataset="airq", bounds=None, tick=100, exploration=2, exploitation=5, verbose=False, alg_func=None,
-         process_runtime=False, max_runtime=0, fix_truncation=3, scenario="MISSINGBLOCK"):
+         process_runtime=False, max_runtime=0, fix_truncation=3, scenario="MISSINGBLOCK", multithread=True):
     global TICKS
     global DATASET
     global VERBOSE
     global ALG_FUNC
     global MAX_RUNTIME
     global FIX_TRUNCATION
+    global SCENARIO
+    global MULTITHREAD
 
     TICKS = int(tick)
     DATASET = dataset
     SCENARIO = scenario
+    MULTITHREAD = multithread
     VERBOSE = verbose
     ALG_FUNC = alg_func
     MAX_RUNTIME = max_runtime

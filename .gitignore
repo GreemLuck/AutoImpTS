@@ -12,6 +12,7 @@ _data/_technical/ST-MVL/*
 !_data/_technical/ST-MVL/TrainingFolder
 _data/_technical/ST-MVL/TrainingFolder/*
 !_data/_technical/ST-MVL/TrainingFolder/.gitkeep
+!_data/_technical/ST-MVL/latlong_placeholder.txt
 *.out
 *.sqlite
 Results
@@ -47,6 +48,8 @@ __pycache__/
 reduced_bench
 
 # Personal Files
+plot_data_in.py
+draw_datasets.py
 draw_graphs.py
 multi_run.py
 run_commands.py

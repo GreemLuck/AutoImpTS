@@ -16,7 +16,10 @@ def sh_execute(algorithm=None, dataset=None,
                sample_size=5,
                distribution={},
                resource_max=80, resource_min=10,
-               keep_losers=False):
+               keep_losers=False,
+               verbose=False,
+               multi_thread=False,
+               scenario="MISSINGBLOCK"):
     """ Starts the successive halving algorithm with the given settings
     Args:
             algorithm:      str
@@ -36,6 +39,14 @@ def sh_execute(algorithm=None, dataset=None,
                 maximum value the resource can attain
             resource_min:   int/float
                 minimum value the resource can start with
+            keep_losers:    bool
+                if True, the rmse of the losers will be kept
+            verbose:        bool
+                if True, the algorithm will print its progress
+            multi_thread:   bool
+                if True, the algorithm will use multiple threads
+            scenario:       str
+                name of the scenario
     """
     # getting random samples
     distribution_keys = distribution.keys()
@@ -66,12 +77,20 @@ def sh_execute(algorithm=None, dataset=None,
         resource_lst.append(resource)
         for c in tqdm(competitors[:n_competitors]):
             print(c[1])
-            rmse, *_ = alg(dataset=dataset, verbose=True, **c[1], **{"scenv": f"{resource},{resource},{resource}"})
+            rmse, *_ = alg(dataset=dataset, 
+                           verbose=verbose, 
+                           multi_thread=multi_thread, 
+                           scenario=scenario, **c[1], 
+                           **{"scenv": f"{resource},{resource},{resource}"})
             c[0].append(rmse)
         if keep_losers:
             for c in tqdm(competitors[n_competitors:]):
                 print(c[1])
-                rmse, _ = alg(dataset=dataset, **c[1], **{"scenv": f"{resource},{resource},{resource}"})
+                rmse, _ = alg(dataset=dataset, 
+                              verbose=verbose,  
+                              multi_thread=multi_thread, 
+                              scenario=scenario, **c[1], 
+                              **{"scenv": f"{resource},{resource},{resource}"})
                 c[2].append(rmse)
         competitors[:n_competitors] = sorted(competitors[:n_competitors], key=lambda r: r[0][-1])
         resource = math.floor(resource*eta)

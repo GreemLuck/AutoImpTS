@@ -34,15 +34,12 @@ project. Here's how to use it:
 2. Run the setup script
     ``` bash
    cd reduced-bench
-   chmod +x setup.sh
    ./setup.sh
     ```
 3. Build the project
     ``` bash
-    mkdir build
-    cd build
-    cmake ..
-    make
+    cmake -B build
+    cmake --build build
     ```
 
 ## Execution
@@ -51,7 +48,6 @@ project. Here's how to use it:
 
 Once built you can use the benchmark go back to the root of the project to run the program
 ``` bash
-cd .. # If you are still in /build
 ./build/reduced_bench [arguments]
 ```
 
