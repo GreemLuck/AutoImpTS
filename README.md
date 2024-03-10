@@ -58,7 +58,7 @@ You can run `./build/autoimpts.py --help` to get more help
 You can run an imputation like in the original ImputeBench by specifying the kind of imputation algorithm you want to run, the dataset you want to use and the missing data scenario you want to use.
 
 ``` bash
-python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK
+python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb
 ```
 
 #### Parallelization
@@ -66,7 +66,7 @@ python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK
 You can chose to enable parallelization by setting the ```multi-thread``` flag.
 
 ``` bash
-python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK --multi-thread
+python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb --multi-thread
 ```
 
 #### Scenario Configuration
@@ -74,7 +74,7 @@ python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK --
 You can configure the scenario variables using the ```scenv``` argument.
 
 ``` bash
-python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK --scenv 30,30,30
+python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb --scenv 30,30,30
 ```
 
 #### Autoparameterization
@@ -82,7 +82,7 @@ python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK --
 You can chose a automatic parameterization technique through the ```technique``` argument
 
 ``` bash
-python3 autoimpts.py --algorithm cdrec --dataset airq --scenario MISSINGBLOCK --technqiue rsearch
+python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb --technqiue rsearch
 ```
 
 
