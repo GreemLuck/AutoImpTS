@@ -12,18 +12,24 @@ import BayesOpt
 import swarm_particle
 import plotSH
 
+separation = "-----------------------------------"
 
 header = ["Algorithm", "Dataset", "Scenario", "Scenario_Variables", "Autoparam", "Autoparam_Settings", "Average_RMSE", "Optimal_Param", "Total_Runtime", "Seed", "Multi_Thread"]
 
-def main(args):
-    
+def main(args):    
     file_exists = os.path.isfile(args.savepath) and os.path.getsize(args.savepath) > 0
 
     row = [args.algorithm, args.dataset, args.scenario, args.scenv, args.technique]
 
     alg_func, alg_bounds, alg_bounds_step = ts_algorithms.get_algorithm(args.algorithm)
 
-    fixed_param = {"verbose": args.verbose, "scenario": args.scenario, "multi_thread": args.multi_thread, "scenv": args.scenv}
+    if args.scenario:
+        if args.scenario == "mcar":
+            args.scenario = "MCAR"
+        elif args.scenario == "missb":
+            args.scenario = "MISSINGBLOCK"
+
+    fixed_param = {"verbose": args.verbose, "scenario": args.scenario, "parallel": args.multi_thread, "scenv": args.scenv}
 
     if args.seed:
         random.seed(args.seed)
@@ -31,22 +37,22 @@ def main(args):
     if args.scenv != "" and args.technique == "succ_halving":
         raise ValueError("The scenario variable cannot be altered for the Successive Halving technique.")
 
+    print(separation)
     print(f"Algorithm: {args.algorithm}")
     print(f"Dataset: {args.dataset}")
     print(f"Scenario: {args.scenario}")
     print(f"Technique: {args.technique}")
+    print(separation)
 
     start_time = time.time()
 
     if args.technique == 'rsearch':
         row.append({"sample_size": args.sample_size})
         print(f"Runing Random Sreach with {args.algorithm} on {args.dataset} ...")
-        result, mean_rmse = random_search.rs_execute(algorithm=args.algorithm, dataset=args.dataset, sample_size=args.sample_size,
+        params, mean_rmse = random_search.rs_execute(algorithm=args.algorithm, dataset=args.dataset, sample_size=args.sample_size,
                                           distribution=alg_bounds_step, fixed_param=fixed_param)
-        print(result)
-        print(mean_rmse)
         row.append(mean_rmse)
-        row.append(result)
+        row.append(params)
         # mean_rmse is just floating point, result is {param1: xxx, param2: xxx}
     elif args.technique == 'bayes':
         row.append({"exploration": args.exploration, "exploitation": args.exploitation})
@@ -59,44 +65,41 @@ def main(args):
                                verbose=args.verbose, 
                                scenario=args.scenario,
                                multithread=args.multi_thread)
-        print(result)
         row.append(-result["target"])
         row.append(result["params"])
+        params = result["params"]
+        mean_rmse = -result["target"]
         # {target: -meanrmse, params{param1: xxx, param2: xxx}}
     elif args.technique == 'swarm_particle':
         row.append({"niter": args.niter, "nparticles": args.nparticles})
         print(f"Running Particle Swarm Optimization with {args.algorithm} on {args.dataset} ...")
-        result, rmse = swarm_particle.ps_execute(algorithm=args.algorithm, 
+        params, mean_rmse = swarm_particle.ps_execute(algorithm=args.algorithm, 
                                                  dataset=args.dataset, 
                                                  distribution=alg_bounds_step,
                                                  sample_size=args.nparticles,
                                                  n_iter=args.niter,
                                                  fixed_param=fixed_param)
-        print(result)
-        print(rmse)
-        row.append(rmse)
-        row.append(result)
+        row.append(mean_rmse)
+        row.append(params)
         # {param1: xxx, param2: xxx}, floating point rmse
     elif args.technique == 'succ_halving':
         row.append({'sample_size': args.sample_size})
         print(f"Runing Successive Halving with {args.algorithm} on {args.dataset} ... ")
-        rmseRuntime, result, _ = plotSH.sh_execute(algorithm=args.algorithm, 
+        rmseRuntime, params, _ = plotSH.sh_execute(algorithm=args.algorithm, 
                                                    dataset=args.dataset, 
                                                    sample_size=args.sample_size, 
                                                    distribution=alg_bounds_step,
                                                    verbose=args.verbose,
                                                    multi_thread=args.multi_thread,
                                                    scenario=args.scenario)
-        rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, **result)
-        row.append(rmse)
+        mean_rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, **params)
+        row.append(mean_rmse)
         row.append(params)
     elif args.technique == 'none':
         row.append({})
         print(f"Running {args.algorithm} on {args.dataset} with default values ...")
-        rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, verbose=args.verbose, parallel=args.multi_thread)
-        print(params)
-        print(rmse)
-        row.append(rmse)
+        mean_rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, verbose=args.verbose, parallel=args.multi_thread, scenv=args.scenv)
+        row.append(mean_rmse)
         row.append(params)
 
     end_time = time.time()
@@ -116,6 +119,11 @@ def main(args):
             csvwriter.writerow(header)
 
         csvwriter.writerow(row)
+
+    print(separation)
+    print(f"Optimal Parameters: {params}")
+    print(f"Average RMSE: {mean_rmse}")
+
         
 
 if __name__ == "__main__":
@@ -148,7 +156,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--scenario",
-        choices=['MCAR', 'MISSINGBLOCK'],
+        choices=['mcar', 'missb'],
         required=True,
         help='Missing data scenario to use.'
     )
@@ -224,7 +232,7 @@ if __name__ == "__main__":
         "--scenv",
         type=str,
         default="",
-        help="Scenario variable in brackets. Example: --scenv='{10, 80, 10}'"
+        help="Scenario variable in brackets. Example: --scenv='10,80,10'"
     )
 
     args = parser.parse_args()

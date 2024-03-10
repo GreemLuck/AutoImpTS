@@ -30,6 +30,24 @@ vector<double> tokenize(string s, string del = ",")
     return result;
 }
 
+string parseScenarioVariables(option::Option options[], int optionsCount, const string& argKey) {
+    string concatenatedArgs;
+    for (int i = 0; i < optionsCount; ++i) {
+        string s, str;
+        if(options[i].name != nullptr)
+            s = options[i].name;
+        else
+            continue;
+        stringstream ss(s);
+        getline(ss, str, '=');
+        if (str == argKey) {
+            if (!concatenatedArgs.empty()) concatenatedArgs += ",";
+            concatenatedArgs += string(options[i].arg).substr(string(options[i].arg).find('=') + 1);
+        }
+    }
+    return concatenatedArgs ;
+}
+
 const option::Descriptor usage[] =
         {
                 {UNKNOWN, 0, "", "",     option::Arg::None,
@@ -45,7 +63,7 @@ const option::Descriptor usage[] =
                 {PARAMS, 0, "", "set-params", option::Arg::Optional,
                  "  --set-params \tSet the algorithm parameters"},
                 {SCENARIO_TYPE, 0, "s", "scenario", option::Arg::Optional,
-                 "  --scenario, -s \tSet the type of scenario (mcar,missp,blackout)."},
+                 "  --scenario, -s \tSet the type of scenario (MCAR,MISSINGBLOCK)."},
                 {SCENARIO_VARIABLES, 0, "", "scenv", option::Arg::Optional,
                  "  --scenv \tSet the scenario variables as {v1,v2,v3,...} "
                  "\t\t - mcar : from, to, steps, block size, # of blocks"
@@ -138,8 +156,8 @@ int parse(int argc, char **argv, settings &set, Scenarios::scenario_settings &sc
 
     if(options[SCENARIO_TYPE])
         scenarioSettings.type = Scenarios::valueOf(options[SCENARIO_TYPE].arg);
-    if(options[SCENARIO_VARIABLES])
-        scenarioSettings.variables = options[SCENARIO_VARIABLES].arg;
+    if(options[SCENARIO_VARIABLES]) 
+        scenarioSettings.variables = parseScenarioVariables(buffer, stats.buffer_max, "--scenv");
     if(options[SCENARIO_OUTPATH]) {
         scenarioSettings.outpath = options[SCENARIO_OUTPATH].arg;
         if(scenarioSettings.outpath.back() != '/'){

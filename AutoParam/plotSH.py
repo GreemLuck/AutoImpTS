@@ -79,7 +79,7 @@ def sh_execute(algorithm=None, dataset=None,
             print(c[1])
             rmse, *_ = alg(dataset=dataset, 
                            verbose=verbose, 
-                           multi_thread=multi_thread, 
+                           parallel=multi_thread, 
                            scenario=scenario, **c[1], 
                            **{"scenv": f"{resource},{resource},{resource}"})
             c[0].append(rmse)

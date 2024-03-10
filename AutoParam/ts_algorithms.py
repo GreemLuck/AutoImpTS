@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
-EXE = "build/reduced_bench"
+EXE = "build/autoimpts"
 DB_FILE_NAME = 'results.db'
 
 # sys.path.append(os.path.join(ROOT_FOLDER, "Algorithms"))
@@ -440,6 +440,7 @@ def cdrec(truncation=3, tolerance=6, max_iter=100, tick=100, dataset='airq', mis
     if misaligned:
         cmd += " --misaligned"
 
+    print(cmd)
     if verbose:
         os.system(cmd)
     else:

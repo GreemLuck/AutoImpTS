@@ -42,7 +42,7 @@ def rs_execute(algorithm=None, dataset=None,
 
     for c in tqdm(competitors):
         print(c[0])
-        rmse, *_ = alg(dataset=dataset, verbose=True, **c[0], **fixed_param)
+        rmse, *_ = alg(dataset=dataset, **c[0], **fixed_param)
         c[1] = rmse
 
     competitors = sorted(competitors, key=lambda r: r[1])

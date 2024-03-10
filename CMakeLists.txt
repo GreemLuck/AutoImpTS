@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-project(reduced_bench)
+project(autoimpts)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-fopenmp")
+set(CMAKE_BUILD_TYPE Debug)
 
 find_package(Armadillo REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development)
@@ -18,21 +19,21 @@ message("Python Lib dir: ${Python3_LIBRARIES}")
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 file(GLOB_RECURSE HEADERS "include/*.h" "include/*hpp")
 
-add_executable(reduced_bench ${SOURCES} ${HEADERS})
+add_executable(autoimpts ${SOURCES} ${HEADERS})
 
 target_include_directories(
-        reduced_bench PUBLIC 
+        autoimpts PUBLIC 
         ${ARMADILLO_INCLUDE_DIR} 
         ${Python3_INCLUDE_DIRS} 
         ${MLPACK_INCLUDE_DIRS}
         ${CMAKE_SOURCE_DIR}/include
 )
 
-target_compile_options(reduced_bench PRIVATE -pg) # Progiling
-target_link_options(reduced_bench PRIVATE -pg) # Profiling
+target_compile_options(autoimpts PRIVATE -pg) # Progiling
+target_link_options(autoimpts PRIVATE -pg) # Profiling
 
 target_link_libraries(
-        reduced_bench
+        autoimpts
         ${MLPACK_LIBRARIES} 
         ${ARMADILLO_LIBRARIES} 
         ${Python3_LIBRARIES} 
