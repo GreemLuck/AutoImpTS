@@ -33,7 +33,7 @@ project. Here's how to use it:
     ```
 2. Run the setup script
     ``` bash
-   cd reduced-bench
+   cd AutoTSImpute
    ./setup.sh
     ```
 3. Build the project
