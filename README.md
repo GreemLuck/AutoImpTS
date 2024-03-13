@@ -89,7 +89,7 @@ All results will be added to `_data/out` folder.
 ___
 
 ## Contributors
-
+Gremaud Lucien (lucien.gremaud@gmail.com) and Mourad Khayati (mkhayati@exascale.info)
 ___
 
 ## Citation
