@@ -44,8 +44,6 @@ project. Here's how to use it:
 
 ## Execution
 
-### Benchmark
-
 Once built you can use the benchmark.
 ``` bash
 python3 autoimpts.py [arguments]
@@ -53,7 +51,7 @@ python3 autoimpts.py [arguments]
 
 You can run `python autoimpts.py --help` to get more help
 
-#### Run imputation scenarios
+### Customize imputation scenarios
 
 You can run an imputation like in the original ImputeBench by specifying the kind of imputation algorithm you want to run, the dataset you want to use and the missing data scenario you want to use.
 
@@ -61,15 +59,15 @@ You can run an imputation like in the original ImputeBench by specifying the kin
 python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb
 ```
 
-#### Parallelization
+### Enable Parallelization
 
-You can chose to enable parallelization by setting the ```multi-thread``` flag.
+You can enable parallelization by setting the ```multi-thread``` flag.
 
 ``` bash
 python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb --multi-thread
 ```
 
-#### Scenario Configuration
+### Scenario Configuration
 
 You can configure the scenario variables using the ```scenv``` argument. The arguments takes a list of variables separated by comas.
 
@@ -97,9 +95,9 @@ You can configure the scenario variables using the ```scenv``` argument. The arg
     python3 autoimpts.py --algorithm cdrec --dataset airq --scenario mcar --scenv 10,40,10,15,20
     ```
 
-#### Autoparameterization
+### Autoparameterization
 
-You can chose a automatic parameterization technique through the ```technique``` argument
+You can choose an automatic parameterization technique through the ```technique``` argument
 
 ``` bash
 python3 autoimpts.py --algorithm cdrec --dataset airq --scenario missb --technqiue rsearch
@@ -111,7 +109,7 @@ All results will be added to `_data/out` folder.
 ___
 
 ## Contributors
-
+Gremaud Lucien (lucien.gremaud@gmail.com) and Mourad Khayati (mkhayati@exascale.info)
 ___
 
 ## Citation
