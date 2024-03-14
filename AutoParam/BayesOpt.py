@@ -11,7 +11,7 @@ from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 
 ROOT_FOLDER = str(Path(__file__).parent.parent.absolute())
-EXE = "reduced_bench"
+EXE = "autoimpts"
 
 sys.path.append(os.path.join(ROOT_FOLDER, "AutoParam"))
 import ts_algorithms

@@ -19,17 +19,17 @@ header = ["Algorithm", "Dataset", "Scenario", "Scenario_Variables", "Autoparam",
 def main(args):    
     file_exists = os.path.isfile(args.savepath) and os.path.getsize(args.savepath) > 0
 
-    row = [args.algorithm, args.dataset, args.scenario, args.scenv, args.technique]
+    row = [args.alg, args.dataset, args.scen, args.scenv, args.technique]
 
-    alg_func, alg_bounds, alg_bounds_step = ts_algorithms.get_algorithm(args.algorithm)
+    alg_func, alg_bounds, alg_bounds_step = ts_algorithms.get_algorithm(args.alg)
 
-    if args.scenario:
-        if args.scenario == "mcar":
-            args.scenario = "MCAR"
-        elif args.scenario == "missb":
-            args.scenario = "MISSINGBLOCK"
+    if args.scen:
+        if args.scen == "mcar":
+            args.scen = "MCAR"
+        elif args.scen == "missb":
+            args.scen = "MISSINGBLOCK"
 
-    fixed_param = {"verbose": args.verbose, "scenario": args.scenario, "parallel": args.multi_thread, "scenv": args.scenv}
+    fixed_param = {"verbose": args.verbose, "scenario": args.scen, "parallel": args.multi_thread, "scenv": args.scenv}
 
     if args.seed:
         random.seed(args.seed)
@@ -38,9 +38,9 @@ def main(args):
         raise ValueError("The scenario variable cannot be altered for the Successive Halving technique.")
 
     print(separation)
-    print(f"Algorithm: {args.algorithm}")
+    print(f"Algorithm: {args.alg}")
     print(f"Dataset: {args.dataset}")
-    print(f"Scenario: {args.scenario}")
+    print(f"Scenario: {args.scen}")
     print(f"Technique: {args.technique}")
     print(separation)
 
@@ -48,22 +48,22 @@ def main(args):
 
     if args.technique == 'rsearch':
         row.append({"sample_size": args.sample_size})
-        print(f"Runing Random Sreach with {args.algorithm} on {args.dataset} ...")
-        params, mean_rmse = random_search.rs_execute(algorithm=args.algorithm, dataset=args.dataset, sample_size=args.sample_size,
+        print(f"Runing Random Sreach with {args.alg} on {args.dataset} ...")
+        params, mean_rmse = random_search.rs_execute(algorithm=args.alg, dataset=args.dataset, sample_size=args.sample_size,
                                           distribution=alg_bounds_step, fixed_param=fixed_param)
         row.append(mean_rmse)
         row.append(params)
         # mean_rmse is just floating point, result is {param1: xxx, param2: xxx}
     elif args.technique == 'bayes':
         row.append({"exploration": args.exploration, "exploitation": args.exploitation})
-        print(f"Running Bayesian Optimization with {args.algorithm} on {args.dataset} ...")
-        result = BayesOpt.main(args.algorithm, 
+        print(f"Running Bayesian Optimization with {args.alg} on {args.dataset} ...")
+        result = BayesOpt.main(args.alg, 
                                dataset=args.dataset, 
                                exploration=args.exploration, 
                                exploitation=args.exploitation, 
                                bounds=alg_bounds, 
                                verbose=args.verbose, 
-                               scenario=args.scenario,
+                               scenario=args.scen,
                                multithread=args.multi_thread)
         row.append(-result["target"])
         row.append(result["params"])
@@ -72,8 +72,8 @@ def main(args):
         # {target: -meanrmse, params{param1: xxx, param2: xxx}}
     elif args.technique == 'swarm_particle':
         row.append({"niter": args.niter, "nparticles": args.nparticles})
-        print(f"Running Particle Swarm Optimization with {args.algorithm} on {args.dataset} ...")
-        params, mean_rmse = swarm_particle.ps_execute(algorithm=args.algorithm, 
+        print(f"Running Particle Swarm Optimization with {args.alg} on {args.dataset} ...")
+        params, mean_rmse = swarm_particle.ps_execute(algorithm=args.alg, 
                                                  dataset=args.dataset, 
                                                  distribution=alg_bounds_step,
                                                  sample_size=args.nparticles,
@@ -84,21 +84,21 @@ def main(args):
         # {param1: xxx, param2: xxx}, floating point rmse
     elif args.technique == 'succ_halving':
         row.append({'sample_size': args.sample_size})
-        print(f"Runing Successive Halving with {args.algorithm} on {args.dataset} ... ")
-        rmseRuntime, params, _ = plotSH.sh_execute(algorithm=args.algorithm, 
+        print(f"Runing Successive Halving with {args.alg} on {args.dataset} ... ")
+        rmseRuntime, params, _ = plotSH.sh_execute(algorithm=args.alg, 
                                                    dataset=args.dataset, 
                                                    sample_size=args.sample_size, 
                                                    distribution=alg_bounds_step,
                                                    verbose=args.verbose,
                                                    multi_thread=args.multi_thread,
-                                                   scenario=args.scenario)
-        mean_rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, **params)
+                                                   scenario=args.scen)
+        mean_rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scen, **params)
         row.append(mean_rmse)
         row.append(params)
     elif args.technique == 'none':
         row.append({})
-        print(f"Running {args.algorithm} on {args.dataset} with default values ...")
-        mean_rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scenario, verbose=args.verbose, parallel=args.multi_thread, scenv=args.scenv)
+        print(f"Running {args.alg} on {args.dataset} with default values ...")
+        mean_rmse, runtime, params = alg_func(dataset=args.dataset, scenario=args.scen, verbose=args.verbose, parallel=args.multi_thread, scenv=args.scenv)
         row.append(mean_rmse)
         row.append(params)
 
@@ -141,13 +141,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run benchmarks for time series imputation.')
 
     parser.add_argument(
-        "--algorithm",
+        "--alg",
         choices=['cdrec','svt','nnmf', 'stmvl', 'grouse', 'rosl', 'softimpute', 'dynammo', 'tkcm'],
         required=True,
         help="Algorithm to use for imputation."
     )
 
     parser.add_argument(
+        "-d",
         "--dataset",
         choices=['airq', 'drift10', 'gas', 'climate', 'temp', 'baffu', 'chlorine', 'electricity', 'meteo'],
         required=True,
@@ -155,7 +156,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--scenario",
+        "--scen",
         choices=['mcar', 'missb'],
         required=True,
         help='Missing data scenario to use.'
